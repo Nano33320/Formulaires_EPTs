@@ -1,4 +1,3 @@
-    <script>
         // Affichage des étapes
         function showStep(stepId) {
             document.querySelectorAll('.step').forEach(div => div.classList.remove('active'));
@@ -431,4 +430,3 @@
 			const mailtoLink = `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 			window.location.href = mailtoLink;
 		});
-    </script>
