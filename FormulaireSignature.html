@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Formulaire avec Signature et Code Unique</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/signature_pad/4.1.7/signature_pad.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        #signature-pad { border: 1px solid #000; touch-action: none; }
+        .form-group { margin-bottom: 1em; }
+        .code-box { font-weight: bold; font-size: 1.2em; background: #e8e8e8; padding: 0.2em 0.5em; display: inline-block; border-radius: 4px; }
+
+        .form-group { margin-bottom: 15px; }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"], input[type="email"], input[type="tel"], input[type="number"],
+        input[type="password"], input[type="date"], input[type="file"], select, textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
+            margin-bottom: 10px;
+            background-color: #fafafa;
+            transition: border 0.2s, box-shadow 0.2s;
+        }
+        input:focus, select:focus, textarea:focus {
+            border: 1.5px solid #4CAF50;
+            background: #fff;
+            outline: none;
+            box-shadow: 0 1px 6px #4caf5044;
+        }
+    </style>
+</head>
+<body>
+  <h2>Signature Adhésion et Questionnaire Santé</h2>
+  <form id="mon-formulaire">
+            <div class="form-group">
+                <label for="nom">NOM<span class="required">*</span></label>
+                <input type="text" id="nom" name="nom" autocomplete="off" required>
+                <div class="help-text">Les majuscules s'implémentent automatiquement y compris avec les accents</div>
+            </div>
+            <div class="form-group">
+                <label for="prenom">Prénom <span class="required">*</span></label>
+                <input type="text" id="prenom" name="prenom" autocomplete="off" required>
+            </div>
+            <div class="form-group">
+                <label for="mobile">Mobile<span class="required">*</span></label>
+                <input type="tel" id="mobile" name="mobile" required maxlength="14" placeholder="0X XX XX XX XX" autocomplete="off">
+                <div class="error-message" id="mobileError">Format : 0X XX XX XX XX</div>
+            </div>
+    <div class="form-group">
+      <label>Code unique :</label>
+      <span id="code-unique" class="code-box">------</span>
+    </div>
+    <div class="form-group">
+      <label>Signature :</label><br>
+      <canvas id="signature-pad" width="400" height="150"></canvas><br>
+      <button type="button" id="clear">Effacer la signature</button>
+    </div>
+    <button type="submit">Générer le PDF signé</button>
+  </form>
+
+  <script>
+    // Formatage des champs Nom et Prénom
+    document.getElementById('nom')?.addEventListener('input', function(e) {
+      let value = e.target.value.replace(/[^a-zA-ZÀ-ÿ\s\-]/g, '').toUpperCase();
+      e.target.value = value;
+    });
+    document.getElementById('prenom')?.addEventListener('input', function(e) {
+      let value = e.target.value.replace(/[^a-zA-ZÀ-ÿ \-]/g, '');
+      value = value.split(/[\s-]/).map(part => part ? part.charAt(0).toUpperCase() + part.slice(1).toLowerCase() : '').join('-');
+      e.target.value = value;
+    });
+    // Formatage du champ Téléphone
+    const mobileInput = document.getElementById('mobile');
+    const mobileError = document.getElementById('mobileError');
+    if (mobileInput && mobileError) {
+        mobileInput.addEventListener('keydown', function(e) {
+          const allowedKeys = ['Tab', 'Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Home', 'End'];
+          if (allowedKeys.includes(e.key)) return;
+          if (!/[0-9]/.test(e.key)) e.preventDefault();
+        });
+        mobileInput.addEventListener('input', function(e) {
+          let value = e.target.value.replace(/\D/g, '').substring(0, 10);
+          if (value.length > 0) value = value.match(/.{1,2}/g)?.join(' ') || '';
+          e.target.value = value;
+          const numericValue = value.replace(/\s/g, '');
+          const isValid = numericValue.length === 10 &&
+            (numericValue.startsWith('06') || numericValue.startsWith('07'));
+          mobileError.style.display = isValid ? 'none' : 'block';
+          mobileInput.setCustomValidity(isValid ? '' : 'Numéro de mobile invalide');
+        });
+    }
+
+    // Génération du code unique à partir du nom, prénom, téléphone et signature
+    async function generateCode(nom, prenom, mobile, signatureData) {
+      const input = (nom.trim().toLowerCase() + ':' + prenom.trim().toLowerCase() + ':' + mobile.trim() + ':' + signatureData);
+      const encoder = new TextEncoder();
+      const data = encoder.encode(input);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+      // Convertir le buffer en chaîne hexadécimale
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+      // Prendre les 6 premiers caractères, majuscules
+      return hashHex.substring(0, 6).toUpperCase();
+    }
+
+    // Mettre à jour le code unique à chaque modification
+    async function updateCode() {
+      const nom = document.getElementById('nom').value;
+      const prenom = document.getElementById('prenom').value;
+      const tel = document.getElementById('mobile').value;
+      const signatureData = signaturePad.toDataURL();
+      if (nom && prenom && tel && !signaturePad.isEmpty()) {
+        const code = await generateCode(nom, prenom, tel, signatureData);
+        document.getElementById('code-unique').textContent = code;
+      } else {
+        document.getElementById('code-unique').textContent = '------';
+      }
+    }
+
+    document.getElementById('nom').addEventListener('input', updateCode);
+    document.getElementById('prenom').addEventListener('input', updateCode);
+    document.getElementById('mobile').addEventListener('input', updateCode);
+
+    // Signature Pad
+    const canvas = document.getElementById('signature-pad');
+    const signaturePad = new SignaturePad(canvas);
+    document.getElementById('clear').addEventListener('click', function(e) {
+      e.preventDefault();
+      signaturePad.clear();
+      updateCode();
+    });
+
+    // Ajouter un écouteur d'événements pour la signature
+    canvas.addEventListener('pointerup', updateCode);
+
+    // Soumission du formulaire et génération du PDF
+    document.getElementById('mon-formulaire').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      if (signaturePad.isEmpty()) {
+        alert('Merci de signer avant de générer le PDF.');
+        return;
+      }
+      const nom = document.getElementById('nom').value;
+      const prenom = document.getElementById('prenom').value;
+      const tel = document.getElementById('mobile').value;
+      const signatureData = signaturePad.toDataURL();
+      const code = await generateCode(nom, prenom, tel, signatureData);
+
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+
+      doc.text(`Nom : ${nom}`, 10, 20);
+      doc.text(`Prénom : ${prenom}`, 10, 30);
+      doc.text(`Téléphone : ${tel}`, 10, 40);
+      doc.text(`Code unique : ${code}`, 10, 50);
+      doc.text('Signature :', 10, 60);
+      doc.addImage(signatureData, 'PNG', 10, 65, 80, 30);
+
+      doc.save('formulaire-signe.pdf');
+    });
+  </script>
+</body>
+</html>
