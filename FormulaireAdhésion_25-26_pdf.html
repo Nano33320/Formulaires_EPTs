@@ -363,7 +363,6 @@
                         </div>
                     </div>
                 </div>
-                <button type="button" class="button secondary" style="margin-right: 10px;" id="resetAdhesion">Réinitialiser le formulaire</button>
                 <button type="submit" id="exportAdhesion">Valider le formulaire</button>
             </form>
         </div>
@@ -742,8 +741,6 @@
 		  form.querySelectorAll('.error-message').forEach(error => error.style.display = 'none');
 		  form.querySelectorAll('input').forEach(input => input.setCustomValidity(''));
 		}
-		document.getElementById('resetAdhesion').onclick = purgeAdhesionFields;
-		window.addEventListener('load', purgeAdhesionFields);
 
 		document.getElementById('nom').addEventListener('input', function(e) {
 		  let value = e.target.value.replace(/[^a-zA-ZÀ-ÿ\s\-]/g, '').toUpperCase();
