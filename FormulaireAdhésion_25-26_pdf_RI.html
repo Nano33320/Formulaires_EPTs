@@ -319,42 +319,49 @@
                     <label for="textfield7">Champ libre 3</label>
                     <input type="text" id="textfield7" name="textfield7">
                 </div>
-                <div class="form-group">
-                    <label>Conditions</label>
-                    <div class="checkbox-group">
-                        <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
-                            <span style="display: flex; align-items: center; flex-grow: 1;">
-                                <input type="radio" id="questionnaire" name="sante" value="Questionnaire" required>
-                                <label for="questionnaire" style="margin-left: 8px; color: black;">Questionnaire Santé <span class="required">*</span></label>
-                            </span>
-                            <span style="display: flex; align-items: center; flex-grow: 1; justify-content: center;">
-                                <input type="radio" id="certificat" name="sante" value="Certificat" required>
-                                <label for="certificat" style="margin-left: 8px; color: brown;">Certificat Médical</label>
-                            </span>
-                            <span style="display: flex; align-items: center; flex-grow: 1; justify-content: flex-end;">
-                                <input type="radio" id="prescription" name="sante" value="Prescription" required>
-                                <label for="prescription" style="margin-left: 8px; color: blue;">Prescription Médicale</label>
-                            </span>
-                        </div>
-						<div>
-							<input type="checkbox" id="reglement" name="conditions" value="reglement" required disabled onclick="ouvrirPDF()">
-							<label for="reglement" onclick="ouvrirPDF()">Acceptation du règlement intérieur<span class="required">*</span></label>
+				<div class="form-group">
+					<label>Conditions</label>
+					<div class="checkbox-group">
+						<div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+							<span style="display: flex; align-items: center; flex-grow: 1;">
+								<input type="radio" id="questionnaire" name="sante" value="Questionnaire" required>
+								<label for="questionnaire" style="margin-left: 8px; color: black;">Questionnaire Santé <span class="required">*</span></label>
+							</span>
+							<span style="display: flex; align-items: center; flex-grow: 1; justify-content: center;">
+								<input type="radio" id="certificat" name="sante" value="Certificat" required>
+								<label for="certificat" style="margin-left: 8px; color: brown;">Certificat Médical</label>
+							</span>
+							<span style="display: flex; align-items: center; flex-grow: 1; justify-content: flex-end;">
+								<input type="radio" id="prescription" name="sante" value="Prescription" required>
+								<label for="prescription" style="margin-left: 8px; color: blue;">Prescription Médicale</label>
+							</span>
 						</div>
-                        <div style="display: flex; align-items: center; gap: 16px;">
-                            <span style="display: flex; align-items: center;">
-                                <input type="radio" id="autorise" name="image" value="Autorise" required>
-                                <label for="autorise" style="margin-left: 8px;">Acceptation de l'autorisation de diffusion<span class="required"><span style="color: white; font-style: italic;">xxxxxxxxxxxxxxx</span></span></label>
-                            </span>
-                            <span style="display: flex; align-items: center;">
-                                <input type="radio" id="refuse" name="image" value="Refuse" required>
-                                <label for="refuse" style="margin-left: 8px;">Refus de l'autorisation de diffusion</label>
-                            </span>
-                        </div>
-                        <div>
-                            <input type="checkbox" id="paiement" name="conditions" value="paiement" required>
-                            <label for="paiement">Je m’engage à payer la cotisation correspondant à mon choix ci-dessus  <i>(jusqu'à 3 chèques à l'ordre de l'</i><span style="color: blue;"><b>Entrain pour Tous</b></span><i>)</i><span class="required">*</span></label>
-                        </div>
-                    </div>
+						<div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+							<span style="display: flex; align-items: center; flex-grow: 1;">
+								<input type="checkbox" id="reglement" name="conditions" value="reglement" required disabled>
+								<label for="reglement" onclick="ouvrirHTMLUnique()" style="margin-left: 8px;">Acceptation du règlement intérieur<span class="required">*</span> <i><span style="color: blue; font-style: italic;">(ouvrir et lire pour valider)</span></i></label>
+							</span>
+						</div> <!-- permuter : ouvrirHTMLUnique <=> ouvrirPDFUnique -->
+						
+
+						<div style="display: flex; align-items: center; gap: 16px; width: 100%;">
+							<span style="display: flex; align-items: center; flex-grow: 1;">
+								<input type="radio" id="autorise" name="image" value="Autorise" required>
+								<label for="autorise" style="margin-left: 8px;">Acceptation de l'autorisation de diffusion<span class="required"><span style="color: white; font-style: italic;">xxxxxxxxxxxxxxx</span></span></label>
+							</span>
+							<span style="display: flex; align-items: center; flex-grow: 1;">
+								<input type="radio" id="refuse" name="image" value="Refuse" required>
+								<label for="refuse" style="margin-left: 8px;">Refus de l'autorisation de diffusion</label>
+							</span>
+						</div>
+						<div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+							<span style="display: flex; align-items: center; flex-grow: 1;">
+								<input type="checkbox" id="paiement" name="conditions" value="paiement" required>
+								<label for="paiement" style="margin-left: 8px;">Je m’engage à payer la cotisation correspondant à mon choix ci-dessus <i>(jusqu'à 3 chèques à l'ordre de l'</i><span style="color: blue;"><b>Entrain pour Tous</b></span><i>)</i><span class="required">*</span></label>
+							</span>
+						</div>
+					</div>
+				</div>
                 </div>
                 <button type="submit" id="exportAdhesion">Valider le formulaire</button>
             </form>
@@ -832,18 +839,34 @@
           }
         }
 
-<!-- ==== Ouverture du PDF règlement intérieur ==== -->
-		function ouvrirPDF() {
-			var pdfWindow = window.open('https://filedn.eu/lALq4kJhfGW5FBzQWKQDPPj/R%C3%A8glement%20Int%C3%A9rieur_25-26.pdf', '_blank');
-			window.pdfTab = pdfWindow; // Stocker la référence de l'onglet
+		<!-- ==== Ouverture du règlement intérieur ==== -->
+		function ouvrirHTMLUnique() {
+			const checkbox = document.getElementById('reglement');
 
-			// Vérification après un délai (par exemple 5 secondes)
-			setTimeout(function() {
-				if (pdfWindow) {
-					document.getElementById('reglement').disabled = false; // Active la case
-				}
-			}, 5000); // 5000 ms = 5 secondes
+			// Si déjà ouvert : activer la case si ce n’est pas déjà fait, ne rien rouvrir
+			if (sessionStorage.getItem("htmlDejaOuvert") === "oui") {
+				if (checkbox.disabled) checkbox.disabled = false;
+				return;
+			}
+
+			// Marquer comme déjà ouvert
+			sessionStorage.setItem("htmlDejaOuvert", "oui");
+
+			// Ouvre la page HTML
+			window.open('https://nano33320.github.io/Formulaires_EPTs/R%C3%A8glement%20Int%C3%A9rieur_25-26.html', '_blank');
+
+			// Active la case après 5 secondes
+			setTimeout(() => {
+				checkbox.disabled = false;
+			}, 5000);
 		}
+
+		// Si la page est rechargée, réactiver la case si HTML déjà ouvert
+		window.addEventListener('DOMContentLoaded', () => {
+			if (sessionStorage.getItem("htmlDejaOuvert") === "oui") {
+				document.getElementById('reglement').disabled = false;
+			}
+		});
 
         let adhesionData = null;
         let pdfAdhesionBlobUrl = null;
