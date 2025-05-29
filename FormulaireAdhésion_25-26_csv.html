@@ -114,9 +114,9 @@
                     <li>Remplissez tous les champs marqués d'un astérisque (<span style="color: red;">*</span>) <span style="color: red;font-style: italic;">ces champs sont obligatoires </span></li>
                     <li>Cochez les activités souhaitées et sélectionnez le tarif correspondant</li>
                     <li>Vérifiez les conditions et cochez les cases obligatoires</li>
-                    <li>Cliquez sur "Exporter les données" pour générer votre fichier d'inscription qui sera téléchargé dans votre dossier Téléchargement</li>
+                    <li>Cliquez sur "Valider le formulaire" pour générer votre fichier d'inscription qui sera téléchargé dans votre dossier Téléchargement</li>
                     <li>De la même manière, en suivant, remplissez le Questionnaire Santé et l'intégrer dans votre dossier Téléchargement</li>
-                    <li>Envoyez par courriel les fichiers <span style="color: blue;">"NOM Prénom_Adhésion_25-26.csv"</span> et <span style="color: blue;">"NOM Prénom_Questionnaire Santé Adulte/Jeune_25-26.csv"</span><br>à l'adresse => lentrainpourtous@epts.fr&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: red; font-style: italic;">[elle est déjà implémentée dans le courriel qui sera généré]</span></li>
+                    <li>Envoyez par courriel les fichiers <span style="color: blue;">"NOM Prénom_Adhésion_25-26.pdf"</span> et <span style="color: blue;">"NOM Prénom_Questionnaire Santé Adulte/Mineur_25-26.pdf"</span><br>à l'adresse => lentrainpourtous@epts.fr&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: red; font-style: italic;">[elle est déjà implémentée dans le courriel qui sera généré]</span></li>
                     <li>Pour que votre adhésion puisse être validée, envoyez votre paiement par chèque à l'ordre de l'<span style="color: blue;"><b>Entrain Pour Tous</b></span>
                 </ol>
             </div>
@@ -175,7 +175,6 @@
                     <input type="tel" id="mobile" name="mobile" required maxlength="14" placeholder="06 XX XX XX XX ou 07 XX XX XX XX" autocomplete="off">
                     <div class="error-message" id="mobileError">Format : 06 XX XX XX XX ou 07 XX XX XX XX</div>
                 </div>
-                <!-- Activités Jeunes -->
                 <div class="form-group">
                     <label>Activités Jeunes</label>
                     <div class="checkbox-group">
@@ -184,7 +183,6 @@
                         <div><input type="checkbox" id="skate" name="activitesj" value="Skate"><label for="skate">Skate à partir de 6 ans</label></div>
                     </div>
                 </div>
-                <!-- Activités Adultes -->
                 <div class="form-group">
                     <label>Activités Adultes</label>
                     <div class="checkbox-group">
@@ -202,7 +200,6 @@
                         <div><input type="checkbox" id="jeuxsociete" name="activitesa" value="JeuxSociete"><label for="jeuxsociete">Jeux de Société</label></div>
                     </div>
                 </div>
-                <!-- Tarifs -->
                 <div class="form-group">
                     <label>Tarifs <span style="color: red; font-style: italic; font-size: smaller;">* <span style="color: blue; font-style: italic;">(1 seul choix possible)</span></label>
                     <div class="radio-group">
@@ -228,7 +225,6 @@
                         </div>
                     </div>
                 </div>
-                <!-- Champs libres -->
                 <div class="form-group">
                     <label for="textfield5">Champ libre 1</label>
                     <input type="text" id="textfield5" name="textfield5">
@@ -241,46 +237,48 @@
                     <label for="textfield7">Champ libre 3</label>
                     <input type="text" id="textfield7" name="textfield7">
                 </div>
-                <!-- Conditions -->
-                <div class="form-group">
-                    <label>Conditions</label>
-                    <div class="checkbox-group">
-                        <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
-                            <span style="display: flex; align-items: center; flex-grow: 1;">
-                                <input type="radio" id="questionnaire" name="sante" value="Questionnaire" required>
-                                <label for="questionnaire" style="margin-left: 8px; color: black;">Questionnaire Santé <span class="required">*</span></label>
-                            </span>
-                            <span style="display: flex; align-items: center; flex-grow: 1; justify-content: center;">
-                                <input type="radio" id="certificat" name="sante" value="Certificat" required>
-                                <label for="certificat" style="margin-left: 8px; color: brown;">Certificat Médical</label>
-                            </span>
-                            <span style="display: flex; align-items: center; flex-grow: 1; justify-content: flex-end;">
-                                <input type="radio" id="prescription" name="sante" value="Prescription" required>
-                                <label for="prescription" style="margin-left: 8px; color: blue;">Prescription Médicale</label>
-                            </span>
-                        </div>
-                        <div>
-                            <input type="checkbox" id="reglement" name="conditions" value="reglement" required>
-                            <label for="reglement">Acceptation du règlement intérieur<span class="required">*</span></label>
-                        </div>
-                        <div style="display: flex; align-items: center; gap: 16px;">
-                            <span style="display: flex; align-items: center;">
-                                <input type="radio" id="autorise" name="image" value="Autorise" required>
-                                <label for="autorise" style="margin-left: 8px;">Acceptation de l'autorisation de diffusion<span class="required"><span style="color: white; font-style: italic;">xxxxxxxxxxxxxxx</span></span></label>
-                            </span>
-                            <span style="display: flex; align-items: center;">
-                                <input type="radio" id="refuse" name="image" value="Refuse" required>
-                                <label for="refuse" style="margin-left: 8px;">Refus de l'autorisation de diffusion</label>
-                            </span>
-                        </div>
-                        <div>
-                            <input type="checkbox" id="paiement" name="conditions" value="paiement" required>
-                            <label for="paiement">Cotisation <i>(jusqu'à 3 chèques à l'ordre de l'</i><span style="color: blue;"><b>Entrain pour Tous</b></span><i>)</i><span class="required">*</span></label>
-                        </div>
-                    </div>
-                </div>
-                <button type="button" class="button secondary" style="margin-right: 10px;" id="resetAdhesion">Réinitialiser le formulaire</button>
-                <button type="submit" id="exportAdhesion">Exporter les données</button>
+				<div class="form-group">
+					<label>Conditions</label>
+					<div class="checkbox-group">
+						<div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+							<span style="display: flex; align-items: center; flex-grow: 1;">
+								<input type="radio" id="questionnaire" name="sante" value="Questionnaire" required>
+								<label for="questionnaire" style="margin-left: 8px; color: black;">Questionnaire Santé <span class="required">*</span></label>
+							</span>
+							<span style="display: flex; align-items: center; flex-grow: 1; justify-content: center;">
+								<input type="radio" id="certificat" name="sante" value="Certificat" required>
+								<label for="certificat" style="margin-left: 8px; color: brown;">Certificat Médical</label>
+							</span>
+							<span style="display: flex; align-items: center; flex-grow: 1; justify-content: flex-end;">
+								<input type="radio" id="prescription" name="sante" value="Prescription" required>
+								<label for="prescription" style="margin-left: 8px; color: blue;">Prescription Médicale</label>
+							</span>
+						</div>
+						<div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+							<span style="display: flex; align-items: center; flex-grow: 1;">
+								<input type="checkbox" id="reglement" name="conditions" value="reglement" required disabled>
+								<label for="reglement" onclick="ouvrirHTMLUnique()" style="margin-left: 8px; cursor: pointer;"><strong><i><u>Acceptation du règlement intérieur</u></i></strong></label><span class="required">*</span> <i><span style="color: blue; font-style: italic;">(afin de valider votre acceptation => cliquer pour ouvrir et lire)</span></i></label>
+							</span>
+						</div>
+						<div style="display: flex; align-items: center; gap: 16px; width: 100%;">
+							<span style="display: flex; align-items: center; flex-grow: 1;">
+								<input type="radio" id="autorise" name="image" value="Autorise" required>
+								<label for="autorise" style="margin-left: 8px;">Acceptation de l'autorisation de diffusion<span class="required"><span style="color: white; font-style: italic;">xxxxxxxxxxxxxxx</span></span></label>
+							</span>
+							<span style="display: flex; align-items: center; flex-grow: 1;">
+								<input type="radio" id="refuse" name="image" value="Refuse" required>
+								<label for="refuse" style="margin-left: 8px;">Refus de l'autorisation de diffusion</label>
+							</span>
+						</div>
+						<div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+							<span style="display: flex; align-items: center; flex-grow: 1;">
+								<input type="checkbox" id="paiement" name="conditions" value="paiement" required>
+								<label for="paiement" style="margin-left: 8px;">Je m’engage à payer la cotisation correspondant à mon choix ci-dessus <i>(jusqu'à 3 chèques à l'ordre de l'</i><span style="color: blue;"><b>Entrain pour Tous</b></span><i>)</i><span class="required">*</span></label>
+							</span>
+						</div>
+					</div>
+				</div>
+                <button type="submit" id="exportAdhesion">Valider le formulaire</button>
             </form>
         </div>
 
@@ -310,7 +308,7 @@
                     <li>Remplissez tous les champs marqués d'un astérisque (*)</li>
                     <li>Cochez les activités souhaitées et sélectionnez le tarif correspondant</li>
                     <li>Vérifiez les conditions et cochez les cases obligatoires</li>
-                    <li>Cliquez sur "Exporter les données" pour générer votre fichier d'inscription qui sera téléchargé dans votre dossier Téléchargement</li>
+                    <li>Cliquez sur "Valider le formulaire" pour générer votre fichier d'inscription qui sera téléchargé dans votre dossier Téléchargement</li>
                     <li>De la même manière, en suivant, remplissez le Questionnaire Santé et l'intégrer dans votre dossier Téléchargement</li>
                     <li>Envoyez par courriel les fichiers <span style="color: blue;">"NOM Prénom_Adhésion_25-26.csv"</span> et <span style="color: blue;">"NOM Prénom_Questionnaire Santé Adulte/Jeune_25-26.csv"</span><br>à l'adresse => lentrainpourtous@epts.fr&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: red; font-style: italic;">[elle est déjà implémentée dans le courriel qui sera généré]</span></li>
                     <li>Pour que votre adhésion puisse être validée, envoyez votre paiement par chèque à l'ordre de l'<span style="color: blue;"><b>Entrain Pour Tous</b></span>
@@ -385,16 +383,15 @@
                     <input type="text" id="dateAdulte" name="date" readonly>
                 </div>
                 <div class="button-container">
-                    <button type="button" class="button secondary" id="resetSanteAdulte">Réinitialiser le formulaire</button>
-                    <button type="submit" id="exportSanteAdulte">Exporter les données</button>
+                    <button type="submit" id="exportSanteAdulte">Valider le formulaire</button>
                     <button type="button" id="printSanteAdulte">Imprimer</button>
                 </div>
             </form>
             <div class="email-container">
-                <h2>Envoyer par email</h2>
-                <button id="sendEmailAdulte" disabled>Envoyer par email</button>
+                <h2>Envoyer par courriel</h2>
+                <button id="sendEmailAdulte" disabled>Envoyer par courriel</button>
                 <div class="instructions">
-                    <p><span style="color: red;"><b>Après avoir exporté les données, cliquez sur "Envoyer par email". Votre client de messagerie s'ouvrira avec un email pré-rempli. Veuillez ajouter manuellement le fichier CSV en pièce jointe avant d'envoyer l'email.</b></span></p>
+                    <p><span style="color: red;"><b>Après avoir exporté les données, cliquez sur "Envoyer par courriel". Votre client de messagerie s'ouvrira avec un email pré-rempli. Veuillez ajouter manuellement le fichier CSV en pièce jointe avant d'envoyer l'email.</b></span></p>
                 </div>
             </div>
             <div style="margin-top:30px;text-align:center;">
@@ -412,7 +409,7 @@
                     <li>Remplissez tous les champs marqués d'un astérisque (*)</li>
                     <li>Cochez les activités souhaitées et sélectionnez le tarif correspondant</li>
                     <li>Vérifiez les conditions et cochez les cases obligatoires</li>
-                    <li>Cliquez sur "Exporter les données" pour générer votre fichier d'inscription qui sera téléchargé dans votre dossier Téléchargement</li>
+                    <li>Cliquez sur "Valider le formulaire" pour générer votre fichier d'inscription qui sera téléchargé dans votre dossier Téléchargement</li>
                     <li>De la même manière, en suivant, remplissez le Questionnaire Santé et l'intégrer dans votre dossier Téléchargement</li>
                     <li>Envoyez par courriel les fichiers <span style="color: blue;">"NOM Prénom_Adhésion_25-26.csv"</span> et <span style="color: blue;">"NOM Prénom_Questionnaire Santé Mineur/Jeune_25-26.csv"</span><br>à l'adresse => lentrainpourtous@epts.fr&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: red; font-style: italic;">[elle est déjà implémentée dans le courriel qui sera généré]</span></li>
                     <li>Pour que votre adhésion puisse être validée, envoyez votre paiement par chèque à l'ordre de l'<span style="color: blue;"><b>Entrain Pour Tous</b></span>
@@ -529,15 +526,14 @@
                 </div>
                 <div class="button-container">
                     <button type="button" class="button secondary" id="resetSanteMineur">Réinitialiser le formulaire</button>
-                    <button type="submit" id="exportSanteMineur">Exporter les données</button>
-                    <button type="button" id="printSanteMineur">Imprimer</button>
+                    <button type="submit" id="exportSanteMineur">Valider le formulaire</button>
                 </div>
             </form>
             <div class="email-container">
-                <h2>Envoyer par email</h2>
-                <button id="sendEmailMineur" disabled>Envoyer par email</button>
+                <h2>Envoyer par courriel</h2>
+                <button id="sendEmailMineur" disabled>Envoyer par courriel</button>
                 <div class="instructions">
-                    <p><span style="color: red;"><b>Après avoir exporté les données, cliquez sur "Envoyer par email". Votre client de messagerie s'ouvrira avec un email pré-rempli. Veuillez ajouter manuellement le fichier CSV en pièce jointe avant d'envoyer l'email.</b></span></p>
+                    <p><span style="color: red;"><b>Après avoir exporté les données, cliquez sur "Envoyer par courriel". Votre client de messagerie s'ouvrira avec un email pré-rempli. Veuillez ajouter manuellement le fichier CSV en pièce jointe avant d'envoyer l'email.</b></span></p>
                 </div>
             </div>
             <div style="margin-top:30px;text-align:center;">
@@ -572,8 +568,6 @@
             form.querySelectorAll('.error-message').forEach(error => error.style.display = 'none');
             form.querySelectorAll('input').forEach(input => input.setCustomValidity(''));
         }
-        document.getElementById('resetAdhesion').onclick = purgeAdhesionFields;
-        window.addEventListener('load', purgeAdhesionFields);
 
         // Gestion du champ NOM (adhésion)
         document.getElementById('nom').addEventListener('input', function(e) {
@@ -664,6 +658,45 @@
                 mobileError.textContent = 'Format : 06 XX XX XX XX ou 07 XX XX XX XX';
             }
         });
+
+
+		<!-- ==== Ouverture du règlement intérieur ==== -->
+		function ouvrirHTMLUnique() {
+			const checkbox = document.getElementById('reglement');
+
+			// Si déjà ouvert : activer la case si ce n’est pas déjà fait, ne rien rouvrir
+			if (sessionStorage.getItem("htmlDejaOuvert") === "oui") {
+				if (checkbox.disabled) checkbox.disabled = false;
+				return;
+			}
+
+			// Marquer comme déjà ouvert
+			sessionStorage.setItem("htmlDejaOuvert", "oui");
+
+			// Ouvre la page HTML
+			window.open('https://nano33320.github.io/Formulaires_EPTs/R%C3%A8glement%20Int%C3%A9rieur_25-26.html', '_blank');
+
+			// Active la case après 5 secondes
+			setTimeout(() => {
+				checkbox.disabled = false;
+			}, 3000);
+		}
+
+		// Si la page est rechargée, réactiver la case si HTML déjà ouvert
+		window.addEventListener('DOMContentLoaded', () => {
+			if (sessionStorage.getItem("htmlDejaOuvert") === "oui") {
+				document.getElementById('reglement').disabled = false;
+			}
+		});
+
+
+
+
+
+
+
+
+
 
         // Soumission du formulaire d’adhésion
         document.getElementById('adhesionForm').addEventListener('submit', function(e) {
@@ -783,10 +816,7 @@
             document.getElementById('dateAdulte').value = getCurrentDate();
             form.querySelectorAll('input[type="checkbox"]').forEach(c => c.nextElementSibling?.classList.remove('text-red'));
         }
-        document.getElementById('resetSanteAdulte').onclick = purgeSanteAdulteFields;
-        window.addEventListener('load', () => {
-            document.getElementById('dateAdulte').value = getCurrentDate();
-        });
+
         // Nom/prénom auto-maj/adulte
         document.getElementById('nomAdulte').addEventListener('input', function(e) {
             e.target.value = e.target.value.replace(/[^a-zA-ZÀ-ÿ\s\-]/g, '').toUpperCase();
@@ -804,8 +834,7 @@
                 else label.classList.remove('text-red');
             });
         });
-        // Imprimer
-        document.getElementById('printSanteAdulte').onclick = () => window.print();
+
         // Export CSV adulte
         document.getElementById('santeAdulteForm').addEventListener('submit', function(e) {
             e.preventDefault();
@@ -903,8 +932,7 @@
 				else label.classList.remove('text-red');
 			});
 		});
-		// Imprimer
-		document.getElementById('printSanteMineur').onclick = () => window.print();
+
 		// Export CSV mineur
 		document.getElementById('santeMineurForm').addEventListener('submit', function(e) {
 			e.preventDefault();

@@ -179,8 +179,8 @@
             .form-container { padding-top: 80px; }
         }
     </style>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/signature_pad/4.1.7/signature_pad.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/signature_pad/4.1.7/signature_pad.umd.min.js"></script>  -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 </head>
 <body>
     <div class="form-container">
@@ -339,11 +339,9 @@
 						<div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
 							<span style="display: flex; align-items: center; flex-grow: 1;">
 								<input type="checkbox" id="reglement" name="conditions" value="reglement" required disabled>
-								<label for="reglement" onclick="ouvrirHTMLUnique()" style="margin-left: 8px;">Acceptation du règlement intérieur<span class="required">*</span> <i><span style="color: blue; font-style: italic;">(ouvrir et lire pour valider)</span></i></label>
+								<label for="reglement" onclick="ouvrirHTMLUnique()" style="margin-left: 8px; cursor: pointer;"><strong><i><u>Acceptation du règlement intérieur</u></i></strong></label><span class="required">*</span> <i><span style="color: blue; font-style: italic;">(afin de valider votre acceptation => cliquer pour ouvrir et lire)</span></i></label>
 							</span>
 						</div> <!-- permuter : ouvrirHTMLUnique <=> ouvrirPDFUnique -->
-						
-
 						<div style="display: flex; align-items: center; gap: 16px; width: 100%;">
 							<span style="display: flex; align-items: center; flex-grow: 1;">
 								<input type="radio" id="autorise" name="image" value="Autorise" required>
@@ -362,10 +360,11 @@
 						</div>
 					</div>
 				</div>
-                </div>
-                <button type="submit" id="exportAdhesion">Valider le formulaire</button>
+				<button type="submit" id="exportAdhesion">Valider le formulaire</button>
+
             </form>
         </div>
+        <!-- =================== CHOIX SANTE ===================== -->		
         <div id="step-choix-sante" class="step">
 				<h1>Questionnaire Santé</h1>
 				<div style="margin-bottom:20px;">
@@ -455,7 +454,7 @@
                     <label style="color: red;">Si vous avez répondu "OUI" à une ou plusieurs de ces questions :</label>
                     <ol style="font-size: 0.9em; margin: 0; padding-left: 20px;">
                         <li>Vous devez consulter votre médecin pour obtenir un certificat médical</li>
-                        <li>Vous devez fournir ce certificat médical pour valider votre inscription</li>
+                        <li>Vous devrez fournir ce certificat médical pour valider votre inscription</li>
                     </ol>
                 </div>
 				<div class="form-group">
@@ -594,7 +593,7 @@
                     <label style="color: red;">Si vous avez répondu "OUI" à une ou plusieurs de ces questions :</label>
                     <ol style="font-size: 0.9em; margin: 0; padding-left: 20px;">
                         <li>Vous devez consulter votre médecin pour obtenir un certificat médical</li>
-                        <li>Vous devez fournir ce certificat médical pour valider votre inscription</li>
+                        <li>Vous devrez fournir ce certificat médical pour valider votre inscription</li>
                     </ol>
                 </div>
 				<div class="form-group">
@@ -613,7 +612,9 @@
             <div style="margin-top:30px;text-align:center;">
                 <button type="button" class="button secondary" id="resetSanteMineur">Réinitialiser le formulaire</button> <button onclick="showStep('step-choix-sante')">Retour au choix Santé</button>
             </div>
-        </div> </div> <script>
+        </div> 
+		</div> 
+<script>
         // === Mapping ===
         const pdfMapAdhesion = {
           annee: "Année",
@@ -823,22 +824,6 @@
             });
         }
 
-        async function fillPDFField(form, champPDF, valeur) {
-          try {
-            const field = form.getField(champPDF);
-            if (field instanceof PDFLib.PDFTextField) {
-              field.setText(valeur);
-            } else if (field instanceof PDFLib.PDFCheckBox) {
-              if (valeur === "Yes" || valeur === true || valeur === "Oui") field.check();
-              else field.uncheck();
-            } else if (field instanceof PDFLib.PDFRadioGroup) {
-              field.select(valeur);
-            }
-          } catch (err) {
-            console.warn(`Champ PDF "${champPDF}" non trouvé ou erreur lors du remplissage:`, err);
-          }
-        }
-
 		<!-- ==== Ouverture du règlement intérieur ==== -->
 		function ouvrirHTMLUnique() {
 			const checkbox = document.getElementById('reglement');
@@ -858,7 +843,7 @@
 			// Active la case après 5 secondes
 			setTimeout(() => {
 				checkbox.disabled = false;
-			}, 5000);
+			}, 3000);
 		}
 
 		// Si la page est rechargée, réactiver la case si HTML déjà ouvert
@@ -867,6 +852,22 @@
 				document.getElementById('reglement').disabled = false;
 			}
 		});
+
+        async function fillPDFField(form, champPDF, valeur) {
+          try {
+            const field = form.getField(champPDF);
+            if (field instanceof PDFLib.PDFTextField) {
+              field.setText(valeur);
+            } else if (field instanceof PDFLib.PDFCheckBox) {
+              if (valeur === "Yes" || valeur === true || valeur === "Oui") field.check();
+              else field.uncheck();
+            } else if (field instanceof PDFLib.PDFRadioGroup) {
+              field.select(valeur);
+            }
+          } catch (err) {
+            console.warn(`Champ PDF "${champPDF}" non trouvé ou erreur lors du remplissage:`, err);
+          }
+        }
 
         let adhesionData = null;
         let pdfAdhesionBlobUrl = null;
