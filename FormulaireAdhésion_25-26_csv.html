@@ -98,7 +98,47 @@
             .form-container img { position: static; width: 100%; max-width: 180px; right: auto; top: 10px; }
             .form-container { padding-top: 80px; }
         }
+		
+		.button-container-signature {
+			display: flex;
+			justify-content: space-between;
+			width: 100%;
+			margin-top: 20px;
+		}
+		.button-container-signature button {
+			padding: 10px 20px;
+			font-size: 16px;
+		}
+        #signature-pad { border: 1px solid #000; touch-action: none; }
+        .form-group { margin-bottom: 1em; }
+        .code-box { font-weight: bold; font-size: 1.2em; background: #e8e8e8; padding: 0.2em 0.5em; display: inline-block; border-radius: 4px; }
+        .form-group { margin-bottom: 15px; }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"], input[type="email"], input[type="tel"], input[type="number"],
+        input[type="password"], input[type="date"], input[type="file"], select, textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
+            margin-bottom: 10px;
+            background-color: #fafafa;
+            transition: border 0.2s, box-shadow 0.2s;
+        }
+        input:focus, select:focus, textarea:focus {
+            border: 1.5px solid #4CAF50;
+            background: #fff;
+            outline: none;
+            box-shadow: 0 1px 6px #4caf5044;
+        }		
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/signature_pad/4.1.7/signature_pad.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
     <div class="form-container">
@@ -257,7 +297,7 @@
 						<div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
 							<span style="display: flex; align-items: center; flex-grow: 1;">
 								<input type="checkbox" id="reglement" name="conditions" value="reglement" required disabled>
-								<label for="reglement" onclick="ouvrirHTMLUnique()" style="margin-left: 8px; cursor: pointer;"><strong><i><u>Acceptation du règlement intérieur</u></i></strong></label><span class="required">*</span> <i><span style="color: blue; font-style: italic;">(afin de valider votre acceptation => cliquer pour ouvrir et lire)</span></i></label>
+								<label for="reglement" onclick="ouvrirHTMLUnique('reglement')" style="margin-left: 8px; cursor: pointer;"><strong><i><u>Acceptation du règlement intérieur</u></i></strong></label><span class="required">*</span> <i><span style="color: blue; font-style: italic;">(afin de valider votre acceptation => cliquer pour ouvrir et lire le règlement intérieur)</span></i></label>
 							</span>
 						</div>
 						<div style="display: flex; align-items: center; gap: 16px; width: 100%;">
@@ -281,7 +321,6 @@
                 <button type="submit" id="exportAdhesion">Valider le formulaire</button>
             </form>
         </div>
-
         <!-- =================== CHOIX SANTE ===================== -->
         <div id="step-choix-sante" class="step">
             <h1>Questionnaire Santé</h1>
@@ -294,7 +333,7 @@
                 <button id="btn-sante-mineur">Questionnaire Santé Mineur</button>
             </div>
             <div style="margin-top:30px;text-align:center;">
-                <button onclick="showStep('step-adhesion')">Retour à l’accueil</button>
+                <button onclick="showStep('step-adhesion')">Modifier le formulaire</button>
             </div>
         </div>
 
@@ -382,39 +421,36 @@
                     <label for="dateAdulte">Date</label>
                     <input type="text" id="dateAdulte" name="date" readonly>
                 </div>
-                <div class="button-container">
-                    <button type="submit" id="exportSanteAdulte">Valider le formulaire</button>
-                    <button type="button" id="printSanteAdulte">Imprimer</button>
-                </div>
+				<div class="button-container">									
+					<button type="submit" id="signatureAdulte" onclick="ouvrirNouvelOnglet()" style="cursor: pointer;"><strong><i>Valider et accéder à la signature</i></strong></button>
+					<button onclick="showStep('step-adhesion')">Modifier le formulaire</button>
+				</div>
             </form>
-            <div class="email-container">
-                <h2>Envoyer par courriel</h2>
-                <button id="sendEmailAdulte" disabled>Envoyer par courriel</button>
+                <h2>Envoyer par Courriel</h2>
+                <div style="text-align: center;">
+                    <button id="sendEmailAdulte" disabled>Envoyer par courriel</button> </div>
                 <div class="instructions">
-                    <p><span style="color: red;"><b>Après avoir exporté les données, cliquez sur "Envoyer par courriel". Votre client de messagerie s'ouvrira avec un email pré-rempli. Veuillez ajouter manuellement le fichier CSV en pièce jointe avant d'envoyer l'email.</b></span></p>
-                </div>
-            </div>
-            <div style="margin-top:30px;text-align:center;">
-                <button onclick="showStep('step-adhesion')">Retour à l’accueil</button>
-                <button onclick="showStep('step-choix-sante')">Retour au choix Santé</button>
-            </div>
-        </div>
+                    <p><span style="color: red;"><b>Après avoir validé le formulaire, cliquez sur "Envoyer par courriel". Votre client de messagerie s'ouvrira avec un courriel pré-rempli. Veuillez ajouter manuellement les DEUX fichiers PDF en pièce jointe avant d'envoyer le courriel.</b></span></p>
+                </div> 
+		</div>
+
+        <!-- ================== SIGNATURE ADULTE ==================== -->
+
 		
-        <!-- =================== SANTE MINEUR ===================== -->
+        <!-- ==================== SANTE MINEUR ====================== -->
         <div id="step-sante-mineur" class="step">
             <h1>Questionnaire Santé Mineur 2025-2026</h1>
             <div style="background-color: #f8f9fa; padding: 15px; margin-bottom: 20px; border-radius: 5px; border-left: 4px solid #4CAF50;">
                 <p style="font-size: 0.9em; margin: 0 0 10px 0;"><strong>Comment remplir ce formulaire :</strong></p>
-                <ol style="font-size: 0.9em; margin: 0; padding-left: 20px;">
-                    <li>Remplissez tous les champs marqués d'un astérisque (*)</li>
-                    <li>Cochez les activités souhaitées et sélectionnez le tarif correspondant</li>
-                    <li>Vérifiez les conditions et cochez les cases obligatoires</li>
-                    <li>Cliquez sur "Valider le formulaire" pour générer votre fichier d'inscription qui sera téléchargé dans votre dossier Téléchargement</li>
-                    <li>De la même manière, en suivant, remplissez le Questionnaire Santé et l'intégrer dans votre dossier Téléchargement</li>
-                    <li>Envoyez par courriel les fichiers <span style="color: blue;">"NOM Prénom_Adhésion_25-26.csv"</span> et <span style="color: blue;">"NOM Prénom_Questionnaire Santé Mineur/Jeune_25-26.csv"</span><br>à l'adresse => lentrainpourtous@epts.fr&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: red; font-style: italic;">[elle est déjà implémentée dans le courriel qui sera généré]</span></li>
-                    <li>Pour que votre adhésion puisse être validée, envoyez votre paiement par chèque à l'ordre de l'<span style="color: blue;"><b>Entrain Pour Tous</b></span>
-                    <li> Si vous devez consulter votre médecin pour un certificat médical, cliquez sur le bouton "<span style="color: green;"><b>Imprimer</b></span>" en bas de page
-                </ol>
+				<ol style="font-size: 0.9em; margin: 0; padding-left: 20px;">
+					<li>Remplissez tous les champs marqués d'un astérisque (*)</li>
+					<li>Cochez les activités souhaitées et sélectionnez le tarif correspondant</li>
+					<li>Vérifiez les conditions et cochez les cases obligatoires</li>
+					<li>Cliquez sur "Valider le formulaire" pour générer votre fichier d'inscription qui sera téléchargé dans votre dossier Téléchargement</li>
+					<li>De la même manière, en suivant, remplissez le Questionnaire Santé et l'intégrer dans votre dossier Téléchargement</li>
+					<li>Envoyez par courriel les fichiers<span style="color: blue;">"NOM Prénom_Adhésion_25-26.csv"</span>et <span style="color: blue;">"NOM Prénom_Questionnaire Santé Mineur/Jeune_25-26.csv"</span><br> à l'adresse => lentrainpourtous@epts.fr&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: red; font-style: italic;">[elle est déjà implémentée dans le courriel qui sera généré]</span></li>
+					<li>Pour que votre adhésion puisse être validée, envoyez votre paiement par chèque à l'ordre de l'<span style="color: blue;"><b>Entrain Pour Tous</b></span></li>
+				</ol>
             </div>
             <form id="santeMineurForm">
                 <div class="form-group hidden-field">
@@ -436,28 +472,28 @@
                 </div>
                 <div class="form-group">
                     <label for="nomMineur">NOM<span class="required">*</span></label>
-                    <input type="text" id="nomMineur" name="nomMineur" autocomplete="off" required>
+                    <input type="text" id="nomMineur" name="nom" autocomplete="off" required>
                     <div class="help-text">Les majuscules s'implémentent automatiquement y compris avec les accents</div>
                 </div>
                 <div class="form-group">
-                    <label for="prenomMineur">Prénom <span class="required">*</span></label>
-                    <input type="text" id="prenomMineur" name="prenomMineur" autocomplete="off" required>
+					<label for="prenomMineur">Prénom <span class="required">*</span></label>
+                    <input type="text" id="prenomMineur" name="prenom" autocomplete="off" required>
                 </div>
                 <div class="age-container">
                     <label for="ageMineur">Âge<span class="required">*</span></label>
-                    <input type="number" id="ageMineur" name="ageMineur" required min="1" max="17">
+                    <input type="number" id="ageMineur" name="age" required min="1" max="17">
                 </div>
                 <div class="form-group"></div>
                 <div class="form-group">
                     <label style="text-align: center; font-size: larger; font-style: italic;background-color: lightgray;padding: 5px 0;">Représentant Légal<span class="required">*</span></label>
                 </div>
                 <div class="form-group">
-                    <label for="nomreplegMineur"><span style="font-style: italic;">NOM<span class="required">*</span></label>
+					<label for="nomreplegMineur"><span style="font-style: italic;">NOM<span class="required">*</span></span></label>		
                     <input type="text" id="nomreplegMineur" autocomplete="off" required>
                     <div class="help-text">Les majuscules s'implémentent automatiquement y compris avec les accents</div>
                 </div>
                 <div class="form-group">
-                    <label for="prenomreplegMineur"><span style="font-style: italic;">Prénom <span class="required">*</span></label>
+                    <label for="prenomreplegMineur"><span style="font-style: italic;">Prénom <span class="required">*</span></span></label>
                     <input type="text" id="prenomreplegMineur" autocomplete="off" required>
                 </div>
                 <div class="form-group">
@@ -466,13 +502,13 @@
                 <div class="form-group">
                     <label>DEPUIS L'ANNNÉE DERNIÈRE :</label>
                     <div class="checkbox-group">
-                        <div><input type="checkbox" id="q1Mineur"><label for="q1Mineur">1°) Es-tu allé.e à l'hôpital pendant toute une journée ou plusieurs jours</label></div>
-                        <div><input type="checkbox" id="q2Mineur"><label for="q2Mineur">2°) As-tu été opéré·e ?</label></div>
+                        <div><input type="checkbox" id="q1Mineur"><label for="q1Mineur">1°) Es-tu allé(e) à l'hôpital pendant toute une journée ou plusieurs jours</label></div>
+                        <div><input type="checkbox" id="q2Mineur"><label for="q2Mineur">2°) As-tu été opéré(e) ?</label></div>
                         <div><input type="checkbox" id="q3Mineur"><label for="q3Mineur">3°) As-tu beaucoup plus grandi que les autres années ?</label></div>
                         <div><input type="checkbox" id="q4Mineur"><label for="q4Mineur">4°) As-tu beaucoup maigri ou grossi ?</label></div>
                         <div><input type="checkbox" id="q5Mineur"><label for="q5Mineur">5°) As-tu eu la tête qui tourne pendant un effort ?</label></div>
-                        <div><input type="checkbox" id="q6Mineur"><label for="q6Mineur">6°) As-tu perdu connaissance ou es-tu tombé.e sans te souvenir de ce qui s'était passé ?</label></div>
-                        <div><input type="checkbox" id="q7Mineur"><label for="q7Mineur">7°) As-tu reçu un ou plusieurs chocs violents qui t'ont obligé.e à interrompre un moment une séance de sport ?</label></div>
+                        <div><input type="checkbox" id="q6Mineur"><label for="q6Mineur">6°) As-tu perdu connaissance ou es-tu tombé(e) sans te souvenir de ce qui s'était passé ?</label></div>
+                        <div><input type="checkbox" id="q7Mineur"><label for="q7Mineur">7°) As-tu reçu un ou plusieurs chocs violents qui t'ont obligé(e) à interrompre un moment une séance de sport ?</label></div>
                         <div><input type="checkbox" id="q8Mineur"><label for="q8Mineur">8°) As-tu eu beaucoup de mal à respirer pendant un effort par rapport à l’habitude ?</label></div>
                         <div><input type="checkbox" id="q9Mineur"><label for="q9Mineur">9°) As-tu eu beaucoup de mal à respirer après un effort ?</label></div>
                         <div><input type="checkbox" id="q10Mineur"><label for="q10Mineur">10°) As-tu eu mal dans la poitrine ou des palpitations (le cœur qui bat très vite) ?</label></div>
@@ -482,10 +518,10 @@
                 <div class="form-group">
                     <label>DEPUIS UN CERTAIN TEMPS (Plus de 2 semaines) :</label>
                     <div class="checkbox-group">
-                        <div><input type="checkbox" id="q12Mineur"><label for="q12Mineur">12°) Te sens-tu très fatigué·e ?</label></div>
+                        <div><input type="checkbox" id="q12Mineur"><label for="q12Mineur">12°) Te sens-tu très fatigué(e) ?</label></div>
                         <div><input type="checkbox" id="q13Mineur"><label for="q13Mineur">13°) As-tu du mal à t’endormir ou te réveilles-tu souvent dans la nuit ?</label></div>
                         <div><input type="checkbox" id="q14Mineur"><label for="q14Mineur">14°) Sens-tu que tu as moins faim ? Que tu manges moins ?</label></div>
-                        <div><input type="checkbox" id="q15Mineur"><label for="q15Mineur">15°) Te sens-tu triste ou inquiet.e ?</label></div>
+                        <div><input type="checkbox" id="q15Mineur"><label for="q15Mineur">15°) Te sens-tu triste ou inquiet(e) ?</label></div>
                         <div><input type="checkbox" id="q16Mineur"><label for="q16Mineur">16°) Pleures-tu plus souvent ?</label></div>
                         <div><input type="checkbox" id="q17Mineur"><label for="q17Mineur">17°) Ressens-tu une douleur ou un manque de force à cause d’une blessure que tu t’es faite cette année ?</label></div>
                     </div>
@@ -522,28 +558,23 @@
                 </div>
                 <div class="form-group">
                     <label for="dateMineur">Date</label>
-                    <input type="text" id="dateMineur" name="dateMineur" readonly>
+                    <input type="text" id="dateMineur" name="date" readonly>
                 </div>
-                <div class="button-container">
-                    <button type="button" class="button secondary" id="resetSanteMineur">Réinitialiser le formulaire</button>
-                    <button type="submit" id="exportSanteMineur">Valider le formulaire</button>
-                </div>
+				<div class="button-container">				
+					<!-- <button type="submit" id="exportSanteMineur" onclick="showStep('step-signature-mineur')">Valider et signer le formulaire</button> -->
+					<button type="submit" id="signatureAdulte" onclick="ouvrirHTMLUnique('https://nano33320.github.io/Formulaires_EPTs/SignatureAdulte.html', 'signatureAdulte')" style="cursor: pointer;"><strong><i>Valider et accéder à la signature</i></strong></button>
+
+
+					<button onclick="showStep('step-adhesion')">Modifier le formulaire</button>
+				</div>
             </form>
-            <div class="email-container">
-                <h2>Envoyer par courriel</h2>
-                <button id="sendEmailMineur" disabled>Envoyer par courriel</button>
-                <div class="instructions">
-                    <p><span style="color: red;"><b>Après avoir exporté les données, cliquez sur "Envoyer par courriel". Votre client de messagerie s'ouvrira avec un email pré-rempli. Veuillez ajouter manuellement le fichier CSV en pièce jointe avant d'envoyer l'email.</b></span></p>
-                </div>
-            </div>
-            <div style="margin-top:30px;text-align:center;">
-                <button onclick="showStep('step-adhesion')">Retour à l’accueil</button>
-                <button onclick="showStep('step-choix-sante')">Retour au choix Santé</button>
-            </div>
         </div>
+
+        <!-- ================== SIGNATURE MINEUR ==================== -->
+ 
 		
-    <!-- =================== SCRIPTS ===================== -->
-    <script>
+<!-- =================== SCRIPTS ===================== -->
+<script>
         // Affichage des étapes
         function showStep(stepId) {
             document.querySelectorAll('.step').forEach(div => div.classList.remove('active'));
@@ -659,7 +690,6 @@
             }
         });
 
-
 		<!-- ==== Ouverture du règlement intérieur ==== -->
 		function ouvrirHTMLUnique() {
 			const checkbox = document.getElementById('reglement');
@@ -688,13 +718,6 @@
 				document.getElementById('reglement').disabled = false;
 			}
 		});
-
-
-
-
-
-
-
 
 
 
@@ -769,16 +792,18 @@
             document.getElementById('dateAdulte').value = getCurrentDate();
             document.getElementById('dateMineur').value = getCurrentDate();
 
+        // =================== CHOIX FORMULAIRE SANTE =====================
             // Calcule l’âge à partir de la date de naissance
 			function getAgeFromBirthdate(birthdate) {
 				// birthdate format: JJ/MM/AAAA
 				if (!birthdate) return NaN;
 				const [day, month, year] = birthdate.split('/');
 				if (!day || !month || !year) return NaN;
-				const birth = new Date(`${year}-${month}-${day}`);
+				const birth = new Date(Number(year), Number(month) - 1, Number(day));
+				if (isNaN(birth.getTime())) return NaN;
 				const today = new Date();
 				let age = today.getFullYear() - birth.getFullYear();
-				const m = today.getMonth() - (birth.getMonth());
+				const m = today.getMonth() - birth.getMonth();
 				if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) age--;
 				return age;
 			}
@@ -797,10 +822,9 @@
 				}
 			} else {
 				showStep('step-choix-sante');
-			}
+			}			
         });
 
-        // =================== CHOIX SANTE =====================
         document.getElementById('btn-sante-adulte').onclick = function() {
             showStep('step-sante-adulte');
         };
@@ -867,32 +891,135 @@
             document.body.removeChild(link);
             document.getElementById('sendEmailAdulte').disabled = false;
         });
-        document.getElementById('sendEmailAdulte').addEventListener('click', function() {
-			const nom = document.getElementById('nom').value.trim();
-			const prenom = document.getElementById('prenom').value.trim();
-			const adhesionFileName = `${nom} ${prenom}_Adhésion_25-26.csv`;
-			const adulteFileName = `${nom} ${prenom}_Questionnaire Santé Adulte_25-26.csv`;
-			const recipient = 'lentrainpourtous@epts.fr';
-			const subject = 'Inscription : fichiers CSV en pièce jointe';
-			const body = `Bonjour,
 
-			Merci de joindre en pièce jointe les DEUX fichiers "*.csv" que vous venez de créer :
-			- Votre fiche d’adhésion
-			- Votre questionnaire santé
+// =================== SIGNATURE ADULTE =====================
+		// Mise en mémoire des éléments de l'adhésion
+		document.addEventListener("DOMContentLoaded", function() {
+			document.getElementById("nom").addEventListener("input", function() {
+				sessionStorage.setItem("nom", this.value.toUpperCase());
+			});
+			document.getElementById("prenom").addEventListener("input", function() {
+				let formattedPrenom = this.value.split(/[\s-]/)
+					.map(part => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
+					.join('-');
+				sessionStorage.setItem("prenom", formattedPrenom);
+			});
+			document.getElementById("mobile").addEventListener("input", function() {
+				sessionStorage.setItem("mobile", this.value);
+			});
+		});
+		// Ouverture du formulaire
+		function ouvrirNouvelOnglet(url) {
+			window.open('https://nano33320.github.io/Formulaires_EPTs/SignatureAdulte.html', '_blank');
+		}
 
-			Noms des fichiers :
-			- ${adhesionFileName}
-			- ${adulteFileName}
+// =================== ENVOI COURRIEL ADULTE =====================	
+        const sendEmailAdulteBtn = document.getElementById('sendEmailAdulte');
+        if (sendEmailAdulteBtn) {
+            sendEmailAdulteBtn.insertAdjacentHTML('afterend', `
+            <div id="alt-mail-panel-adulte" style="display:none; border:1px solid #ccc; padding:1em; margin-top:1em; background:#fafaff;">
+              <p>Impossible d’ouvrir un client de messagerie local.<br>
+                Utilisez un de ces webmails :</p>
+              <ul>
+                <li><a id="gmail-link-adulte" target="_blank" rel="noopener">Gmail</a></li>
+                <li><a id="outlook-link-adulte" target="_blank" rel="noopener">Outlook Web</a></li>
+                <li><a id="yahoo-link-adulte" target="_blank" rel="noopener">Yahoo Mail</a></li>
+                <li><a id="orange-link-adulte" target="_blank" rel="noopener">Orange</a></li>
+                <li><a id="sfr-link-adulte" target="_blank" rel="noopener">SFR</a></li>
+                <li><a id="bouygues-link-adulte" target="_blank" rel="noopener">Bouygues</a></li>
+                <li><a id="free-link-adulte" target="_blank" rel="noopener">Free</a></li>
+              </ul>
+              <p>Ou copiez le texte du mail :
+                <button id="copy-btn-adulte">Copier</button>
+              </p>
+              <textarea id="mail-body-adulte" style="width:100%;height:120px;" readonly></textarea>
+            </div>
+            `);
 
-			Pour cela, cliquez sur l’icône 📎 (trombone) dans votre outil/interface de messagerie, puis sélectionnez les deux fichiers dans votre dossier "Téléchargement".
+            sendEmailAdulteBtn.addEventListener('click', function() {
+              const nom = document.getElementById('nom')?.value.trim() || 'NOM_INCONNU'; // Fallback si l'ID nom n'est pas trouvé ou vide
+              const prenom = document.getElementById('prenom')?.value.trim() || 'PRENOM_INCONNU'; // Fallback
+              const adhesionFileName = `${nom} ${prenom}_Adhésion_25-26.pdf`;
+              const adulteFileName = `${nom} ${prenom}_Questionnaire Santé Adulte_25-26.pdf`;
+              const recipient = 'lentrainpourtous@epts.fr';
+              const subject = 'Inscription : fichiers PDF en pièce jointe';
+              const body = `Bonjour,
 
-			Sans ces deux pièces jointes, votre inscription ne pourra pas être traitée.
+Merci de joindre en pièce jointe les DEUX fichiers "*.pdf" que vous venez de créer :
+- Votre fiche d’adhésion
+- Votre questionnaire santé
 
-			Cordialement,
-			L’équipe de l’Entrain Pour Tous`;
-            const mailtoLink = `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-            window.location.href = mailtoLink;
+Noms des fichiers :
+- ${adhesionFileName}
+- ${adulteFileName}
+
+Pour cela, cliquez sur l’icône 📎 (trombone) dans votre outil/interface de messagerie, puis sélectionnez les deux fichiers dans votre dossier "Téléchargement".
+
+Sans ces deux pièces jointes, votre inscription ne pourra pas être traitée.
+
+Cordialement,
+L’équipe de l’Entrain Pour Tous`;
+              const mailtoLink = `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+              function showAltMailAdulte() {
+                const gmailLink = document.getElementById('gmail-link-adulte');
+                if(gmailLink) gmailLink.href = `https://mail.google.com/mail/?view=cm&to=${encodeURIComponent(recipient)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+                const outlookLink = document.getElementById('outlook-link-adulte');
+                if(outlookLink) outlookLink.href = `https://outlook.live.com/mail/0/deeplink/compose?to=${encodeURIComponent(recipient)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+                const yahooLink = document.getElementById('yahoo-link-adulte');
+                if(yahooLink) yahooLink.href = `https://compose.mail.yahoo.com/?to=${encodeURIComponent(recipient)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+                const orangeLink = document.getElementById('orange-link-adulte');
+                if(orangeLink) orangeLink.href = `https://mail.orange.fr/appsuite/#!!&view=message&to=${encodeURIComponent(recipient)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+                const sfrLink = document.getElementById('sfr-link-adulte');
+                if(sfrLink) sfrLink.href = `https://webmail.sfr.fr/?to=${encodeURIComponent(recipient)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+                const bouyguesLink = document.getElementById('bouygues-link-adulte');
+                if(bouyguesLink) bouyguesLink.href = `https://www.bouyguestelecom.fr/mon-compte/ma-messagerie?to=${encodeURIComponent(recipient)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+                const freeLink = document.getElementById('free-link-adulte');
+                if(freeLink) freeLink.href = `https://zimbra.free.fr/?to=${encodeURIComponent(recipient)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+                const mailBodyAdulte = document.getElementById('mail-body-adulte');
+                if(mailBodyAdulte) mailBodyAdulte.value = body;
+                const altMailPanelAdulte = document.getElementById('alt-mail-panel-adulte');
+                if(altMailPanelAdulte) altMailPanelAdulte.style.display = 'block';
+              }
+
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            document.body.appendChild(iframe); // Append before setting src for some browser policies
+            iframe.src = mailtoLink;
+
+            let fallbackDisplayed = false;
+            const blurHandler = () => {
+                fallbackDisplayed = true;
+                window.removeEventListener("blur", blurHandler); // Clean up listener
+            };
+            window.addEventListener("blur", blurHandler);
+
+            setTimeout(() => {
+                if (iframe.parentNode) { // Check if iframe is still in DOM
+                    document.body.removeChild(iframe);
+                }
+                window.removeEventListener("blur", blurHandler); // Clean up listener if timeout occurs first
+                setTimeout(() => { // Nested timeout to allow blur event to fire
+                    if (!fallbackDisplayed) {
+                        showAltMailAdulte();
+                    }
+                }, 300);
+            }, 1000);
         });
+        }
+
+        const copyBtnAdulte = document.getElementById('copy-btn-adulte');
+        if (copyBtnAdulte) {
+            copyBtnAdulte.addEventListener('click', function(){
+                const mailBodyAdulte = document.getElementById('mail-body-adulte');
+                if (mailBodyAdulte) {
+                    navigator.clipboard.writeText(mailBodyAdulte.value)
+                        .then(() => alert('Texte copié dans le presse-papiers !'))
+                        .catch(err => console.error('Erreur de copie: ', err));
+                }
+            });
+        }
 
         // =================== SANTE MINEUR EVENTS =====================
 		function purgeSanteMineurFields() {
@@ -932,7 +1059,7 @@
 				else label.classList.remove('text-red');
 			});
 		});
-
+		
 		// Export CSV mineur
 		document.getElementById('santeMineurForm').addEventListener('submit', function(e) {
 			e.preventDefault();
@@ -982,6 +1109,37 @@
 			document.body.removeChild(link);
 			document.getElementById('sendEmailMineur').disabled = false;
 		});
+		
+// =================== SIGNATURE MINEUR =====================
+			// Pré-remplir les questionnaires santé avec nom/prénom/civilité
+			// Mise en mémoire des éléments de l'adhésion
+			document.addEventListener("DOMContentLoaded", function() {
+				document.getElementById("nom").addEventListener("input", function() {
+					sessionStorage.setItem("nom", this.value.toUpperCase());
+				});
+				document.getElementById("prenom").addEventListener("input", function() {
+					let formattedPrenom = this.value.split(/[\s-]/)
+						.map(part => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
+						.join('-');
+					sessionStorage.setItem("prenom", formattedPrenom);
+				});
+				document.getElementById("mobile").addEventListener("input", function() {
+					sessionStorage.setItem("mobile", this.value);
+				});
+			});
+
+			// Mise en mémoire des éléments du questionnaire santé mineur
+			document.addEventListener("DOMContentLoaded", function() {
+				document.getElementById("nomreplegMineur").addEventListener("input", function() {
+					sessionStorage.setItem("nomreplegMineur", this.value);
+				});
+				document.getElementById("prenomreplegMineur").addEventListener("input", function() {
+					sessionStorage.setItem("prenomreplegMineur", this.value);
+				});
+			});
+	
+		
+        // =================== COURRIEL MINEUR =====================			
 			document.getElementById('sendEmailMineur').addEventListener('click', function() {
 			const nom = document.getElementById('nom').value.trim();
 			const prenom = document.getElementById('prenom').value.trim();
@@ -1008,6 +1166,8 @@
 			const mailtoLink = `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 			window.location.href = mailtoLink;
 		});
+		
+		
     </script>
 </body>
 </html>

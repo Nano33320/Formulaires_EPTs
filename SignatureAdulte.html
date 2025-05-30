@@ -151,6 +151,18 @@
 		" alt="Logo">
         <!-- =================== SIGNATURE ===================== -->		
 		<h1>Signature de l'Adhésion et du Questionnaire Santé Adulte</h1>
+       <div style="background-color: #f8f9fa; padding: 15px; margin-bottom: 20px; border-radius: 5px; border-left: 4px solid #4CAF50;">
+            <p style="font-size: 0.9em; margin: 0 0 10px 0;"><strong>Comment signer ce document :</strong></p>
+            <ol style="font-size: 0.9em; margin: 0; padding-left: 20px;">
+                <li>Les champs NOM, Prénom sont automatiquement remplis</li>
+                <li>Les champs NOM, Prénom du représentant légal sont automatiquement remplis</li>
+                <li>Le champ Téléphone est automatiquement rempli ainsi que le champ Date</li>
+				<li>Avec la souris ou avec le doigt si vous avez un écran tactile, générez une signature dans le PAD / Rectangle</li>
+                <li>Cliquez sur "Générer le PDF signé et revenir au formulaire principal pour envi courriel" votre fichier "NOM Prénom_Signature.pdf" sera créé et enregistré dans votre dossier Téléchargement et le PDF sera fermé</li>
+                <li>A partir du Questionnaire Santé sur lequel vous êtes revenu, cliquez sur "Envoyez les fichiers par courriel<span style="color: blue;">"NOM Prénom_Adhésion_24-24.csv"</span> + <span style="color: blue;">"NOM Prénom_Questionnaire Santé Adulte_24-24.csv"</span> et <span style="color: blue;">"NOM Prénom_Signature_24-24.pdf"</span><br>à l'adresse => lentrainpourtous@epts.fr&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: red; font-style: italic;">[elle est déjà implémentée dans le courriel qui sera généré]</span></li>
+				<li>Pour que votre adhésion puisse être validée, envoyez votre paiement par chèque à l'ordre de l'<span style="color: blue;"><b>Entrain Pour Tous</b></span>
+            </ol>
+        </div>
 		<form id="signaturePDFAdulte">
 				<div class="form-group">
 					<label for="nom">NOM<span class="required">*</span></label>
@@ -159,11 +171,11 @@
 				</div>
 				<div class="form-group">
 					<label for="prenom">Prénom <span class="required">*</span></label>
-					<input type="text" id="prenom" name="prenom" autocomplete="off" required>
+					<input type="text" id="prenomSignature" name="prenom" autocomplete="off" required>
 				</div>
 				<div class="form-group">
 					<label for="mobile">Mobile<span class="required">*</span></label>
-					<input type="tel" id="mobile" name="mobile" required maxlength="14" placeholder="0X XX XX XX XX" autocomplete="off">
+					<input type="tel" id="mobileSignature" name="mobile" required maxlength="14" placeholder="0X XX XX XX XX" autocomplete="off">
 					<div class="error-message" id="mobileError">Format : 0X XX XX XX XX</div>
 				</div>
 		<div class="form-group">
@@ -181,14 +193,8 @@
 			<button type="button" id="clear">Effacer / refaire la signature</button>
 		</div>
 		<div class="button-container">
-			<button class="center-button" type="submit">Générer le PDF signé et revenir au formulaire principal pour envoi courriel</button>
+			<button class="button" type="submit">Générer le PDF signé et revenir au formulaire principal pour envoi courriel</button>
 		</div>
-
-
-
-		<!-- <div class="button-container" style="margin-top:100px;text-align:center;">
-			<button class="center-button" type="submit">Générer le PDF signé et revenir au formulaire principal pour envoi courriel</button>
-		</div> -->
 	 </form>
 
 <script>
@@ -197,13 +203,7 @@
 			document.getElementById("nom").value = sessionStorage.getItem("nom") || "";
 			document.getElementById("prenom").value = sessionStorage.getItem("prenom") || "";
 			document.getElementById("mobile").value = sessionStorage.getItem("mobile") || "";
-			document.getElementById("adresse").value = sessionStorage.getItem("adresse") || "";
-			document.getElementById("email").value = sessionStorage.getItem("email") || "";
 		});
-
-
-
-
 		// Formatage des champs Nom et Prénom
 		document.getElementById('nom')?.addEventListener('input', function(e) {
 		  let value = e.target.value.replace(/[^a-zA-ZÀ-ÿ\s\-]/g, '').toUpperCase();
@@ -232,8 +232,8 @@
 				(numericValue.startsWith('06') || numericValue.startsWith('07'));
 			  mobileError.style.display = isValid ? 'none' : 'block';
 			  mobileInput.setCustomValidity(isValid ? '' : 'Numéro de mobile invalide');
-			});
-		}
+			}
+		});
 
 		// Insertion de la Date
 		document.addEventListener("DOMContentLoaded", function() {
@@ -248,8 +248,6 @@
 				dateField.value = formattedDate;
 			}
 		});
-
-
 
 		// Génération du code unique à partir du nom, prénom, téléphone et signature
 		async function generateCode(nom, prenom, mobile, signatureData) {
@@ -278,8 +276,8 @@
 		  }
 		}
 
-		document.getElementById('nom').addEventListener('input', updateCode);
-		document.getElementById('prenom').addEventListener('input', updateCode);
+		document.getElementById('nomSignature').addEventListener('input', updateCode);
+		document.getElementById('prenomSignature').addEventListener('input', updateCode);
 		document.getElementById('mobile').addEventListener('input', updateCode);
 
 		// Signature Pad
@@ -301,6 +299,7 @@
 			alert('Merci de signer avant de générer le PDF.');
 			return;
 		  }
+
 		  const nom = document.getElementById('nom').value;
 		  const prenom = document.getElementById('prenom').value;
 		  const tel = document.getElementById('mobile').value;
@@ -322,8 +321,9 @@
 		  doc.text(`Code unique : ${code}`, 10, 90);
 		  doc.text('Signature :', 10, 100);
 		  doc.addImage(signatureData, 'PNG', 10, 90, 80, 30);
-
-		  doc.save('formulaire-signe.pdf');
+		  let nomFichier = `${nom} ${prenom}_Signature.pdf`;
+		  doc.save(nomFichier);
+		  window.close();		  
 		});
  </script>
 </body>
