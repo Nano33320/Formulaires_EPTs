@@ -422,7 +422,7 @@
                     <input type="text" id="dateAdulte" name="date" readonly>
                 </div>
 				<div class="button-container">									
-					<button type="submit" id="signatureAdulte" onclick="ouvrirNouvelOnglet()" style="cursor: pointer;"><strong><i>Valider et accéder à la signature</i></strong></button>
+					<button type="submit" id="exportSanteAdulte" onclick="ouvrirNouvelOnglet()" style="cursor: pointer;"><strong><i>Valider et accéder à la signature</i></strong></button>
 					<button onclick="showStep('step-adhesion')">Modifier le formulaire</button>
 				</div>
             </form>
@@ -432,11 +432,8 @@
                 <div class="instructions">
                     <p><span style="color: red;"><b>Après avoir validé le formulaire, cliquez sur "Envoyer par courriel". Votre client de messagerie s'ouvrira avec un courriel pré-rempli. Veuillez ajouter manuellement les DEUX fichiers PDF en pièce jointe avant d'envoyer le courriel.</b></span></p>
                 </div> 
-		</div>
+        </div>
 
-        <!-- ================== SIGNATURE ADULTE ==================== -->
-
-		
         <!-- ==================== SANTE MINEUR ====================== -->
         <div id="step-sante-mineur" class="step">
             <h1>Questionnaire Santé Mineur 2025-2026</h1>
@@ -562,16 +559,11 @@
                 </div>
 				<div class="button-container">				
 					<!-- <button type="submit" id="exportSanteMineur" onclick="showStep('step-signature-mineur')">Valider et signer le formulaire</button> -->
-					<button type="submit" id="signatureAdulte" onclick="ouvrirHTMLUnique('https://nano33320.github.io/Formulaires_EPTs/SignatureAdulte.html', 'signatureAdulte')" style="cursor: pointer;"><strong><i>Valider et accéder à la signature</i></strong></button>
-
-
+					<button type="submit" id="exportSanteMineur" onclick="ouvrirNouvelOnglet2()" style="cursor: pointer;"><strong><i>Valider et accéder à la signature</i></strong></button>
 					<button onclick="showStep('step-adhesion')">Modifier le formulaire</button>
 				</div>
             </form>
         </div>
-
-        <!-- ================== SIGNATURE MINEUR ==================== -->
- 
 		
 <!-- =================== SCRIPTS ===================== -->
 <script>
@@ -581,6 +573,33 @@
             document.getElementById(stepId).classList.add('active');
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
+
+		// Local Storage
+		document.addEventListener("DOMContentLoaded", function() {
+			// Pour stockage des valeurs afin de pré-remplissage le formulaire signature
+			document.getElementById("nomMineur").value = localStorage.getItem("nom") || "";
+			document.getElementById("prenomMineur").value = localStorage.getItem("prenom") || "";
+			document.getElementById("nomrepleg").value = localStorage.getItem("nomrepleg") || "";
+			document.getElementById("prenomrepleg").value = localStorage.getItem("prenomrepleg") || "";
+			document.getElementById("mobile").value = localStorage.getItem("mobile") || "";
+
+			// Sauvegarde automatique dès qu'un champ est modifié
+			document.getElementById("nom").addEventListener("input", function() {
+				localStorage.setItem("nom", this.value);
+			});
+			document.getElementById("prenom").addEventListener("input", function() {
+				localStorage.setItem("prenom", this.value);
+			});
+			document.getElementById("nomrepleg").addEventListener("input", function() {
+				localStorage.setItem("nomrepleg", this.value);
+			});
+			document.getElementById("prenomrepleg").addEventListener("input", function() {
+				localStorage.setItem("prenomrepleg", this.value);
+			});
+			document.getElementById("mobile").addEventListener("input", function() {
+				localStorage.setItem("mobile", this.value);
+			});
+		});
 
         // Utilitaire pour la date JJ/MM/AAAA
         function getCurrentDate() {
@@ -611,6 +630,18 @@
             value = value.split(/[\s-]/).map(part => part ? part.charAt(0).toUpperCase() + part.slice(1).toLowerCase() : '').join('-');
             e.target.value = value;
         });
+        // Gestion du champ NOM du représentant légal
+        document.getElementById('nomreplegMineur').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/[^a-zA-ZÀ-ÿ\s\-]/g, '').toUpperCase();
+            e.target.value = value;
+        });
+        // Gestion du champ Prénom du représentant légal
+        document.getElementById('prenomreplegMineur').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/[^a-zA-ZÀ-ÿ \-]/g, '');
+            value = value.split(/[\s-]/).map(part => part ? part.charAt(0).toUpperCase() + part.slice(1).toLowerCase() : '').join('-');
+            e.target.value = value;
+        });		
+		
         // Ville
         document.getElementById('ville').addEventListener('input', function(e) {
             let value = e.target.value.replace(/[^a-zA-ZÀ-ÿ\s\-]/g, '').toUpperCase();
@@ -939,26 +970,29 @@
             sendEmailAdulteBtn.addEventListener('click', function() {
               const nom = document.getElementById('nom')?.value.trim() || 'NOM_INCONNU'; // Fallback si l'ID nom n'est pas trouvé ou vide
               const prenom = document.getElementById('prenom')?.value.trim() || 'PRENOM_INCONNU'; // Fallback
-              const adhesionFileName = `${nom} ${prenom}_Adhésion_25-26.pdf`;
-              const adulteFileName = `${nom} ${prenom}_Questionnaire Santé Adulte_25-26.pdf`;
+              const adhesionFileName = `${nom} ${prenom}_Adhésion_25-26.csv`;
+              const adulteFileName = `${nom} ${prenom}_Questionnaire Santé Adulte_25-26.csv`;
+			  const signatureFileName = `${nom} ${prenom}_Signature.pdf`
               const recipient = 'lentrainpourtous@epts.fr';
-              const subject = 'Inscription : fichiers PDF en pièce jointe';
+              const subject = 'Inscription : fichiers CSV et PDF en pièce jointe';
               const body = `Bonjour,
 
-Merci de joindre en pièce jointe les DEUX fichiers "*.pdf" que vous venez de créer :
-- Votre fiche d’adhésion
-- Votre questionnaire santé
+				Merci de joindre en pièce jointe les 3 fichiers 2 x "*." et 1 x "*.pdf" que vous venez de créer :
+				- Votre fiche d’adhésion
+				- Votre questionnaire santé
+				- votre signature
 
-Noms des fichiers :
-- ${adhesionFileName}
-- ${adulteFileName}
+				Noms des fichiers :
+				- ${adhesionFileName}
+				- ${adulteFileName}
+				- ${signatureFileName}
 
-Pour cela, cliquez sur l’icône 📎 (trombone) dans votre outil/interface de messagerie, puis sélectionnez les deux fichiers dans votre dossier "Téléchargement".
+				Pour cela, cliquez sur l’icône 📎 (trombone) dans votre outil/interface de messagerie, puis sélectionnez les 3 fichiers dans votre dossier "Téléchargement".
 
-Sans ces deux pièces jointes, votre inscription ne pourra pas être traitée.
+				Sans ces deux pièces jointes, votre inscription ne pourra pas être traitée.
 
-Cordialement,
-L’équipe de l’Entrain Pour Tous`;
+				Cordialement,
+				L’équipe de l’Entrain Pour Tous`;
               const mailtoLink = `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 
               function showAltMailAdulte() {
@@ -1114,6 +1148,34 @@ L’équipe de l’Entrain Pour Tous`;
 			// Pré-remplir les questionnaires santé avec nom/prénom/civilité
 			// Mise en mémoire des éléments de l'adhésion
 			document.addEventListener("DOMContentLoaded", function() {
+				document.getElementById("nomMineur").addEventListener("input", function() {
+					sessionStorage.setItem("nom", this.value.toUpperCase());
+				});
+				document.getElementById("prenomMineur").addEventListener("input", function() {
+					let formattedPrenom = this.value.split(/[\s-]/)
+						.map(part => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
+						.join('-');
+					sessionStorage.setItem("prenom", formattedPrenom);
+				});
+				document.getElementById("nomreplegMineur").addEventListener("input", function() {
+					sessionStorage.setItem("nom", this.value.toUpperCase());
+				});
+				document.getElementById("prenomreplegMineur").addEventListener("input", function() {
+					let formattedPrenom = this.value.split(/[\s-]/)
+						.map(part => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
+						.join('-');
+					sessionStorage.setItem("prenom", formattedPrenom);
+				});
+				document.getElementById("mobile").addEventListener("input", function() {
+					sessionStorage.setItem("mobile", this.value);
+				});								
+			});
+
+			// Ouverture du formulaire
+			function ouvrirNouvelOnglet2(url) {
+				window.open('https://nano33320.github.io/Formulaires_EPTs/SignatureMineur.html', '_blank');
+			}		
+			document.addEventListener("DOMContentLoaded", function() {
 				document.getElementById("nom").addEventListener("input", function() {
 					sessionStorage.setItem("nom", this.value.toUpperCase());
 				});
@@ -1136,38 +1198,133 @@ L’équipe de l’Entrain Pour Tous`;
 				document.getElementById("prenomreplegMineur").addEventListener("input", function() {
 					sessionStorage.setItem("prenomreplegMineur", this.value);
 				});
-			});
-	
+			});	
 		
         // =================== COURRIEL MINEUR =====================			
-			document.getElementById('sendEmailMineur').addEventListener('click', function() {
-			const nom = document.getElementById('nom').value.trim();
-			const prenom = document.getElementById('prenom').value.trim();
-			const adhesionFileName = `${nom} ${prenom}_Adhésion_25-26.csv`;
-			const mineurFileName = `${nom} ${prenom}_Questionnaire Santé Mineur_25-26.csv`;
-			const recipient = 'lentrainpourtous@epts.fr';
-			const subject = 'Inscription : fichiers CSV en pièce jointe';
-			const body = `Bonjour,
+        const sendEmailMineurBtn = document.getElementById('sendEmailMineur');
+        if (sendEmailMineurBtn) {
+            sendEmailMineurBtn.insertAdjacentHTML('afterend', `
+            <div id="alt-mail-panel-mineur" style="display:none; border:1px solid #ccc; padding:1em; margin-top:1em; background:#fafaff;">
+              <p>Impossible d’ouvrir un client de messagerie local.<br>
+                Utilisez un de ces webmails :</p>
+              <ul>
+                <li><a id="gmail-link-mineur" target="_blank" rel="noopener">Gmail</a></li>
+                <li><a id="outlook-link-mineur" target="_blank" rel="noopener">Outlook Web</a></li>
+                <li><a id="yahoo-link-mineur" target="_blank" rel="noopener">Yahoo Mail</a></li>
+                <li><a id="orange-link-mineur" target="_blank" rel="noopener">Orange</a></li>
+                <li><a id="sfr-link-mineur" target="_blank" rel="noopener">SFR</a></li>
+                <li><a id="bouygues-link-mineur" target="_blank" rel="noopener">Bouygues</a></li>
+                <li><a id="free-link-mineur" target="_blank" rel="noopener">Free</a></li>
+              </ul>
+              <p>Ou copiez le texte du mail :
+                <button id="copy-btn-mineur">Copier</button>
+              </p>
+              <textarea id="mail-body-mineur" style="width:100%;height:120px;" readonly></textarea>
+            </div>
+            `);
 
-			Merci de joindre en pièce jointe les DEUX fichiers "*.csv" que vous venez de créer :
-			- Votre fiche d’adhésion
-			- Votre questionnaire santé
+            sendEmailMineurBtn.addEventListener('click', function() {
+              const nom = document.getElementById('nom')?.value.trim() || 'NOM_INCONNU'; // Fallback
+              const prenom = document.getElementById('prenom')?.value.trim() || 'PRENOM_INCONNU'; // Fallback
+              const adhesionFileName = `${nom} ${prenom}_Adhésion_25-26.csv`;
+              const mineurFileName = `${nom} ${prenom}_Questionnaire Santé Mineur_25-26.csv`;
+              const signatureFileName = `${nom} ${prenom}_Signature_25-26.pdf`;			  
+              const recipient = 'lentrainpourtous@epts.fr';
+              const subject = 'Inscription : fichiers PDF en pièce jointe';
+              const body = `Bonjour,
 
-			Noms des fichiers :
-			- ${adhesionFileName}
-			- ${mineurFileName}
+				Merci de joindre en pièce jointe les 3 fichiers 2 x "*." et 1 x "*.pdf" que vous venez de créer :
+				- Votre fiche d’adhésion
+				- Votre questionnaire santé
+				- votre signature
 
-			Pour cela, cliquez sur l’icône 📎 (trombone) dans votre outil/interface de messagerie, puis sélectionnez les deux fichiers dans votre dossier "Téléchargement".
+				Noms des fichiers :
+				- ${adhesionFileName}
+				- ${adulteFileName}
+				- ${signatureFileName}
 
-			Sans ces deux pièces jointes, votre inscription ne pourra pas être traitée.
+				Pour cela, cliquez sur l’icône 📎 (trombone) dans votre outil/interface de messagerie, puis sélectionnez les 3 fichiers dans votre dossier "Téléchargement".
 
-			Cordialement,
-			L’équipe de l’Entrain Pour Tous`;
-			const mailtoLink = `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-			window.location.href = mailtoLink;
-		});
-		
-		
+				Sans ces deux pièces jointes, votre inscription ne pourra pas être traitée.
+
+				Cordialement,
+				L’équipe de l’Entrain Pour Tous`;
+              const mailtoLink = `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+              function showAltMailMineur() {
+                const gmailLink = document.getElementById('gmail-link-mineur');
+                if(gmailLink) gmailLink.href = `https://mail.google.com/mail/?view=cm&to=${encodeURIComponent(recipient)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+                const outlookLink = document.getElementById('outlook-link-mineur');
+                if(outlookLink) outlookLink.href = `https://outlook.live.com/mail/0/deeplink/compose?to=${encodeURIComponent(recipient)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+                const yahooLink = document.getElementById('yahoo-link-mineur');
+                if(yahooLink) yahooLink.href = `https://compose.mail.yahoo.com/?to=${encodeURIComponent(recipient)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+                const orangeLink = document.getElementById('orange-link-mineur');
+                if(orangeLink) orangeLink.href = `https://mail.orange.fr/appsuite/#!!&view=message&to=${encodeURIComponent(recipient)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+                const sfrLink = document.getElementById('sfr-link-mineur');
+                if(sfrLink) sfrLink.href = `https://webmail.sfr.fr/?to=${encodeURIComponent(recipient)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+                const bouyguesLink = document.getElementById('bouygues-link-mineur');
+                if(bouyguesLink) bouyguesLink.href = `https://www.bouyguestelecom.fr/mon-compte/ma-messagerie?to=${encodeURIComponent(recipient)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+                const freeLink = document.getElementById('free-link-mineur');
+                if(freeLink) freeLink.href = `https://zimbra.free.fr/?to=${encodeURIComponent(recipient)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+                const mailBodyMineur = document.getElementById('mail-body-mineur');
+                if(mailBodyMineur) mailBodyMineur.value = body;
+                const altMailPanelMineur = document.getElementById('alt-mail-panel-mineur');
+                if(altMailPanelMineur) altMailPanelMineur.style.display = 'block';
+              }
+
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            document.body.appendChild(iframe);
+            iframe.src = mailtoLink;
+
+            let fallbackDisplayedMineur = false; // Use a different variable name
+            const blurHandlerMineur = () => {
+                fallbackDisplayedMineur = true;
+                window.removeEventListener("blur", blurHandlerMineur);
+            };
+            window.addEventListener("blur", blurHandlerMineur);
+
+            setTimeout(() => {
+                if (iframe.parentNode) {
+                    document.body.removeChild(iframe);
+                }
+                window.removeEventListener("blur", blurHandlerMineur);
+                setTimeout(() => {
+                    if (!fallbackDisplayedMineur) {
+                        showAltMailMineur();
+                    }
+                }, 300);
+            }, 1000); // Reduced timeout slightly
+        });
+        }
+
+        const copyBtnMineur = document.getElementById('copy-btn-mineur');
+        if (copyBtnMineur) {
+            copyBtnMineur.addEventListener('click', function(){
+                const mailBodyMineur = document.getElementById('mail-body-mineur');
+                if (mailBodyMineur) {
+                    navigator.clipboard.writeText(mailBodyMineur.value)
+                        .then(() => alert('Texte copié dans le presse-papiers !'))
+                        .catch(err => console.error('Erreur de copie: ', err));
+                }
+            });
+        }
+
+        // Initialisation de la date pour les formulaires Santé au chargement
+        window.addEventListener('load', () => {
+          const dateAdulteEl = document.getElementById('dateAdulte');
+          if (dateAdulteEl) dateAdulteEl.value = getCurrentDate();
+          const dateMineurEl = document.getElementById('dateMineur');
+          if (dateMineurEl) dateMineurEl.value = getCurrentDate();
+
+          // Vérifier si une image de logo est présente, sinon utiliser le placeholder
+          const logoImg = document.querySelector('.form-container img');
+          if (logoImg && (!logoImg.getAttribute('src') || logoImg.getAttribute('src').trim() === "")) {
+            logoImg.src = "https://placehold.co/300x100/eeeeee/333333?text=Logo+EPT";
+            logoImg.alt = "Logo EPT Placeholder";
+          }
+        });
     </script>
 </body>
 </html>

@@ -18,21 +18,16 @@
             padding: 20px;
             background-color: #DCDCDC;
         }
-        .form-container {
-            background-color: white;
-            padding: 20px;
-            padding-top: 160px; /* Nouveau padding pour le logo */
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            position: relative;
-        }
-        .form-container img {
-            position: absolute;
-            top: 20px;
-            right: 370px;
-            width: 300px;
-            height: auto;
-        }
+		.form-container {
+			display: flex;
+			flex-direction: column;
+			align-items: center; /* Centre le contenu, y compris l'image */
+		}
+		.form-container img {
+			display: block;
+			margin: auto;
+		}
+
         .form-group {
             margin-bottom: 15px;
         }
@@ -80,17 +75,28 @@
             font-size: 14px;
             margin-top: 4px;
         }
-        .text-red {
-            color: red;
+        /* Nouvelle classe pour la civilité */
+        .radio-group-horizontal {
+            display: flex;
+            flex-direction: row;
+            align-items: left;
+            margin: 5px 0;
         }
         .button-container {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
+			display: flex;
+			justify-content: center;
+			align-items: center; /* Centre verticalement si nécessaire */
+			margin-top: 20px;
         }
         .button-container button {
             margin-left: 10px;
         }
+		.center-button {
+			padding: 10px 20px;
+			display: block;
+			margin: auto;
+			width: fit-content;
+		}
         .email-container {
             display: flex;
             flex-direction: column;
@@ -158,6 +164,9 @@
             </ol>
         </div>
         <form id="SignatureForm">
+			<div class="form-group">
+                <label style="text-align: center; font-size: larger; font-style: italic;background-color: lightgray;padding: 5px 0;">Adhérant</label>
+            </div> 
             <div class="form-group">
                 <label for="nom">NOM<span class="required">*</span></label>
                 <input type="text" id="nom" name="nom" autocomplete="off" required>
@@ -206,6 +215,15 @@
 
 
 <script>
+		// Récupératoion des champs du formuaire amont
+		document.addEventListener("DOMContentLoaded", function() {
+			document.getElementById("nom").value = localStorage.getItem("nom") || "";
+			document.getElementById("prenom").value = localStorage.getItem("prenom") || "";
+			document.getElementById("nomrepleg").value = localStorage.getItem("nomrepleg") || "";
+			document.getElementById("prenomrepleg").value = localStorage.getItem("prenomrepleg") || "";
+			document.getElementById("mobile").value = localStorage.getItem("mobile") || "";
+		});
+
 		// Formatage des champs Nom et Prénom Adhérent
 		document.getElementById('nom')?.addEventListener('input', function(e) {
 		  let value = e.target.value.replace(/[^a-zA-ZÀ-ÿ\s\-]/g, '').toUpperCase();
