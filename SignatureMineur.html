@@ -206,6 +206,15 @@
 
 
 <script>
+		// Récupératoion des champs du formuaire amont
+		document.addEventListener("DOMContentLoaded", function() {
+			document.getElementById("nom").value = localStorage.getItem("nom") || "";
+			document.getElementById("prenom").value = localStorage.getItem("prenom") || "";
+			document.getElementById("nomrepleg").value = localStorage.getItem("nomrepleg") || "";
+			document.getElementById("prenomrepleg").value = localStorage.getItem("prenomrepleg") || "";
+			document.getElementById("mobile").value = localStorage.getItem("mobile") || "";
+		});
+
 		// Formatage des champs Nom et Prénom Adhérent
 		document.getElementById('nom')?.addEventListener('input', function(e) {
 		  let value = e.target.value.replace(/[^a-zA-ZÀ-ÿ\s\-]/g, '').toUpperCase();
