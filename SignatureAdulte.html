@@ -293,6 +293,7 @@
 			alert('Merci de signer avant de générer le PDF.');
 			return;
 		  }
+
 		  const nom = document.getElementById('nom').value;
 		  const prenom = document.getElementById('prenom').value;
 		  const tel = document.getElementById('mobile').value;
@@ -316,6 +317,7 @@
 		  doc.addImage(signatureData, 'PNG', 10, 90, 80, 30);
 		  let nomFichier = `${nom} ${prenom}_Signature.pdf`;
 		  doc.save(nomFichier);
+		  window.close();		  
 		});
  </script>
 </body>
