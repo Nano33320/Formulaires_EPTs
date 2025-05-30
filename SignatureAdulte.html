@@ -153,17 +153,17 @@
 		<h1>Signature de l'Adhésion et du Questionnaire Santé Adulte</h1>
 		<form id="signaturePDFAdulte">
 				<div class="form-group">
-					<label for="nom">NOM<span class="required">*</span></label>
-					<input type="text" id="nom" name="nom" autocomplete="off" required>
+					<label for="nomSignature">NOM<span class="required">*</span></label>
+					<input type="text" id="nomSignature" name="nom" autocomplete="off" required>
 					<div class="help-text">Les majuscules s'implémentent automatiquement y compris avec les accents</div>
 				</div>
 				<div class="form-group">
-					<label for="prenom">Prénom <span class="required">*</span></label>
-					<input type="text" id="prenom" name="prenom" autocomplete="off" required>
+					<label for="prenomSignature">Prénom <span class="required">*</span></label>
+					<input type="text" id="nomSignature" name="prenom" autocomplete="off" required>
 				</div>
 				<div class="form-group">
-					<label for="mobile">Mobile<span class="required">*</span></label>
-					<input type="tel" id="mobile" name="mobile" required maxlength="14" placeholder="0X XX XX XX XX" autocomplete="off">
+					<label for="mobileSignature">Mobile<span class="required">*</span></label>
+					<input type="tel" id="mobileSignature" name="mobile" required maxlength="14" placeholder="0X XX XX XX XX" autocomplete="off">
 					<div class="error-message" id="mobileError">Format : 0X XX XX XX XX</div>
 				</div>
 		<div class="form-group">
@@ -181,14 +181,8 @@
 			<button type="button" id="clear">Effacer / refaire la signature</button>
 		</div>
 		<div class="button-container">
-			<button class="center-button" type="submit">Générer le PDF signé et revenir au formulaire principal pour envoi courriel</button>
+			<button class="button" type="submit">Générer le PDF signé et revenir au formulaire principal pour envoi courriel</button>
 		</div>
-
-
-
-		<!-- <div class="button-container" style="margin-top:100px;text-align:center;">
-			<button class="center-button" type="submit">Générer le PDF signé et revenir au formulaire principal pour envoi courriel</button>
-		</div> -->
 	 </form>
 
 <script>
@@ -197,8 +191,6 @@
 			document.getElementById("nom").value = sessionStorage.getItem("nom") || "";
 			document.getElementById("prenom").value = sessionStorage.getItem("prenom") || "";
 			document.getElementById("mobile").value = sessionStorage.getItem("mobile") || "";
-			document.getElementById("adresse").value = sessionStorage.getItem("adresse") || "";
-			document.getElementById("email").value = sessionStorage.getItem("email") || "";
 		});
 
 
@@ -322,8 +314,8 @@
 		  doc.text(`Code unique : ${code}`, 10, 90);
 		  doc.text('Signature :', 10, 100);
 		  doc.addImage(signatureData, 'PNG', 10, 90, 80, 30);
-
-		  doc.save('formulaire-signe.pdf');
+		  let nomFichier = `${nom} ${prenom}_Signature.pdf`;
+		  doc.save(nomFichier);
 		});
  </script>
 </body>
