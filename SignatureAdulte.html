@@ -256,20 +256,15 @@ console.log("localStorage disponible ?", typeof Storage !== "undefined");
 		});
 
 // ========== Génération du code unique =================
+// Récupération des data
 document.addEventListener("DOMContentLoaded", function() {
-    // Récupération des valeurs et affichage dans les champs
-    document.getElementById("nom").value = localStorage.getItem("nom") || "";
-    document.getElementById("prenom").value = localStorage.getItem("prenom") || "";
-    document.getElementById("mobile").value = localStorage.getItem("mobile") || "";
-});
-document.addEventListener("DOMContentLoaded", function() {
-    localStorage.setItem("nom", "Dupont");
-    localStorage.setItem("prenom", "Jean");
-    localStorage.setItem("mobile", "06 12 34 56 78");
+    const params = new URLSearchParams(window.location.search);
 
-    console.log("Nom enregistré :", localStorage.getItem("nom"));
-    console.log("Prénom enregistré :", localStorage.getItem("prenom"));
-    console.log("Mobile enregistré :", localStorage.getItem("mobile"));
+    document.getElementById("nomMineur").value = params.get("nom") || "";
+    document.getElementById("prenomMineur").value = params.get("prenom") || "";
+    document.getElementById("mobile").value = params.get("mobile") || "";
+    document.getElementById("nomrepleg").value = params.get("nomrepleg") || "";
+    document.getElementById("prenomrepleg").value = params.get("prenomrepleg") || "";
 });
 
 
