@@ -422,11 +422,11 @@
                     <input type="text" id="dateAdulte" name="date" readonly>
                 </div>
 				<div class="button-container">									
-					<button type="submit" id="exportSanteAdulte" onclick="ouvrirNouvelOnglet()" style="cursor: pointer;"><strong><i>Valider et accéder à la signature</i></strong></button>
+					<button type="submit" id="exportSanteAdulte" onclick="redirectToSignatureForm()" style="cursor: pointer;"><strong><i>Valider et accéder à la signature</i></strong></button>
 					<button onclick="showStep('step-adhesion')">Modifier le formulaire</button>
 				</div>
-            </form>
-                <h2>Envoyer par Courriel</h2>
+			</form>
+                <h1>Envoyer par Courriel</h1>
                 <div style="text-align: center;">
                     <button id="sendEmailAdulte" disabled>Envoyer par courriel</button> </div>
                 <div class="instructions">
@@ -558,12 +558,17 @@
                     <input type="text" id="dateMineur" name="date" readonly>
                 </div>
 				<div class="button-container">				
-					<!-- <button type="submit" id="exportSanteMineur" onclick="showStep('step-signature-mineur')">Valider et signer le formulaire</button> -->
-					<button type="submit" id="exportSanteMineur" onclick="ouvrirNouvelOnglet2()" style="cursor: pointer;"><strong><i>Valider et accéder à la signature</i></strong></button>
+					<button type="submit" id="exportSanteMineur" onclick="redirectToSignatureForm2()" style="cursor: pointer;"><strong><i>Valider et accéder à la signature</i></strong></button>
 					<button onclick="showStep('step-adhesion')">Modifier le formulaire</button>
 				</div>
             </form>
-        </div>
+                <h1>Envoyer par Courriel</h1>
+                <div style="text-align: center;">
+                    <button id="sendEmailAdulte" disabled>Envoyer par courriel</button> </div>
+                <div class="instructions">
+                    <p><span style="color: red;"><b>Après avoir validé le formulaire, cliquez sur "Envoyer par courriel". Votre client de messagerie s'ouvrira avec un courriel pré-rempli. Veuillez ajouter manuellement les DEUX fichiers PDF en pièce jointe avant d'envoyer le courriel.</b></span></p>
+                </div>  
+		</div>
 		
 <!-- =================== SCRIPTS ===================== -->
 <script>
@@ -925,24 +930,18 @@
 
 // =================== SIGNATURE ADULTE =====================
 		// Mise en mémoire des éléments de l'adhésion
-		document.addEventListener("DOMContentLoaded", function() {
-			document.getElementById("nom").addEventListener("input", function() {
-				sessionStorage.setItem("nom", this.value.toUpperCase());
-			});
-			document.getElementById("prenom").addEventListener("input", function() {
-				let formattedPrenom = this.value.split(/[\s-]/)
-					.map(part => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
-					.join('-');
-				sessionStorage.setItem("prenom", formattedPrenom);
-			});
-			document.getElementById("mobile").addEventListener("input", function() {
-				sessionStorage.setItem("mobile", this.value);
-			});
-		});
-		// Ouverture du formulaire
-		function ouvrirNouvelOnglet(url) {
-			window.open('https://nano33320.github.io/Formulaires_EPTs/SignatureAdulte.html', '_blank');
-		}
+function redirectToSignatureForm() {
+    // Récupérer les valeurs des champs
+    const nom = document.getElementById('nom').value;
+    const prenom = document.getElementById('prenom').value;
+    const mobile = document.getElementById('mobile').value;
+
+    // Construire l'URL avec les paramètres
+    const url = `https://nano33320.github.io/Formulaires_EPTs/SignatureAdulte.html?nom=${encodeURIComponent(nom)}&prenom=${encodeURIComponent(prenom)}&mobile=${encodeURIComponent(mobile)}`;
+
+    // Ouvrir l'URL dans un nouvel onglet
+    window.open(url, '_blank');
+}
 
 // =================== ENVOI COURRIEL ADULTE =====================	
         const sendEmailAdulteBtn = document.getElementById('sendEmailAdulte');
@@ -1145,60 +1144,21 @@
 		});
 		
 // =================== SIGNATURE MINEUR =====================
-			// Pré-remplir les questionnaires santé avec nom/prénom/civilité
-			// Mise en mémoire des éléments de l'adhésion
-			document.addEventListener("DOMContentLoaded", function() {
-				document.getElementById("nomMineur").addEventListener("input", function() {
-					sessionStorage.setItem("nom", this.value.toUpperCase());
-				});
-				document.getElementById("prenomMineur").addEventListener("input", function() {
-					let formattedPrenom = this.value.split(/[\s-]/)
-						.map(part => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
-						.join('-');
-					sessionStorage.setItem("prenom", formattedPrenom);
-				});
-				document.getElementById("nomreplegMineur").addEventListener("input", function() {
-					sessionStorage.setItem("nom", this.value.toUpperCase());
-				});
-				document.getElementById("prenomreplegMineur").addEventListener("input", function() {
-					let formattedPrenom = this.value.split(/[\s-]/)
-						.map(part => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
-						.join('-');
-					sessionStorage.setItem("prenom", formattedPrenom);
-				});
-				document.getElementById("mobile").addEventListener("input", function() {
-					sessionStorage.setItem("mobile", this.value);
-				});								
-			});
 
-			// Ouverture du formulaire
-			function ouvrirNouvelOnglet2(url) {
-				window.open('https://nano33320.github.io/Formulaires_EPTs/SignatureMineur.html', '_blank');
-			}		
-			document.addEventListener("DOMContentLoaded", function() {
-				document.getElementById("nom").addEventListener("input", function() {
-					sessionStorage.setItem("nom", this.value.toUpperCase());
-				});
-				document.getElementById("prenom").addEventListener("input", function() {
-					let formattedPrenom = this.value.split(/[\s-]/)
-						.map(part => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
-						.join('-');
-					sessionStorage.setItem("prenom", formattedPrenom);
-				});
-				document.getElementById("mobile").addEventListener("input", function() {
-					sessionStorage.setItem("mobile", this.value);
-				});
-			});
+function redirectToSignatureForm2() {
+    // Récupérer les valeurs des champs
+    const nomMineur = document.getElementById('nomMineur').value;
+    const prenomMineur = document.getElementById('prenomMineur').value;
+    const mobile = document.getElementById('mobile').value; // Assurez-vous que cet élément existe
+    const nomreplegMineur = document.getElementById('nomreplegMineur').value;
+    const prenomreplegMineur = document.getElementById('prenomreplegMineur').value;
 
-			// Mise en mémoire des éléments du questionnaire santé mineur
-			document.addEventListener("DOMContentLoaded", function() {
-				document.getElementById("nomreplegMineur").addEventListener("input", function() {
-					sessionStorage.setItem("nomreplegMineur", this.value);
-				});
-				document.getElementById("prenomreplegMineur").addEventListener("input", function() {
-					sessionStorage.setItem("prenomreplegMineur", this.value);
-				});
-			});	
+    // Construire l'URL avec les paramètres
+    const url = `https://nano33320.github.io/Formulaires_EPTs/SignatureMineur.html?nomMineur=${encodeURIComponent(nomMineur)}&prenomMineur=${encodeURIComponent(prenomMineur)}&mobile=${encodeURIComponent(mobile)}&nomreplegMineur=${encodeURIComponent(nomreplegMineur)}&prenomreplegMineur=${encodeURIComponent(prenomreplegMineur)}`;
+
+    // Ouvrir l'URL dans un nouvel onglet
+    window.open(url, '_blank');
+}
 		
         // =================== COURRIEL MINEUR =====================			
         const sendEmailMineurBtn = document.getElementById('sendEmailMineur');
