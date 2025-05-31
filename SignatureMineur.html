@@ -214,15 +214,15 @@
 			const prenomreplegMineur = urlParams.get('prenomreplegMineur');
 
 			// Utiliser les valeurs récupérées pour remplir les champs du formulaire
-			document.getElementById('nom').value = nom || '';
-			document.getElementById('prenom').value = prenom || '';
+			document.getElementById('nom').value = nomMineur || '';
+			document.getElementById('prenom').value = prenomMineur || '';
 			document.getElementById('mobile').value = mobile || '';
 			document.getElementById('nomreplegMineur').value = nomreplegMineur || '';
 			document.getElementById('prenomreplegMineur').value = prenomreplegMineur || '';
 		});
 
 
-		// Formatage des champs Nom et Prénom Adhérent
+		// Formatage des champs Nom et Prénom de l'adhérent
 		document.getElementById('nom')?.addEventListener('input', function(e) {
 		  let value = e.target.value.replace(/[^a-zA-ZÀ-ÿ\s\-]/g, '').toUpperCase();
 		  e.target.value = value;
@@ -232,7 +232,16 @@
 		  value = value.split(/[\s-]/).map(part => part ? part.charAt(0).toUpperCase() + part.slice(1).toLowerCase() : '').join('-');
 		  e.target.value = value;
 		});
-		
+		// Formatage des champs Nom et Prénom du responsable légal
+		document.getElementById('nomreplegMineur')?.addEventListener('input', function(e) {
+		  let value = e.target.value.replace(/[^a-zA-ZÀ-ÿ\s\-]/g, '').toUpperCase();
+		  e.target.value = value;
+		});
+		document.getElementById('prenomreplegMineur')?.addEventListener('input', function(e) {
+		  let value = e.target.value.replace(/[^a-zA-ZÀ-ÿ \-]/g, '');
+		  value = value.split(/[\s-]/).map(part => part ? part.charAt(0).toUpperCase() + part.slice(1).toLowerCase() : '').join('-');
+		  e.target.value = value;
+		});		
 		// Formatage du champ Mobile
         const mobileInput = document.getElementById('mobile');
         const mobileError = document.getElementById('mobileError');
