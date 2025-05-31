@@ -579,33 +579,6 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-		// Local Storage
-		document.addEventListener("DOMContentLoaded", function() {
-			// Pour stockage des valeurs afin de pré-remplissage le formulaire signature
-			document.getElementById("nomMineur").value = localStorage.getItem("nom") || "";
-			document.getElementById("prenomMineur").value = localStorage.getItem("prenom") || "";
-			document.getElementById("nomrepleg").value = localStorage.getItem("nomrepleg") || "";
-			document.getElementById("prenomrepleg").value = localStorage.getItem("prenomrepleg") || "";
-			document.getElementById("mobile").value = localStorage.getItem("mobile") || "";
-
-			// Sauvegarde automatique dès qu'un champ est modifié
-			document.getElementById("nom").addEventListener("input", function() {
-				localStorage.setItem("nom", this.value);
-			});
-			document.getElementById("prenom").addEventListener("input", function() {
-				localStorage.setItem("prenom", this.value);
-			});
-			document.getElementById("nomrepleg").addEventListener("input", function() {
-				localStorage.setItem("nomrepleg", this.value);
-			});
-			document.getElementById("prenomrepleg").addEventListener("input", function() {
-				localStorage.setItem("prenomrepleg", this.value);
-			});
-			document.getElementById("mobile").addEventListener("input", function() {
-				localStorage.setItem("mobile", this.value);
-			});
-		});
-
         // Utilitaire pour la date JJ/MM/AAAA
         function getCurrentDate() {
             const today = new Date();
@@ -756,7 +729,7 @@
 		});
 
 
-
+		<!-- ==== Procédure d'Adhésion ==== -->
         // Soumission du formulaire d’adhésion
         document.getElementById('adhesionForm').addEventListener('submit', function(e) {
             e.preventDefault();
@@ -1144,21 +1117,20 @@ function redirectToSignatureForm() {
 		});
 		
 // =================== SIGNATURE MINEUR =====================
+		function redirectToSignatureForm2() {
+			// Récupérer les valeurs des champs
+			const nom = document.getElementById('nom').value;
+			const prenom = document.getElementById('prenom').value;
+			const mobile = document.getElementById('mobile').value; // Assurez-vous que cet élément existe
+			const nomreplegMineur = document.getElementById('nomreplegMineur').value;
+			const prenomreplegMineur = document.getElementById('prenomreplegMineur').value;
 
-function redirectToSignatureForm2() {
-    // Récupérer les valeurs des champs
-    const nomMineur = document.getElementById('nomMineur').value;
-    const prenomMineur = document.getElementById('prenomMineur').value;
-    const mobile = document.getElementById('mobile').value; // Assurez-vous que cet élément existe
-    const nomreplegMineur = document.getElementById('nomreplegMineur').value;
-    const prenomreplegMineur = document.getElementById('prenomreplegMineur').value;
+			// Construire l'URL avec les paramètres
+			const url = `https://nano33320.github.io/Formulaires_EPTs/SignatureMineur.html?nom=${encodeURIComponent(nom)}&prenom=${encodeURIComponent(prenom)}&mobile=${encodeURIComponent(mobile)}&nomrepleg=${encodeURIComponent(nomreplegMineur)}&prenomrepleg=${encodeURIComponent(prenomreplegMineur)}`;
 
-    // Construire l'URL avec les paramètres
-    const url = `https://nano33320.github.io/Formulaires_EPTs/SignatureMineur.html?nomMineur=${encodeURIComponent(nomMineur)}&prenomMineur=${encodeURIComponent(prenomMineur)}&mobile=${encodeURIComponent(mobile)}&nomreplegMineur=${encodeURIComponent(nomreplegMineur)}&prenomreplegMineur=${encodeURIComponent(prenomreplegMineur)}`;
-
-    // Ouvrir l'URL dans un nouvel onglet
-    window.open(url, '_blank');
-}
+			// Ouvrir l'URL dans un nouvel onglet
+			window.open(url, '_blank');
+		}
 		
         // =================== COURRIEL MINEUR =====================			
         const sendEmailMineurBtn = document.getElementById('sendEmailMineur');

@@ -328,7 +328,10 @@
 		  doc.text('Signature :', 10, 100);
 		  doc.addImage(signatureData, 'PNG', 10, 105, 80, 30);
 		  let nomFichier = `${nom} ${prenom}_Signature.pdf`;
-		  doc.save(nomFichier);	  
+
+	      //	Sauvegarde du pdf sans l'ouvrir
+		  let nomFichier = `${nom} ${prenom}_Signature.pdf`;
+		  doc.save(nomFichier);  
 
         // Activer le bouton après la génération du PDF
         document.getElementById('returnButton').disabled = false;
