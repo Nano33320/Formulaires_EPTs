@@ -83,20 +83,10 @@
             margin: 5px 0;
         }
         .button-container {
-			display: flex;
-			justify-content: center;
-			align-items: center; /* Centre verticalement si nécessaire */
-			margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
         }
-        .button-container button {
-            margin-left: 10px;
-        }
-		.center-button {
-			padding: 10px 20px;
-			display: block;
-			margin: auto;
-			width: fit-content;
-		}
         .email-container {
             display: flex;
             flex-direction: column;
@@ -159,7 +149,7 @@
                 <li>Le champ Téléphone est automatiquement rempli ainsi que le champ Date</li>
 				<li>Avec la souris ou avec le doigt si vous avez un écran tactile, générez une signature dans le PAD / Rectangle</li>
                 <li>Cliquez sur "Générer le PDF signé et revenir au formulaire principal pour envi courriel" votre fichier "NOM Prénom_Signature.pdf" sera créé et enregistré dans votre dossier Téléchargement et le PDF sera fermé</li>
-                <li>A partir du Questionnaire Santé sur lequel vous êtes revenu, cliquez sur "Envoyez les fichiers par courriel<span style="color: blue;">"NOM Prénom_Adhésion_24-24.csv"</span> + <span style="color: blue;">"NOM Prénom_Questionnaire Santé Adulte_24-24.csv"</span> et <span style="color: blue;">"NOM Prénom_Signature_24-24.pdf"</span><br>à l'adresse => lentrainpourtous@epts.fr&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: red; font-style: italic;">[elle est déjà implémentée dans le courriel qui sera généré]</span></li>
+                <li>A partir du Questionnaire Santé sur lequel vous êtes revenu, cliquez sur "Envoyez les 3 fichiers par courriel <span style="color: blue;">"NOM Prénom_Adhésion_24-24.csv"</span> + <span style="color: blue;">"NOM Prénom_Questionnaire Santé Adulte_24-24.csv"</span> + <span style="color: blue;">"NOM Prénom_Signature_24-24.pdf"</span><br>à l'adresse => lentrainpourtous@epts.fr&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: red; font-style: italic;">[elle est déjà implémentée dans le courriel qui sera généré]</span></li>
 				<li>Pour que votre adhésion puisse être validée, envoyez votre paiement par chèque à l'ordre de l'<span style="color: blue;"><b>Entrain Pour Tous</b></span>
             </ol>
         </div>
@@ -194,18 +184,20 @@
 				<button type="button" id="clear">Effacer / refaire la signature</button>
 			</div>
 			<div class="button-container">
-				<button class="button" type="submit">Générer le PDF signé et revenir au formulaire principal pour envoi courriel</button>
+				<button class="button" type="submit">Générer le PDF signé</button>
+				<button class="button" onclick="window.close()" id="returnButton" disabled>Revenir au formulaire principal pour envoi courriel</button>
 			</div>
-        </form>
-
+		</form>
 <script>
-console.log("localStorage disponible ?", typeof Storage !== "undefined");
-
-		// Récupératoion des champs du formuaire amont
+		// récupération des champs utiles
 		document.addEventListener("DOMContentLoaded", function() {
-			document.getElementById("nom").value = localStorage.getItem("nom") || "";
-			document.getElementById("prenom").value = localStorage.getItem("prenom") || "";
-			document.getElementById("mobile").value = localStorage.getItem("mobile") || "";
+			const urlParams = new URLSearchParams(window.location.search);
+			const nom = urlParams.get('nom');
+			const prenom = urlParams.get('prenom');
+			const tel = urlParams.get('mobile');
+
+			// Utilisez les valeurs récupérées comme vous le souhaitez
+			console.log(nom, prenom, mobile);
 		});
 
 		// Formatage des champs Nom et Prénom Adhérent
@@ -218,6 +210,7 @@ console.log("localStorage disponible ?", typeof Storage !== "undefined");
 		  value = value.split(/[\s-]/).map(part => part ? part.charAt(0).toUpperCase() + part.slice(1).toLowerCase() : '').join('-');
 		  e.target.value = value;
 		});
+		
 		// Formatage du champ Mobile
         const mobileInput = document.getElementById('mobile');
         const mobileError = document.getElementById('mobileError');
@@ -241,6 +234,7 @@ console.log("localStorage disponible ?", typeof Storage !== "undefined");
                 mobileError.textContent = 'Format : 06 XX XX XX XX ou 07 XX XX XX XX';
             }
         });
+		
 		// Insertion de la Date
 		document.addEventListener("DOMContentLoaded", function() {
 			const dateField = document.getElementById("date");
@@ -256,88 +250,48 @@ console.log("localStorage disponible ?", typeof Storage !== "undefined");
 		});
 
 // ========== Génération du code unique =================
-document.addEventListener("DOMContentLoaded", function() {
-    // Récupération des valeurs et affichage dans les champs
-    document.getElementById("nom").value = localStorage.getItem("nom") || "";
-    document.getElementById("prenom").value = localStorage.getItem("prenom") || "";
-    document.getElementById("mobile").value = localStorage.getItem("mobile") || "";
-});
-document.addEventListener("DOMContentLoaded", function() {
-    localStorage.setItem("nom", "Dupont");
-    localStorage.setItem("prenom", "Jean");
-    localStorage.setItem("mobile", "06 12 34 56 78");
+		// Assurez-vous que la bibliothèque Signature Pad est correctement chargée
+		const canvas = document.getElementById('signature-pad');
+		const signaturePad = new SignaturePad(canvas);
 
-    console.log("Nom enregistré :", localStorage.getItem("nom"));
-    console.log("Prénom enregistré :", localStorage.getItem("prenom"));
-    console.log("Mobile enregistré :", localStorage.getItem("mobile"));
-});
-
-
-		// Génération du code unique à partir du nom, prénom, téléphone et signature
+		// Fonction pour générer le code unique
 		async function generateCode(nom, prenom, mobile, signatureData) {
-		  const input = (nom.trim().toLowerCase() + ':' + prenom.trim().toLowerCase() + ':' + mobile.replace(/\s+/g, '').trim() + ':' + signatureData);
-		  const encoder = new TextEncoder();
-		  const data = encoder.encode(input);
-		  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-		  // Convertir le buffer en chaîne hexadécimale
-		  const hashArray = Array.from(new Uint8Array(hashBuffer));
-		  const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-		  // Prendre les 6 premiers caractères, majuscules
-		  return hashHex.substring(0, 6).toUpperCase();
+			const input = nom.trim().toLowerCase() + ':' + prenom.trim().toLowerCase() + ':' + mobile.replace(/\s+/g, '') + ':' + signatureData;
+			const encoder = new TextEncoder();
+			const data = encoder.encode(input);
+			const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+			const hashArray = Array.from(new Uint8Array(hashBuffer));
+			const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+			return hashHex.substring(0, 6).toUpperCase();
 		}
 
-		// Mettre à jour le code unique à chaque modification
+		// Fonction pour mettre à jour le code unique
 		async function updateCode() {
-		  const nom = document.getElementById('nom').value;
-		  const prenom = document.getElementById('prenom').value;
-		  const tel = document.getElementById('mobile').value;
-		  const signatureData = signaturePad.toDataURL();
-		  if (nom && prenom && tel && !signaturePad.isEmpty()) {
-			const code = await generateCode(nom, prenom, tel, signatureData);
-			document.getElementById('code-unique').textContent = code;
-		  } else {
-			document.getElementById('code-unique').textContent = '------';
-		  }
+			const nom = document.getElementById('nom').value;
+			const prenom = document.getElementById('prenom').value;
+			const tel = document.getElementById('mobile').value;
+			const signatureData = signaturePad.toDataURL();
+
+			if (nom && prenom && tel && !signaturePad.isEmpty()) {
+				const code = await generateCode(nom, prenom, tel, signatureData);
+				document.getElementById('code-unique').textContent = code;
+			} else {
+				document.getElementById('code-unique').textContent = '------';
+			}
 		}
 
+		// Ajoutez des écouteurs d'événements pour les champs
 		document.getElementById('nom').addEventListener('input', updateCode);
 		document.getElementById('prenom').addEventListener('input', updateCode);
 		document.getElementById('mobile').addEventListener('input', updateCode);
 
-		// Signature Pad
-		const canvas = document.getElementById('signature-pad');
-		const signaturePad = new SignaturePad(canvas);
+		// Écoutez les événements de la signature
+		signaturePad.addEventListener('endStroke', updateCode);
+
 		document.getElementById('clear').addEventListener('click', function(e) {
-		  e.preventDefault();
-		  signaturePad.clear();
-		  updateCode();
-		});
-
-		// Mettre à jour le code unique à chaque modification
-		async function updateCode() {
-		  const nom = document.getElementById('nom').value;
-		  const prenom = document.getElementById('prenom').value;
-		  const tel = document.getElementById('mobile').value;
-		  const signatureData = signaturePad.toDataURL();
-		  if (nom && prenom && tel && !signaturePad.isEmpty()) {
-			const code = await generateCode(nom, prenom, tel, signatureData);
-			document.getElementById('code-unique').textContent = code;
-		  } else {
-			document.getElementById('code-unique').textContent = '------';
-		  }
-		}
-
-		document.getElementById('nom').addEventListener('input', updateCode);
-		document.getElementById('prenom').addEventListener('input', updateCode);
-		document.getElementById('mobile').addEventListener('input', updateCode);
-
-		// Signature Pad
-		const canvas = document.getElementById('signature-pad');
-		const signaturePad = new SignaturePad(canvas);
-		document.getElementById('clear').addEventListener('click', function(e) {
-		  e.preventDefault();
-		  signaturePad.clear();
-		  updateCode();
+			e.preventDefault();
+			signaturePad.clear();
+			updateCode();
 		});
 
 		// Soumission du formulaire et génération du PDF
@@ -368,15 +322,13 @@ document.addEventListener("DOMContentLoaded", function() {
 		  doc.text(`Date : ${date}`, 10, 70);
 		  doc.text(`Code unique : ${code}`, 10, 90);
 		  doc.text('Signature :', 10, 100);
-		  doc.addImage(signatureData, 'PNG', 10, 90, 80, 30);
+		  doc.addImage(signatureData, 'PNG', 10, 105, 80, 30);
 		  let nomFichier = `${nom} ${prenom}_Signature.pdf`;
 		  doc.save(nomFichier);	  
-		});
-		//window.close();
-window.addEventListener("storage", function(e) {
-    console.log("Modification détectée :", e.key, e.newValue);
-});
 
+        // Activer le bouton après la génération du PDF
+        document.getElementById('returnButton').disabled = false;
+    });
  </script>
 </body>
 </html>
