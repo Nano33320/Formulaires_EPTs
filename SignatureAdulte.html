@@ -330,8 +330,17 @@
 		  let nomFichier = `${nom} ${prenom}_Signature.pdf`;
 
 	      //	Sauvegarde du pdf sans l'ouvrir
-	      //  let nomFichier = `${nom} ${prenom}_Signature.pdf`;
-		  doc.save(nomFichier);  
+		  const blob = doc.output('blob');
+		  const blobUrl = URL.createObjectURL(blob);
+		  const a = document.createElement('a');
+		  a.href = blobUrl;
+		  a.download = nomFichier;
+		  document.body.appendChild(a);
+		  a.click();
+		  document.body.removeChild(a);
+		  URL.revokeObjectURL(blobUrl);
+
+
 
         // Activer le bouton après la génération du PDF
         document.getElementById('returnButton').disabled = false;
