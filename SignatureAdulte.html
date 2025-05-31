@@ -190,15 +190,19 @@
 		</form>
 <script>
 		// récupération des champs utiles
-		document.addEventListener("DOMContentLoaded", function() {
-			const urlParams = new URLSearchParams(window.location.search);
-			const nom = urlParams.get('nom');
-			const prenom = urlParams.get('prenom');
-			const tel = urlParams.get('mobile');
+document.addEventListener("DOMContentLoaded", function() {
+    const urlParams = new URLSearchParams(window.location.search);
 
-			// Utilisez les valeurs récupérées comme vous le souhaitez
-			console.log(nom, prenom, mobile);
-		});
+    // Récupérer les valeurs des paramètres d'URL
+    const nom = urlParams.get('nom');
+    const prenom = urlParams.get('prenom');
+    const mobile = urlParams.get('mobile');
+
+    // Utiliser les valeurs récupérées pour remplir les champs du formulaire
+    if (nom) document.getElementById('nom').value = nom;
+    if (prenom) document.getElementById('prenom').value = prenom;
+    if (mobile) document.getElementById('mobile').value = mobile;
+});
 
 		// Formatage des champs Nom et Prénom Adhérent
 		document.getElementById('nom')?.addEventListener('input', function(e) {
