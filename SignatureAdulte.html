@@ -27,10 +27,15 @@
 			display: block;
 			margin: auto;
 		}
+		.form-group {
+			display: block; /* Garde tout aligné à gauche */
+			text-align: left; /* Assure l'alignement des textes et du pad */
+		}
 
-        .form-group {
-            margin-bottom: 15px;
-        }
+		#clear {
+		margin-left: 75px; /* Ajoute une marge de 50px à gauche */
+		display: block; /* Assure qu'il reste bien positionné */
+		}
         label {
             display: block;
             margin-bottom: 5px;
@@ -70,22 +75,15 @@
             background-color: #cccccc;
             cursor: not-allowed;
         }
-        .help-text {
-            color: #666;
-            font-size: 14px;
-            margin-top: 4px;
-        }
-        /* Nouvelle classe pour la civilité */
-        .radio-group-horizontal {
-            display: flex;
-            flex-direction: row;
-            align-items: left;
-            margin: 5px 0;
-        }
         .button-container {
             display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
+            justify-content: center;
+            margin-top: 10px;
+        } 
+		.help-text {
+            color: #666666;
+            font-size: 14px;
+            margin-top: 4px;
         }
         .email-container {
             display: flex;
@@ -104,7 +102,7 @@
             font-size: 0.9em;
             color: #666;
         }
-        #signature-pad { border: 1px solid #000; touch-action: none; }
+		#signature-pad { border: 1px solid #cc0002; touch-action: none; background-color: #D3D3D3;}
         .form-group { margin-bottom: 1em; }
         .code-box { font-weight: bold; font-size: 1.2em; background: #e8e8e8; padding: 0.2em 0.5em; display: inline-block; border-radius: 4px; }
         .form-group { margin-bottom: 15px; }
@@ -155,9 +153,9 @@
         </div>
 		<form id="signaturePDFAdulte">
 			<div class="form-group">
-			<div class="form-group">
                 <label style="text-align: center; font-size: larger; font-style: italic;background-color: lightgray;padding: 5px 0;">Adhérant</label>
             </div> 
+			<div class="form-group">
 				<label for="nom">NOM</label>
                 <input type="text" id="nom" name="nom" autocomplete="off" required>
             </div>
@@ -179,30 +177,30 @@
 			  <span id="code-unique" class="code-box">------</span>
 			</div>
 			<div class="form-group">
-				<label>Signature :</label><br>
+				<label>Signer dans le rectangle</label><br>
 				<canvas id="signature-pad" width="400" height="150"></canvas><br>
 				<button type="button" id="clear">Effacer / refaire la signature</button>
 			</div>
 			<div class="button-container">
-				<button class="button" type="submit">Générer le PDF signé</button>
-				<button class="button" onclick="window.close()" id="returnButton" disabled>Revenir au formulaire principal pour envoi courriel</button>
+				<button class="button" type="submit" onclick="fermerFenetre()">Valider</button>
 			</div>
+			<!-- 	<button class="button" onclick="window.close()" id="returnButton" disabled>Revenir au formulaire principal pour envoi courriel</button> -->
 		</form>
 <script>
 		// récupération des champs utiles
-document.addEventListener("DOMContentLoaded", function() {
-    const urlParams = new URLSearchParams(window.location.search);
+		document.addEventListener("DOMContentLoaded", function() {
+			const urlParams = new URLSearchParams(window.location.search);
 
-    // Récupérer les valeurs des paramètres d'URL
-    const nom = urlParams.get('nom');
-    const prenom = urlParams.get('prenom');
-    const mobile = urlParams.get('mobile');
+			// Récupérer les valeurs des paramètres d'URL
+			const nom = urlParams.get('nom');
+			const prenom = urlParams.get('prenom');
+			const mobile = urlParams.get('mobile');
 
-    // Utiliser les valeurs récupérées pour remplir les champs du formulaire
-    if (nom) document.getElementById('nom').value = nom;
-    if (prenom) document.getElementById('prenom').value = prenom;
-    if (mobile) document.getElementById('mobile').value = mobile;
-});
+			// Utiliser les valeurs récupérées pour remplir les champs du formulaire
+			if (nom) document.getElementById('nom').value = nom;
+			if (prenom) document.getElementById('prenom').value = prenom;
+			if (mobile) document.getElementById('mobile').value = mobile;
+		});
 
 		// Formatage des champs Nom et Prénom Adhérent
 		document.getElementById('nom')?.addEventListener('input', function(e) {
@@ -328,10 +326,17 @@ document.addEventListener("DOMContentLoaded", function() {
 		  doc.text('Signature :', 10, 100);
 		  doc.addImage(signatureData, 'PNG', 10, 105, 80, 30);
 		  let nomFichier = `${nom} ${prenom}_Signature.pdf`;
-		  doc.save(nomFichier);	  
 
-        // Activer le bouton après la génération du PDF
-        document.getElementById('returnButton').disabled = false;
+	      //	Sauvegarde du pdf
+		  doc.save(nomFichier);
+
+        // Ferme la fenêtre "Signature" et remet l'onglet du formulaire santé au premier plan
+		function fermerFenetre() {
+			window.opener.focus(); 
+			setTimeout(function() {
+				window.close();
+			}, 3000); // 3000 millisecondes = 3 secondes
+		}	
     });
  </script>
 </body>
