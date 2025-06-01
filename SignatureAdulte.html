@@ -184,7 +184,6 @@
 			<div class="button-container">
 				<button class="button" type="submit" onclick="fermerFenetre()">Valider</button>
 			</div>
-			<!-- 	<button class="button" onclick="window.close()" id="returnButton" disabled>Revenir au formulaire principal pour envoi courriel</button> -->
 		</form>
 <script>
 		// récupération des champs utiles
@@ -327,17 +326,20 @@
 		  doc.addImage(signatureData, 'PNG', 10, 105, 80, 30);
 		  let nomFichier = `${nom} ${prenom}_Signature.pdf`;
 
-	      //	Sauvegarde du pdf
-		  doc.save(nomFichier);
-
-        // Ferme la fenêtre "Signature" et remet l'onglet du formulaire santé au premier plan
+		// Gère la fermeture de la fenêtre "Signature" et remet l'onglet du formulaire santé au premier plan
 		function fermerFenetre() {
-			window.opener.focus(); 
 			setTimeout(function() {
+				if (window.opener && !window.opener.closed) {
+					window.opener.focus();
+				}
 				window.close();
-			}, 3000); // 3000 millisecondes = 3 secondes
-		}	
-    });
+			}, 2000); // 2000 ms = 2 s après la génération du PDF
+		}
+		
+	    //	Sauvegarde du pdf et appelle la fermeture
+		doc.save(nomFichier);
+		fermerFenetre();
+			});
  </script>
 </body>
 </html>
