@@ -324,25 +324,25 @@
 		  doc.text(`Code unique : ${code}`, 10, 90);
 		  doc.text('Signature :', 10, 100);
 		  doc.addImage(signatureData, 'PNG', 10, 105, 80, 30);
-doc.setTextColor(255, 0, 0);
-const lignes = [
-  "Votre signature est enregistrée,",
-  " ",
-  "Vous allez être redirigé vers le Questionnaire Santé",
-  "sur lequel vous devrez cliquer sur le bouton « Envoyer par courriel »",
-  "Vous devez fermer cette page pour accéder à l'écran suivant."
-];
-let y = 150;
-const indexNoir = [2, 3]; 
-lignes.forEach((texte, index) => {
-  if (indexNoir.includes(index)) {
-    doc.setTextColor(0, 0, 0); // Noir
-  } else {
-    doc.setTextColor(255, 0, 0); // Rouge
-  }
-  doc.text(texte, 105, y, { align: "center" });
-  y += 10;
-});
+			doc.setTextColor(255, 0, 0);
+			const lignes = [
+			  "Votre signature est enregistrée,",
+			  " ",
+			  "Vous allez être redirigé vers le Questionnaire Santé",
+			  "sur lequel vous devrez cliquer sur le bouton « Envoyer par courriel »",
+			  "Vous DEVEZ fermer cette page pour accéder à l'écran suivant."
+			];
+			let y = 150;
+			const indexNoir = [2, 3]; 
+			lignes.forEach((texte, index) => {
+			  if (indexNoir.includes(index)) {
+				doc.setTextColor(0, 0, 0); // Noir
+			  } else {
+				doc.setTextColor(255, 0, 0); // Rouge
+			  }
+			  doc.text(texte, 105, y, { align: "center" });
+			  y += 10;
+			});
 		  let nomFichier = `${nom} ${prenom}_Signature.pdf`;
 
 		// Ferme la fenêtre "Signature"
