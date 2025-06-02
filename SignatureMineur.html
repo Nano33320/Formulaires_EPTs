@@ -353,19 +353,23 @@
 		  doc.text(`Code unique : ${code}`, 10, 100);
 		  doc.text('Signature :', 10, 110);
 		  doc.addImage(signatureData, 'PNG', 10, 100, 80, 30);
+		  doc.setTextColor(255, 0, 0);
+		  doc.text("Votre signature est enregistrée, vous pouvez fermer cette page.", 10, 150);	
 		  let nomFichier = `${nom} ${prenom}_Signature.pdf`;
 
-	      //	Sauvegarde du pdf sans l'ouvrir
-		  let nomFichier = `${nom} ${prenom}_Signature.pdf`;
-		  doc.save(nomFichier);	  
-
-        // Ferme la fenêtre "Signature" et remet l'onglet du formulaire santé au premier plan
+        // Ferme la fenêtre "Signature"
 		function fermerFenetre() {
-			window.opener.focus(); 
 			setTimeout(function() {
+				if (window.opener && !window.opener.closed) {
+					window.opener.focus();
+				}
 				window.close();
-			}, 3000); // 3000 millisecondes = 3 secondes
-		}	
+			}, 3000); // 3000 ms
+		}
+		
+	    //	Sauvegarde du pdf et appelle la fermeture
+		doc.save(nomFichier);
+		fermerFenetre();
 		});
  </script>
 </body>

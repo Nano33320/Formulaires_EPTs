@@ -324,22 +324,24 @@
 		  doc.text(`Code unique : ${code}`, 10, 90);
 		  doc.text('Signature :', 10, 100);
 		  doc.addImage(signatureData, 'PNG', 10, 105, 80, 30);
+		  doc.setTextColor(255, 0, 0);
+		  doc.text("Votre signature est enregistrée, vous pouvez fermer cette page.", 10, 150);		  
 		  let nomFichier = `${nom} ${prenom}_Signature.pdf`;
 
-		// Gère la fermeture de la fenêtre "Signature" et remet l'onglet du formulaire santé au premier plan
+		// Ferme la fenêtre "Signature"
 		function fermerFenetre() {
 			setTimeout(function() {
 				if (window.opener && !window.opener.closed) {
 					window.opener.focus();
 				}
 				window.close();
-			}, 2000); // 2000 ms = 2 s après la génération du PDF
+			}, 3000); // 3000 ms
 		}
 		
 	    //	Sauvegarde du pdf et appelle la fermeture
 		doc.save(nomFichier);
 		fermerFenetre();
-			});
+		});
  </script>
 </body>
 </html>

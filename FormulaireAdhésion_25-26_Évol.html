@@ -403,20 +403,8 @@
                         <div><input type="checkbox" id="q9Adulte"><label for="q9Adulte">9°) Pensez-vous avoir besoin d'un avis médical pour poursuivre votre pratique sportive ?</label></div>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label style="color: blue;">Si vous avez répondu "NON" à toutes les questions :</label>
-                    <ol style="font-size: 0.9em; margin: 0; padding-left: 20px;">
-                        <li>Pas de certificat médical à fournir</li>
-                        <li>Vous attestez avoir répondu "NON" à toutes les questions lors de la demande de licence</li>
-                    </ol>
-                </div>
-                <div class="form-group">
-                    <label style="color: red;">Si vous avez répondu "OUI" à une ou plusieurs de ces questions :</label>
-                    <ol style="font-size: 0.9em; margin: 0; padding-left: 20px;">
-                        <li>Vous devez fournir un certificat médical</li>
-                        <li>Vous devez consulter votre médecin et lui présenter ce questionnaire renseigné</li>
-                    </ol>
-                </div>
+				<div id="sante-adulte-count"><label style="color: blue;"><span id="sante-adulte-value" style="display: none;">0</span>0</span></label></div>				
+				<div id="sante-adulte-message" style="margin-bottom: 1em;"></div>
                 <div class="form-group">
                     <label for="dateAdulte">Date</label>
                     <input type="text" id="dateAdulte" name="date" readonly>
@@ -537,26 +525,14 @@
                         <div><input type="checkbox" id="q22Mineur"><label for="q22Mineur">22°) Êtes-vous inquiet pour son poids ? Trouvez-vous qu’il se nourrit trop ou pas assez ?</label></div>
                         <div><input type="checkbox" id="q23Mineur"><label for="q23Mineur">23°) Avez-vous manqué l’examen de santé prévu à l’âge de votre enfant chez le médecin ? <span style="color: red;">* </span></label></div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label style="color: blue;">Si vous avez répondu "NON" à toutes les questions :</label>
-                    <ol style="font-size: 0.9em; margin: 0; padding-left: 20px;">
-                        <li>Pas de certificat médical à fournir</li>
-                        <li>Vous attestez avoir répondu "NON" à toutes les questions lors de la demande de licence</li>
-                    </ol>
-                </div>
-                <div class="form-group">
-                    <label style="color: red;">Si vous avez répondu "OUI" à une ou plusieurs de ces questions :</label>
-                    <ol style="font-size: 0.9em; margin: 0; padding-left: 20px;">
-                        <li>Vous devez fournir un certificat médical</li>
-                        <li>Vous devez consulter votre médecin et lui présenter ce questionnaire renseigné</li>
-                    </ol>
-                </div>
+                </div>			
+				<div id="sante-mineur-count"><label style="color: blue;"><span id="sante-mineur-value" style="display: none;">0</span></label></div>	
+				<div id="sante-mineur-message" style="margin-bottom: 1em;"></div>
                 <div class="form-group">
                     <label for="dateMineur">Date</label>
                     <input type="text" id="dateMineur" name="date" readonly>
                 </div>
-				<div class="button-container">				
+				<div class="button-container">									
 					<button type="submit" id="exportSanteMineur" onclick="redirectToSignatureForm2()" style="cursor: pointer;"><strong><i>Valider</i></strong></button>
 				</div>
             </form>
@@ -928,6 +904,23 @@
     });
   }
 
+//	<!-- ==== Comptage des problèmes santé adulte ==== -->
+const checkboxesAdulte = document.querySelectorAll('input[id^="q"][id$="Adulte"]');
+const santeAdulteCount = document.getElementById('sante-adulte-count');
+
+function updateSanteAdulteCount() {
+    const checkedCount = Array.from(checkboxesAdulte).filter(cb => cb.checked).length;
+
+    if (checkedCount === 0) {
+        santeAdulteCount.innerHTML = `<label style="color: blue;">Le questionnaire Santé suffit pour vous inscrire</label>`;
+    } else {
+        santeAdulteCount.innerHTML = `<label style="color: red;">Vous devez consulter votre médecin afin qu'il vous prescrive un certificat médical</label>`;
+    }
+}
+
+checkboxesAdulte.forEach(cb => cb.addEventListener('change', updateSanteAdulteCount));
+updateSanteAdulteCount();
+
   // --- SIGNATURE ADULTE ---
   window.redirectToSignatureForm = function() {
     const nomVal = nom ? nom.value : '';
@@ -1111,6 +1104,32 @@ L’équipe de l’Entrain Pour Tous`;
       if (document.getElementById('sendEmailMineur')) document.getElementById('sendEmailMineur').disabled = false;
     });
   }
+
+	<!-- ==== Comptage des problèmes santé mineur ==== -->
+	document.addEventListener('DOMContentLoaded', function () {
+		const checkboxesMineur = document.querySelectorAll('input[id^="q"][id$="Mineur"]');
+		const santeMineurValue = document.getElementById('sante-mineur-value');
+		const santeMineurMessage = document.getElementById('sante-mineur-message');
+
+		function updateSanteMineurCount() {
+			const checkedCount = Array.from(checkboxesMineur).filter(cb => cb.checked).length;
+
+			if (santeMineurValue) {
+				santeMineurValue.textContent = checkedCount;
+			}
+
+			if (santeMineurMessage) {
+				if (checkedCount === 0) {
+					santeMineurMessage.innerHTML = `<label style="color: blue;">Le questionnaire Santé suffit pour vous inscrire</label>`;
+				} else {
+					santeMineurMessage.innerHTML = `<label style="color: red;">Vous devez consulter votre médecin afin qu'il vous prescrive un certificat médical</label>`;
+				}
+			}
+		}
+
+		checkboxesMineur.forEach(cb => cb.addEventListener('change', updateSanteMineurCount));
+		updateSanteMineurCount();
+	});
 
   // --- SIGNATURE MINEUR ---
   window.redirectToSignatureForm2 = function() {
