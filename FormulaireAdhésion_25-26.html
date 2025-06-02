@@ -344,7 +344,7 @@
             <div style="background-color: #f8f9fa; padding: 15px; margin-bottom: 20px; border-radius: 5px; border-left: 4px solid #4CAF50;">
                 <p style="font-size: 0.9em; margin: 0 0 10px 0;"><strong>Comment remplir ce formulaire :</strong></p>
                 <ol style="font-size: 0.9em; margin: 0; padding-left: 20px;">
-                    <li>Remplissez tous les champs marqués d'un astérisque (*)</li>
+                    <li>Remplissez tous les champs marqués d'un astérisque(<span style="color: red;">*</span>)</li>
                     <li>Cochez les activités souhaitées et sélectionnez le tarif correspondant</li>
                     <li>Vérifiez les conditions et cochez les cases obligatoires</li>
                     <li>Cliquez sur "Valider le formulaire" pour générer votre fichier d'inscription qui sera téléchargé dans votre dossier Téléchargement</li>
@@ -417,7 +417,7 @@
                 <div style="text-align: center;">
                     <button id="sendEmailAdulte" disabled>Envoyer par courriel</button> </div>
                 <div class="instructions">
-                    <p><span style="color: red;"><b>Après avoir validé le formulaire, cliquez sur "Envoyer par courriel". Votre client de messagerie s'ouvrira avec un courriel pré-rempli. Veuillez ajouter manuellement les DEUX fichiers PDF en pièce jointe avant d'envoyer le courriel.</b></span></p>
+                    <p><span style="color: red;"><b>Cliquez sur "Envoyer par courriel". Votre client de messagerie s'ouvrira avec un courriel pré-rempli. Veuillez ajouter manuellement les DEUX fichiers PDF en pièce jointe avant d'envoyer le courriel.</b></span></p>
                 </div> 
         </div>
 
@@ -427,7 +427,7 @@
             <div style="background-color: #f8f9fa; padding: 15px; margin-bottom: 20px; border-radius: 5px; border-left: 4px solid #4CAF50;">
                 <p style="font-size: 0.9em; margin: 0 0 10px 0;"><strong>Comment remplir ce formulaire :</strong></p>
 				<ol style="font-size: 0.9em; margin: 0; padding-left: 20px;">
-					<li>Remplissez tous les champs marqués d'un astérisque (*)</li>
+					<li>Remplissez tous les champs marqués d'un astérisque(<span style="color: red;">*</span>)</li>
 					<li>Cochez les activités souhaitées et sélectionnez le tarif correspondant</li>
 					<li>Vérifiez les conditions et cochez les cases obligatoires</li>
 					<li>Cliquez sur "Valider le formulaire" pour générer votre fichier d'inscription qui sera téléchargé dans votre dossier Téléchargement</li>
@@ -540,7 +540,7 @@
                 <div style="text-align: center;">
                     <button id="sendEmailMineur" disabled>Envoyer par courriel</button> </div>
                 <div class="instructions">
-                    <p><span style="color: red;"><b>Après avoir validé le formulaire, cliquez sur "Envoyer par courriel". Votre client de messagerie s'ouvrira avec un courriel pré-rempli. Veuillez ajouter manuellement les DEUX fichiers PDF en pièce jointe avant d'envoyer le courriel.</b></span></p>
+                    <p><span style="color: red;"><b>Cliquez sur "Envoyer par courriel". Votre client de messagerie s'ouvrira avec un courriel pré-rempli. Veuillez ajouter manuellement les DEUX fichiers PDF en pièce jointe avant d'envoyer le courriel.</b></span></p>
                 </div>  
 		</div>
 		
@@ -963,12 +963,7 @@ updateSanteAdulteCount();
       const subject = 'Inscription : fichiers CSV et PDF en pièce jointe';
       const body = `Bonjour,
 
-Merci de joindre en pièce jointe les 3 fichiers 2 x "*." et 1 x "*.pdf" que vous venez de créer :
-- Votre fiche d’adhésion
-- Votre questionnaire santé
-- votre signature
-
-Noms des fichiers :
+Merci de joindre en pièce jointe les 3 fichiers dont les noms sont :
 - ${adhesionFileName}
 - ${adulteFileName}
 - ${signatureFileName}
@@ -1198,14 +1193,9 @@ function redirectToSignatureForm2() {
       const subject = 'Inscription : fichiers PDF en pièce jointe';
       const body = `Bonjour,
 
-Merci de joindre en pièce jointe les 3 fichiers 2 x "*." et 1 x "*.pdf" que vous venez de créer :
-- Votre fiche d’adhésion
-- Votre questionnaire santé
-- votre signature
-
-Noms des fichiers :
+Merci de joindre en pièce jointe les 3 fichiers dont les noms sont :
 - ${adhesionFileName}
-- ${mineurFileName}
+- ${adulteFileName}
 - ${signatureFileName}
 
 Pour cela, cliquez sur l’icône 📎 (trombone) dans votre outil/interface de messagerie, puis sélectionnez les 3 fichiers dans votre dossier "Téléchargement".
