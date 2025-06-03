@@ -151,13 +151,14 @@
             <div style="background-color: #f8f9fa; padding: 15px; margin-bottom: 20px; border-radius: 5px; border-left: 4px solid #4CAF50;">
                 <p style="font-size: 0.9em; margin: 0 0 10px 0;"><strong>Comment remplir ce formulaire :</strong></p>
                 <ol style="font-size: 0.9em; margin: 0; padding-left: 20px;">
-                    <li>Remplissez tous les champs marqués d'un astérisque (<span style="color: red;">*</span>) <span style="color: red;font-style: italic;">ces champs sont obligatoires </span></li>
-                    <li>Cochez les activités souhaitées et sélectionnez le tarif correspondant</li>
+                    <li>Remplissez tous les champs marqués d'un astérisque (<span style="color: red;">*</span>) <span style="color: red;font-style: italic;">ils sont obligatoires </span></li>
+                    <li>Cochez les activités souhaitées et choisissez le tarif de votre adhésion</li>
                     <li>Vérifiez les conditions et cochez les cases obligatoires</li>
-                    <li>Cliquez sur "Valider le formulaire" pour générer votre fichier d'inscription qui sera téléchargé dans votre dossier Téléchargement</li>
-                    <li>De la même manière, en suivant, remplissez le Questionnaire Santé et l'intégrer dans votre dossier Téléchargement</li>
-                    <li>Envoyez par courriel les fichiers <span style="color: blue;">"NOM Prénom_Adhésion_25-26.pdf"</span> et <span style="color: blue;">"NOM Prénom_Questionnaire Santé Adulte/Mineur_25-26.pdf"</span><br>à l'adresse => lentrainpourtous@epts.fr&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: red; font-style: italic;">[elle est déjà implémentée dans le courriel qui sera généré]</span></li>
-                    <li>Pour que votre adhésion puisse être validée, envoyez votre paiement par chèque à l'ordre de l'<span style="color: blue;"><b>Entrain Pour Tous</b></span>
+                    <li>Cliquez sur "Valider" => votre fichier d'inscription sera enregistré dans votre dossier "Téléchargements"</li>
+                    <li>En suivant, remplissez le Questionnaire Santé => sera enregistré dans votre dossier "Téléchargements"</li>
+                    <li>Envoyez par courriel les fichiers <span style="color: blue;">"NOM Prénom_Adhésion_25-26.csv"</span> et <span style="color: blue;">"NOM Prénom_Questionnaire Santé Adulte/Mineur_25-26.csv"</span><br>
+					ainsi que le fichier  <span style="color: blue;">"NOM Prénom_Signature_25-26.pdf"</span>à l'adresse => lentrainpourtous@epts.fr&nbsp;&nbsp;&nbsp;&nbsp;</span></li>
+                    <li>Pour que votre adhésion puisse être validée, transmettez nous votre paiement par chèque à l'ordre de l'<span style="color: blue;"><b>Entrain Pour Tous</b></span>
                 </ol>
             </div>
             <form id="adhesionForm">
@@ -344,14 +345,8 @@
             <div style="background-color: #f8f9fa; padding: 15px; margin-bottom: 20px; border-radius: 5px; border-left: 4px solid #4CAF50;">
                 <p style="font-size: 0.9em; margin: 0 0 10px 0;"><strong>Comment remplir ce formulaire :</strong></p>
                 <ol style="font-size: 0.9em; margin: 0; padding-left: 20px;">
-                    <li>Remplissez tous les champs marqués d'un astérisque(<span style="color: red;">*</span>)</li>
-                    <li>Cochez les activités souhaitées et sélectionnez le tarif correspondant</li>
-                    <li>Vérifiez les conditions et cochez les cases obligatoires</li>
-                    <li>Cliquez sur "Valider le formulaire" pour générer votre fichier d'inscription qui sera téléchargé dans votre dossier Téléchargement</li>
-                    <li>De la même manière, en suivant, remplissez le Questionnaire Santé et l'intégrer dans votre dossier Téléchargement</li>
-                    <li>Envoyez par courriel les fichiers <span style="color: blue;">"NOM Prénom_Adhésion_25-26.csv"</span> et <span style="color: blue;">"NOM Prénom_Questionnaire Santé Adulte/Jeune_25-26.csv"</span><br>à l'adresse => lentrainpourtous@epts.fr&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: red; font-style: italic;">[elle est déjà implémentée dans le courriel qui sera généré]</span></li>
-                    <li>Pour que votre adhésion puisse être validée, envoyez votre paiement par chèque à l'ordre de l'<span style="color: blue;"><b>Entrain Pour Tous</b></span>
-                    <li> Si vous devez consulter votre médecin pour un certificat médical, cliquez sur le bouton "<span style="color: green;"><b>Imprimer</b></span>" en bas de page
+                    <li>Cochez les cases qui vous concernent s'il y en a</li>
+                    <li>Cliquez sur "Valider" => votre fichier Qestionnaire Santé Adulte sera enregistréé dans votre dossier Téléchargement</li>
                 </ol>
             </div>
             <form id="santeAdulteForm">
@@ -363,23 +358,23 @@
                     <label>Civilité<span class="required">*</span></label>
                     <div class="radio-group">
                         <div>
-                            <input type="radio" id="mrAdulte" name="civiliteAdulte" value="Mr" required>
+                            <input type="radio" id="mrAdulte" name="civiliteAdulte" value="Mr" required readonly>
                             <label for="mrAdulte">Mr</label>
                         </div>
                         <div>
-                            <input type="radio" id="mmeAdulte" name="civiliteAdulte" value="Mme">
+                            <input type="radio" id="mmeAdulte" name="civiliteAdulte" value="Mme"required readonly>
                             <label for="mmeAdulte">Mme</label>
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="nomAdulte">NOM<span class="required">*</span></label>
-                    <input type="text" id="nomAdulte" name="nom" autocomplete="off" required>
+                    <input type="text" id="nomAdulte" name="nom" autocomplete="off" required readonly>
                     <div class="help-text">Les majuscules s'implémentent automatiquement y compris avec les accents</div>
                 </div>
                 <div class="form-group">
                     <label for="prenomAdulte">Prénom <span class="required">*</span></label>
-                    <input type="text" id="prenomAdulte" name="prenom" autocomplete="off" required>
+                    <input type="text" id="prenomAdulte" name="prenom" autocomplete="off" required readonly>
                 </div>
                 <div class="form-group">
                     <label style="color: blue; text-align: center; background-color: lightgray;padding: 10px 0;">Répondez aux questions ci-dessous => en laissant la case vide vous validez "NON" <span style="color: red; font-style: italic;">en la cochant vous validez "OUI"</span></label>
@@ -427,13 +422,8 @@
             <div style="background-color: #f8f9fa; padding: 15px; margin-bottom: 20px; border-radius: 5px; border-left: 4px solid #4CAF50;">
                 <p style="font-size: 0.9em; margin: 0 0 10px 0;"><strong>Comment remplir ce formulaire :</strong></p>
 				<ol style="font-size: 0.9em; margin: 0; padding-left: 20px;">
-					<li>Remplissez tous les champs marqués d'un astérisque(<span style="color: red;">*</span>)</li>
-					<li>Cochez les activités souhaitées et sélectionnez le tarif correspondant</li>
-					<li>Vérifiez les conditions et cochez les cases obligatoires</li>
-					<li>Cliquez sur "Valider le formulaire" pour générer votre fichier d'inscription qui sera téléchargé dans votre dossier Téléchargement</li>
-					<li>De la même manière, en suivant, remplissez le Questionnaire Santé et l'intégrer dans votre dossier Téléchargement</li>
-					<li>Envoyez par courriel les fichiers<span style="color: blue;">"NOM Prénom_Adhésion_25-26.csv"</span>et <span style="color: blue;">"NOM Prénom_Questionnaire Santé Mineur/Jeune_25-26.csv"</span><br> à l'adresse => lentrainpourtous@epts.fr&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: red; font-style: italic;">[elle est déjà implémentée dans le courriel qui sera généré]</span></li>
-					<li>Pour que votre adhésion puisse être validée, envoyez votre paiement par chèque à l'ordre de l'<span style="color: blue;"><b>Entrain Pour Tous</b></span></li>
+                    <li>Cochez les cases qui vous concernent s'il y en a</li>
+                    <li>Cliquez sur "Valider" => votre fichier Qestionnaire Santé Adulte sera enregistréé dans votre dossier Téléchargement</li>
 				</ol>
             </div>
             <form id="santeMineurForm" onsubmit="return handleFormSubmit(event)">
@@ -445,27 +435,27 @@
                     <label style="text-align: center;font-style: italic;font-size: larger;background-color: lightgray;padding: 5px 0;">Enfant Mineur<span class="required">*</span></label>
                     <div class="radio-group">
                         <div>
-                            <input type="radio" id="G" name="civiliteMineur" value="G" required>
+                            <input type="radio" id="G" name="civiliteMineur" value="G" required readonly>
                             <label for="G">Garçon</label>
                         </div>
                         <div>
-                            <input type="radio" id="F" name="civiliteMineur" value="F">
+                            <input type="radio" id="F" name="civiliteMineur" value="F" required readonly>
                             <label for="F">Fille</label>
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="nomMineur">NOM<span class="required">*</span></label>
-                    <input type="text" id="nomMineur" name="nom" autocomplete="off" required>
+                    <input type="text" id="nomMineur" name="nom" autocomplete="off" required readonly>
                     <div class="help-text">Les majuscules s'implémentent automatiquement y compris avec les accents</div>
                 </div>
                 <div class="form-group">
 					<label for="prenomMineur">Prénom <span class="required">*</span></label>
-                    <input type="text" id="prenomMineur" name="prenom" autocomplete="off" required>
+                    <input type="text" id="prenomMineur" name="prenom" autocomplete="off" required readonly>
                 </div>
                 <div class="age-container">
                     <label for="ageMineur">Âge<span class="required">*</span></label>
-                    <input type="number" id="ageMineur" name="age" required min="1" max="17">
+                    <input type="number" id="ageMineur" name="age" required min="1" max="17" readonly>
                 </div>
                 <div class="form-group"></div>
                 <div class="form-group">
@@ -921,6 +911,11 @@ function updateSanteAdulteCount() {
 checkboxesAdulte.forEach(cb => cb.addEventListener('change', updateSanteAdulteCount));
 updateSanteAdulteCount();
 
+// Réagit aux changements de checkbox (page 2)
+document.querySelectorAll('input[id^="q"][id$="Adulte"]').forEach(cb => {
+  cb.addEventListener('change', updateSanteAdulteCount);
+});
+
   // --- SIGNATURE ADULTE ---
   window.redirectToSignatureForm = function() {
     const nomVal = nom ? nom.value : '';
@@ -1117,7 +1112,7 @@ L’équipe de l’Entrain Pour Tous`;
 				if (checkedCount === 0) {
 					santeMineurMessage.innerHTML = `<label style="color: blue;">Le questionnaire Santé suffit pour vous inscrire</label>`;
 				} else {
-					santeMineurMessage.innerHTML = `<label style="color: red;">Vous devez consulter votre médecin afin qu'il vous prescrive un certificat médical</label>`;
+					santeMineurMessage.innerHTML = `<label style="color: red;">Vous devez consulter votre médecin et nous fournir un certificat médical.<br>Finalisez votre inscription nous mettons votre dossier en suspend dans l'attente du certificat médical.</label>`;
 				}
 			}
 		}
@@ -1127,9 +1122,6 @@ L’équipe de l’Entrain Pour Tous`;
 	});
 
   // --- SIGNATURE MINEUR ---
-  
-  
-  
   function handleFormSubmit(event) {
     // Vérifie les champs HTML5 (required, etc.)
     if (!event.target.checkValidity()) {
@@ -1148,7 +1140,6 @@ L’équipe de l’Entrain Pour Tous`;
 function redirectToSignatureForm2() {
     window.location.href = "signature.html"; // Remplace par ta vraie URL
 }
-  
   
   window.redirectToSignatureForm2 = function() {
     const nomVal = nom ? nom.value : '';
