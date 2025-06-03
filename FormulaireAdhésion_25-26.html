@@ -304,7 +304,7 @@
 						<div style="display: flex; align-items: center; gap: 16px; width: 100%;">
 							<span style="display: flex; align-items: center; flex-grow: 1;">
 								<input type="radio" id="autorise" name="image" value="Autorise" required>
-								<label for="autorise" style="margin-left: 8px;">Acceptation de l'autorisation de diffusion<span class="required"><span style="color: white; font-style: italic;">xxxxxxxxxxxxxxx</span></span></label>
+								<label for="autorise" style="margin-left: 8px;">Acceptation de l'autorisation de diffusion<span class="required" style="color: white; font-style: italic;">xxxxxxxxxxxxxxx</span></label>
 							</span>
 							<span style="display: flex; align-items: center; flex-grow: 1;">
 								<input type="radio" id="refuse" name="image" value="Refuse" required>
@@ -1250,13 +1250,12 @@ L’équipe de l’Entrain Pour Tous`;
 
   const copyBtnMineur = document.getElementById('copy-btn-mineur');
   if (copyBtnMineur) {
-<<<<<<< HEAD
     copyBtnMineur.addEventListener('click', function () {
       navigator.clipboard.writeText(document.getElementById('mail-body-mineur').value)
         .then(() => alert('Message copié dans le presse-papiers !'))
         .catch(err => console.error('Erreur de copie : ', err));
     });
-=======
+	
 	copyBtnMineur.addEventListener('click', function(){
 	  const mailBodyMineur = document.getElementById('mail-body-mineur');
 	  if (mailBodyMineur) {
@@ -1266,7 +1265,6 @@ L’équipe de l’Entrain Pour Tous`;
 		  .catch(err => console.error('Erreur de copie: ', err));
 	  }
 	});
->>>>>>> 6820eca18259c24887d1cc3c8472df4e2b09c9c7
   }
 });
 
