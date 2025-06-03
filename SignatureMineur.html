@@ -31,7 +31,9 @@
 			display: block; /* Garde tout aligné à gauche */
 			text-align: left; /* Assure l'alignement des textes et du pad */
 		}
-
+		li {
+		line-height: 1.4; /* Ajuste l'interligne à l'intérieur d'un même élément <li> */
+		}
 		#clear {
 		margin-left: 75px; /* Ajoute une marge de 50px à gauche */
 		display: block; /* Assure qu'il reste bien positionné */
@@ -139,15 +141,15 @@
 		" alt="Logo">
         <!-- =================== SIGNATURE ===================== -->		
 		<h1>Signature de l'Adhésion et du Questionnaire Santé Adulte</h1>
-       <div style="background-color: #f8f9fa; padding: 15px; margin-bottom: 20px; border-radius: 5px; border-left: 4px solid #4CAF50;">
-            <p style="font-size: 0.9em; margin: 0 0 10px 0;"><strong>Comment signer ce document :</strong></p>
-            <ol style="font-size: 0.9em; margin: 0; padding-left: 20px;">
-		<li>Avec la souris ou un thinkpad si vous en avez un ou avec le doigt si vous avez un écran tactile, signez dans le PAD / Rectangle</li>
-		<li>Cliquez sur "Valider" votre fichier "NOM Prénom_Signature.pdf" sera créé et enregistré dans votre dossier Téléchargement et le PDF s'affichera</li>
-		<li>Fermer le PDF et vous serez ramené au Qustionnaire Santé en bas duquel le bouton "Envoyer par courriel" sera activé (en fond vert)</li>
-		<li>Une fenêtre courriel s'ouvrira y joindre les 3 fichiers par courriel <span style="color: blue;">"NOM Prénom_Adhésion_24-24.csv"</span> + <span style="color: blue;">"NOM Prénom_Questionnaire Santé Adulte_24-24.csv"</span> + <span style="color: blue;">"NOM Prénom_Signature_24-24.pdf" </span>à l'adresse => lentrainpourtous@epts.fr&nbsp;&nbsp;&nbsp;&nbsp;</li>
-		<li>Pour que votre adhésion puisse être validée, envoyez votre paiement par chèque à l'ordre de l'<span style="color: blue;"><b>Entrain Pour Tous</b></span>
-            </ol>
+		<div style="background-color: #f8f9fa; padding: 15px; margin-bottom: 20px; border-radius: 5px; border-left: 4px solid #4CAF50;">
+		<p style="font-size: 1.2em; margin: 0 0 10px 0;"><strong>Comment signer ce document :</strong></p>
+			<ol style="font-size: 0.9em; margin: 0; padding-left: 20px;">
+				<li style="line-height: 1.4; margin-bottom: 10px;">Avec la souris ou un ThinkPad si vous en avez un ou avec le doigt si vous avez un écran tactile, <span style="color: red;">signez dans le PAD = Rectangle à bord rouge</span></li>
+				<li style="line-height: 1.4; margin-bottom: 10px;">Cliquez sur "Valider" => votre fichier "NOM Prénom_Signature.pdf" sera créé et enregistré dans votre dossier Téléchargement et le PDF s'affichera.</li>
+				<li style="line-height: 1.4; margin-bottom: 10px;">Fermez le PDF et vous serez ramené au Questionnaire Santé en bas duquel le bouton <b>"Envoyer par courriel"</b> sera activé <i><span style="color: #4CAF50;">(sur fond vert)</span></i>.</li>
+				<li style="line-height: 1.4; margin-bottom: 10px;">Une fenêtre courriel s'ouvrira pour y joindre les 3 fichiers par courriel : <span style="color: blue;">"NOM Prénom_Adhésion_24-24.csv"</span>+<span style="color: blue;">"NOM Prénom_Questionnaire Santé Adulte_24-24.csv"</span>+<span style="color: blue;">"NOM Prénom_Signature_24-24.pdf"</span>à l'adresse => <span style="color: blue;"><b>lentrainpourtous@epts.fr&nbsp;&nbsp;&nbsp;&nbsp;</b></span></li>
+				<li style="line-height: 1.4; margin-bottom: 10px;">Pour que votre adhésion puisse être validée, envoyez votre paiement par chèque à l'ordre de l'<span style="color: blue;"><b>Entrain Pour Tous</b></span>.</li>
+			</ol>
         </div>
 		<form id="signaturePDFAdulte">
 			<div class="form-group">
@@ -354,13 +356,13 @@
 			doc.setTextColor(255, 0, 0);
 			const lignes = [
 			  "Votre signature est enregistrée,",
+			  "vous DEVEZ fermer cette page pour accéder à l'écran suivant.",
 			  " ",
-			  "Vous allez être redirigé vers le Questionnaire Santé",
-			  "sur lequel vous devrez cliquer sur le bouton « Envoyer par courriel »",
-			  "Vous DEVEZ fermer cette page pour accéder à l'écran suivant."
+			  "Vous serez redirigé vers le Questionnaire Santé",
+			  "sur lequel vous devrez cliquer sur le bouton « Envoyer par courriel »"
 			];
 			let y = 150;
-			const indexNoir = [2, 3]; 
+			const indexNoir = [3, 4]; 
 			lignes.forEach((texte, index) => {
 			  if (indexNoir.includes(index)) {
 				doc.setTextColor(0, 0, 0); // Noir
