@@ -826,7 +826,7 @@
     };
   }
 
-  // --- SANTE ADULTE ---
+  // --- SANTE ADULTE ---  
   function purgeSanteAdulteFields() {
     const form = document.getElementById('santeAdulteForm');
     if (!form) return;
@@ -927,37 +927,39 @@ updateSanteAdulteCount();
   };
 
   // --- ENVOI COURRIEL ADULTE ---
+document.addEventListener("DOMContentLoaded", function () {
   const sendEmailAdulteBtn = document.getElementById('sendEmailAdulte');
-  if (sendEmailAdulteBtn) {
-    sendEmailAdulteBtn.insertAdjacentHTML('afterend', `
-      <div id="alt-mail-panel-adulte" style="display:none; border:1px solid #ccc; padding:1em; margin-top:1em; background:#fafaff;">
-        <p>Impossible d’ouvrir un client de messagerie local.<br>
-          Utilisez un de ces webmails :</p>
-        <ul>
-          <li><a id="gmail-link-adulte" target="_blank" rel="noopener">Gmail</a></li>
-          <li><a id="outlook-link-adulte" target="_blank" rel="noopener">Outlook Web</a></li>
-          <li><a id="yahoo-link-adulte" target="_blank" rel="noopener">Yahoo Mail</a></li>
-          <li><a id="orange-link-adulte" target="_blank" rel="noopener">Orange</a></li>
-          <li><a id="sfr-link-adulte" target="_blank" rel="noopener">SFR</a></li>
-          <li><a id="bouygues-link-adulte" target="_blank" rel="noopener">Bouygues</a></li>
-          <li><a id="free-link-adulte" target="_blank" rel="noopener">Free</a></li>
-        </ul>
-        <p>Ou copiez le texte du mail :
-          <button id="copy-btn-adulte">Copier</button>
-        </p>
-        <textarea id="mail-body-adulte" style="width:100%;height:120px;" readonly></textarea>
-      </div>
-    `);
+  if (!sendEmailAdulteBtn) return;
 
-    sendEmailAdulteBtn.addEventListener('click', function() {
-      const nomVal = nom ? nom.value.trim() : 'NOM_INCONNU';
-      const prenomVal = prenom ? prenom.value.trim() : 'PRENOM_INCONNU';
-      const adhesionFileName = `${nomVal} ${prenomVal}_Adhésion_25-26.csv`;
-      const adulteFileName = `${nomVal} ${prenomVal}_Questionnaire Santé Adulte_25-26.csv`;
-      const signatureFileName = `${nomVal} ${prenomVal}_Signature.pdf`;
-      const recipient = 'lentrainpourtous@epts.fr';
-      const subject = 'Inscription : fichiers CSV et PDF en pièce jointe';
-      const body = `Bonjour,
+  sendEmailAdulteBtn.insertAdjacentHTML('afterend', `
+    <div id="alt-mail-panel-adulte" style="display:none; border:1px solid #ccc; padding:1em; margin-top:1em; background:#fafaff;">
+      <p>Impossible d’ouvrir un client de messagerie local.<br>
+        Utilisez un de ces webmails :</p>
+      <ul>
+        <li><a id="gmail-link-adulte" target="_blank" rel="noopener">Gmail</a></li>
+        <li><a id="outlook-link-adulte" target="_blank" rel="noopener">Outlook Web</a></li>
+        <li><a id="yahoo-link-adulte" target="_blank" rel="noopener">Yahoo Mail</a></li>
+        <li><a id="orange-link-adulte" target="_blank" rel="noopener">Orange</a></li>
+        <li><a id="sfr-link-adulte" target="_blank" rel="noopener">SFR</a></li>
+        <li><a id="bouygues-link-adulte" target="_blank" rel="noopener">Bouygues</a></li>
+        <li><a id="free-link-adulte" target="_blank" rel="noopener">Free</a></li>
+      </ul>
+      <p>Ou copiez le texte du mail :
+        <button id="copy-btn-adulte">Copier</button>
+      </p>
+      <textarea id="mail-body-adulte" style="width:100%;height:120px;" readonly></textarea>
+    </div>
+  `);
+
+  sendEmailAdulteBtn.addEventListener('click', function () {
+    const nomVal = (typeof nom !== 'undefined' && nom.value.trim()) || 'NOM_INCONNU';
+    const prenomVal = (typeof prenom !== 'undefined' && prenom.value.trim()) || 'PRENOM_INCONNU';
+    const recipient = 'lentrainpourtous@epts.fr';
+    const subject = 'Inscription : fichiers CSV et PDF en pièce jointe';
+    const adhesionFileName = `${nomVal}_${prenomVal}_Adhésion_25-26.csv`;
+    const adulteFileName = `${nomVal}_${prenomVal}_Questionnaire Santé Adulte_25-26.csv`;
+    const signatureFileName = `${nomVal}_${prenomVal}_Signature.pdf`;
+    const body = `Bonjour,
 
 Merci de joindre en pièce jointe les 3 fichiers dont les noms sont :
 - ${adhesionFileName}
@@ -966,58 +968,58 @@ Merci de joindre en pièce jointe les 3 fichiers dont les noms sont :
 
 Pour cela, cliquez sur l’icône 📎 (trombone) dans votre outil/interface de messagerie, puis sélectionnez les 3 fichiers dans votre dossier "Téléchargement".
 
-Sans ces deux pièces jointes, votre inscription ne pourra pas être traitée.
+Sans ces pièces jointes, votre inscription ne pourra pas être traitée.
 
 Cordialement,
 L’équipe de l’Entrain Pour Tous`;
-      const mailtoLink = `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 
-      function showAltMailAdulte() {
-        document.getElementById('gmail-link-adulte').href = `https://mail.google.com/mail/?view=cm&to=${encodeURIComponent(recipient)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-        document.getElementById('outlook-link-adulte').href = `https://outlook.live.com/mail/0/deeplink/compose?to=${encodeURIComponent(recipient)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-        document.getElementById('yahoo-link-adulte').href = `https://compose.mail.yahoo.com/?to=${encodeURIComponent(recipient)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-        document.getElementById('orange-link-adulte').href = `https://mail.orange.fr/appsuite/#!!&view=message&to=${encodeURIComponent(recipient)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-        document.getElementById('sfr-link-adulte').href = `https://webmail.sfr.fr/?to=${encodeURIComponent(recipient)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-        document.getElementById('bouygues-link-adulte').href = `https://www.bouyguestelecom.fr/mon-compte/ma-messagerie?to=${encodeURIComponent(recipient)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-        document.getElementById('free-link-adulte').href = `https://zimbra.free.fr/?to=${encodeURIComponent(recipient)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-        document.getElementById('alt-mail-panel-adulte').style.display = 'block';
-        document.getElementById('mail-body-adulte').value = body;
-      }
+    document.getElementById('mail-body-adulte').value = body;
 
-      const iframe = document.createElement('iframe');
-      iframe.style.display = 'none';
-      document.body.appendChild(iframe);
-      iframe.src = mailtoLink;
+    const mailtoLink = `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 
-      let fallbackDisplayed = false;
-      const blurHandler = () => {
-        fallbackDisplayed = true;
-        window.removeEventListener("blur", blurHandler);
-      };
-      window.addEventListener("blur", blurHandler);
+    let fallbackDisplayed = false;
+    const blurHandler = () => {
+      fallbackDisplayed = true;
+      window.removeEventListener("blur", blurHandler);
+    };
+    window.addEventListener("blur", blurHandler);
 
+    setTimeout(() => {
+      window.removeEventListener("blur", blurHandler);
       setTimeout(() => {
-        if (iframe.parentNode) document.body.removeChild(iframe);
-        window.removeEventListener("blur", blurHandler);
-        setTimeout(() => {
-          if (!fallbackDisplayed) showAltMailAdulte();
-        }, 300);
-      }, 1000);
+        if (!fallbackDisplayed) showAltMailAdulte(recipient, subject, body);
+      }, 300);
+    }, 1000);
+  });
+
+  function showAltMailAdulte(recipient, subject, body) {
+    const mailServices = {
+      "gmail-link-adulte": `https://mail.google.com/mail/?view=cm&to=${encodeURIComponent(recipient)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`,
+      "outlook-link-adulte": `https://outlook.live.com/mail/0/deeplink/compose?to=${encodeURIComponent(recipient)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`,
+      "yahoo-link-adulte": `https://compose.mail.yahoo.com/?to=${encodeURIComponent(recipient)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`,
+      "orange-link-adulte": `https://mail.orange.fr/appsuite/#!!&view=message&to=${encodeURIComponent(recipient)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`,
+      "sfr-link-adulte": `https://webmail.sfr.fr/?to=${encodeURIComponent(recipient)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`,
+      "bouygues-link-adulte": `https://www.bouyguestelecom.fr/mon-compte/ma-messagerie?to=${encodeURIComponent(recipient)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`,
+      "free-link-adulte": `https://zimbra.free.fr/?to=${encodeURIComponent(recipient)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+    };
+
+    Object.keys(mailServices).forEach(id => {
+      const linkElement = document.getElementById(id);
+      if (linkElement) linkElement.href = mailServices[id];
     });
+
+    document.getElementById('alt-mail-panel-adulte').style.display = 'block';
   }
 
   const copyBtnAdulte = document.getElementById('copy-btn-adulte');
   if (copyBtnAdulte) {
-	copyBtnAdulte.addEventListener('click', function(){
-	  const mailBodyAdulte = document.getElementById('mail-body-Adulte');
-	  if (mailBodyAdulte) {
-		const texteACopier = `Destinataire : ${recipient}\n\nMessage : ${mailBodyAdulte.value}`;
-		navigator.clipboard.writeText(texteACopier)
-		  .then(() => alert('Adresse et message copiés dans le presse-papiers !'))
-		  .catch(err => console.error('Erreur de copie: ', err));
-	  }
-	});
+    copyBtnAdulte.addEventListener('click', function () {
+      navigator.clipboard.writeText(document.getElementById('mail-body-adulte').value)
+        .then(() => alert('Message copié dans le presse-papiers !'))
+        .catch(err => console.error('Erreur de copie : ', err));
+    });
   }
+});
 
   // --- SANTE MINEUR ---
   function purgeSanteMineurFields() {
@@ -1160,99 +1162,101 @@ function redirectToSignatureForm2() {
   };
 
   // --- ENVOI COURRIEL MINEUR ---
+document.addEventListener("DOMContentLoaded", function () {
   const sendEmailMineurBtn = document.getElementById('sendEmailMineur');
-  if (sendEmailMineurBtn) {
-    sendEmailMineurBtn.insertAdjacentHTML('afterend', `
-      <div id="alt-mail-panel-mineur" style="display:none; border:1px solid #ccc; padding:1em; margin-top:1em; background:#fafaff;">
-        <p>Impossible d’ouvrir un client de messagerie local.<br>
-          Utilisez un de ces webmails :</p>
-        <ul>
-          <li><a id="gmail-link-mineur" target="_blank" rel="noopener">Gmail</a></li>
-          <li><a id="outlook-link-mineur" target="_blank" rel="noopener">Outlook Web</a></li>
-          <li><a id="yahoo-link-mineur" target="_blank" rel="noopener">Yahoo Mail</a></li>
-          <li><a id="orange-link-mineur" target="_blank" rel="noopener">Orange</a></li>
-          <li><a id="sfr-link-mineur" target="_blank" rel="noopener">SFR</a></li>
-          <li><a id="bouygues-link-mineur" target="_blank" rel="noopener">Bouygues</a></li>
-          <li><a id="free-link-mineur" target="_blank" rel="noopener">Free</a></li>
-        </ul>
-        <p>Ou copiez le texte du mail :
-          <button id="copy-btn-mineur">Copier</button>
-        </p>
-        <textarea id="mail-body-mineur" style="width:100%;height:120px;" readonly></textarea>
-      </div>
-    `);
+  if (!sendEmailMineurBtn) return;
 
-    sendEmailMineurBtn.addEventListener('click', function() {
-      const nomVal = nom ? nom.value.trim() : 'NOM_INCONNU';
-      const prenomVal = prenom ? prenom.value.trim() : 'PRENOM_INCONNU';
-      const adhesionFileName = `${nomVal} ${prenomVal}_Adhésion_25-26.csv`;
-      const mineurFileName = `${nomVal} ${prenomVal}_Questionnaire Santé Mineur_25-26.csv`;
-      const signatureFileName = `${nomVal} ${prenomVal}_Signature_25-26.pdf`;
-      const recipient = 'lentrainpourtous@epts.fr';
-      const subject = 'Inscription : fichiers PDF en pièce jointe';
-      const body = `Bonjour,
+  sendEmailMineurBtn.insertAdjacentHTML('afterend', `
+    <div id="alt-mail-panel-mineur" style="display:none; border:1px solid #ccc; padding:1em; margin-top:1em; background:#fafaff;">
+      <p>Impossible d’ouvrir un client de messagerie local.<br>
+        Utilisez un de ces webmails :</p>
+      <ul>
+        <li><a id="gmail-link-mineur" target="_blank" rel="noopener">Gmail</a></li>
+        <li><a id="outlook-link-mineur" target="_blank" rel="noopener">Outlook Web</a></li>
+        <li><a id="yahoo-link-mineur" target="_blank" rel="noopener">Yahoo Mail</a></li>
+        <li><a id="orange-link-mineur" target="_blank" rel="noopener">Orange</a></li>
+        <li><a id="sfr-link-mineur" target="_blank" rel="noopener">SFR</a></li>
+        <li><a id="bouygues-link-mineur" target="_blank" rel="noopener">Bouygues</a></li>
+        <li><a id="free-link-mineur" target="_blank" rel="noopener">Free</a></li>
+      </ul>
+      <p>Ou copiez le texte du mail :
+        <button id="copy-btn-mineur">Copier</button>
+      </p>
+      <textarea id="mail-body-mineur" style="width:100%;height:120px;" readonly></textarea>
+    </div>
+  `);
 
-Merci de joindre en pièce jointe les 3 fichiers dont les noms sont :
+  sendEmailMineurBtn.addEventListener('click', function () {
+    const nomVal = (typeof nom !== 'undefined' && nom.value.trim()) || 'NOM_INCONNU';
+    const prenomVal = (typeof prenom !== 'undefined' && prenom.value.trim()) || 'PRENOM_INCONNU';
+    const recipient = 'lentrainpourtous@epts.fr';
+    const subject = 'Inscription : fichiers PDF en pièce jointe';
+    const adhesionFileName = `${nomVal}_${prenomVal}_Adhésion_25-26.csv`;
+    const mineurFileName = `${nomVal}_${prenomVal}_Questionnaire Santé Mineur_25-26.csv`;
+    const signatureFileName = `${nomVal}_${prenomVal}_Signature_25-26.pdf`;
+    const body = `Bonjour,
+
+Merci de joindre en pièce jointe les fichiers suivants :
 - ${adhesionFileName}
-- ${adulteFileName}
+- ${mineurFileName}
 - ${signatureFileName}
 
-Pour cela, cliquez sur l’icône 📎 (trombone) dans votre outil/interface de messagerie, puis sélectionnez les 3 fichiers dans votre dossier "Téléchargement".
-
-Sans ces deux pièces jointes, votre inscription ne pourra pas être traitée.
+Sans ces documents, votre inscription ne pourra pas être traitée.
 
 Cordialement,
 L’équipe de l’Entrain Pour Tous`;
 
-      const mailtoLink = `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    const mailtoLink = `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 
-      function showAltMailMineur() {
-        document.getElementById('gmail-link-mineur').href = `https://mail.google.com/mail/?view=cm&to=${encodeURIComponent(recipient)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-        document.getElementById('outlook-link-mineur').href = `https://outlook.live.com/mail/0/deeplink/compose?to=${encodeURIComponent(recipient)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-        document.getElementById('yahoo-link-mineur').href = `https://compose.mail.yahoo.com/?to=${encodeURIComponent(recipient)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-        document.getElementById('orange-link-mineur').href = `https://mail.orange.fr/appsuite/#!!&view=message&to=${encodeURIComponent(recipient)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-        document.getElementById('sfr-link-mineur').href = `https://webmail.sfr.fr/?to=${encodeURIComponent(recipient)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-        document.getElementById('bouygues-link-mineur').href = `https://www.bouyguestelecom.fr/mon-compte/ma-messagerie?to=${encodeURIComponent(recipient)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-        document.getElementById('free-link-mineur').href = `https://zimbra.free.fr/?to=${encodeURIComponent(recipient)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-        document.getElementById('alt-mail-panel-mineur').style.display = 'block';
-        document.getElementById('mail-body-mineur').value = body;
-      }
+    const iframe = document.createElement('iframe');
+    iframe.style.display = 'none';
+    document.body.appendChild(iframe);
+    iframe.src = mailtoLink;
 
-      const iframe = document.createElement('iframe');
-      iframe.style.display = 'none';
-      document.body.appendChild(iframe);
-      iframe.src = mailtoLink;
+    let fallbackDisplayedMineur = false;
+    const blurHandlerMineur = () => {
+      fallbackDisplayedMineur = true;
+      window.removeEventListener("blur", blurHandlerMineur);
+    };
+    window.addEventListener("blur", blurHandlerMineur);
 
-      let fallbackDisplayedMineur = false;
-      const blurHandlerMineur = () => {
-        fallbackDisplayedMineur = true;
-        window.removeEventListener("blur", blurHandlerMineur);
-      };
-      window.addEventListener("blur", blurHandlerMineur);
-
+    setTimeout(() => {
+      if (iframe.parentNode) document.body.removeChild(iframe);
+      window.removeEventListener("blur", blurHandlerMineur);
       setTimeout(() => {
-        if (iframe.parentNode) document.body.removeChild(iframe);
-        window.removeEventListener("blur", blurHandlerMineur);
-        setTimeout(() => {
-          if (!fallbackDisplayedMineur) showAltMailMineur();
-        }, 300);
-      }, 1000);
+        if (!fallbackDisplayedMineur) showAltMailMineur(recipient, subject, body);
+      }, 300);
+    }, 1000);
+  });
+
+  function showAltMailMineur(recipient, subject, body) {
+    const mailServices = {
+      "gmail-link-mineur": `https://mail.google.com/mail/?view=cm&to=${encodeURIComponent(recipient)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`,
+      "outlook-link-mineur": `https://outlook.live.com/mail/0/deeplink/compose?to=${encodeURIComponent(recipient)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`,
+      "yahoo-link-mineur": `https://compose.mail.yahoo.com/?to=${encodeURIComponent(recipient)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`,
+      "orange-link-mineur": `https://mail.orange.fr/appsuite/#!!&view=message&to=${encodeURIComponent(recipient)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`,
+      "sfr-link-mineur": `https://webmail.sfr.fr/?to=${encodeURIComponent(recipient)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`,
+      "bouygues-link-mineur": `https://www.bouyguestelecom.fr/mon-compte/ma-messagerie?to=${encodeURIComponent(recipient)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`,
+      "free-link-mineur": `https://zimbra.free.fr/?to=${encodeURIComponent(recipient)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+    };
+
+    Object.keys(mailServices).forEach(id => {
+      const linkElement = document.getElementById(id);
+      if (linkElement) linkElement.href = mailServices[id];
     });
+
+    document.getElementById('alt-mail-panel-mineur').style.display = 'block';
   }
 
   const copyBtnMineur = document.getElementById('copy-btn-mineur');
   if (copyBtnMineur) {
-	copyBtnMineur.addEventListener('click', function(){
-	  const mailBodyMineur = document.getElementById('mail-body-mineur');
-	  if (mailBodyMineur) {
-		const texteACopier = `Destinataire : ${recipient}\n\nMessage : ${mailBodyMineur.value}`;
-		navigator.clipboard.writeText(texteACopier)
-		  .then(() => alert('Adresse et message copiés dans le presse-papiers !'))
-		  .catch(err => console.error('Erreur de copie: ', err));
-	  }
-	});
-
+    copyBtnMineur.addEventListener('click', function () {
+      navigator.clipboard.writeText(document.getElementById('mail-body-mineur').value)
+        .then(() => alert('Message copié dans le presse-papiers !'))
+        .catch(err => console.error('Erreur de copie : ', err));
+    });
   }
+});
 
   // --- INIT DATES ET LOGO ---
   window.addEventListener('load', () => {
