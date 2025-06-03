@@ -904,7 +904,7 @@ function updateSanteAdulteCount() {
     const selectedRadio = document.querySelector('input[name="sante"]:checked');
 
     if (selectedRadio && (selectedRadio.value === "Certificat" || selectedRadio.value === "Prescription")) {
-        santeAdulteCount.innerHTML = `<label style="color: green;">Continuez votre démarche d'adhésion, nous mettrons votre dossier en suspend en attendant le document</label>`;
+        santeAdulteCount.innerHTML = `<label style="color: green;">Vous avez une prescription ou un certificat médical,<br>continuez votre démarche d'adhésion, nous mettrons votre dossier en suspend en attendant le document</label>`;
     } else if (checkedCount === 0) {
         santeAdulteCount.innerHTML = `<label style="color: blue;">Le questionnaire Santé suffit pour vous inscrire</label>`;
     } else {
@@ -1113,7 +1113,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (santeMineurMessage) {
             if (selectedRadio && (selectedRadio.value === "Certificat" || selectedRadio.value === "Prescription")) {
-                santeMineurMessage.innerHTML = `<label style="color: green;">Continuez votre démarche d'adhésion, nous mettrons votre dossier en suspend en attendant le document</label>`;
+                santeMineurMessage.innerHTML = `<label style="color: green;">Vous avez une prescription ou un certificat médical,<br>continuez votre démarche d'adhésion, nous mettrons votre dossier en suspend en attendant le document</label>`;
             } else if (checkedCount === 0) {
                 santeMineurMessage.innerHTML = `<label style="color: blue;">Le questionnaire Santé suffit pour vous inscrire</label>`;
             } else {
