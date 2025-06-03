@@ -1008,14 +1008,15 @@ L’équipe de l’Entrain Pour Tous`;
 
   const copyBtnAdulte = document.getElementById('copy-btn-adulte');
   if (copyBtnAdulte) {
-    copyBtnAdulte.addEventListener('click', function() {
-      const mailBodyAdulte = document.getElementById('mail-body-adulte');
-      if (mailBodyAdulte) {
-        navigator.clipboard.writeText(mailBodyAdulte.value)
-          .then(() => alert('Texte copié dans le presse-papiers !'))
-          .catch(err => console.error('Erreur de copie: ', err));
-      }
-    });
+	copyBtnAdulte.addEventListener('click', function(){
+	  const mailBodyAdulte = document.getElementById('mail-body-Adulte');
+	  if (mailBodyAdulte) {
+		const texteACopier = `Destinataire : ${recipient}\n\nMessage : ${mailBodyAdulte.value}`;
+		navigator.clipboard.writeText(texteACopier)
+		  .then(() => alert('Adresse et message copiés dans le presse-papiers !'))
+		  .catch(err => console.error('Erreur de copie: ', err));
+	  }
+	});
   }
 
   // --- SANTE MINEUR ---
@@ -1241,14 +1242,16 @@ L’équipe de l’Entrain Pour Tous`;
 
   const copyBtnMineur = document.getElementById('copy-btn-mineur');
   if (copyBtnMineur) {
-    copyBtnMineur.addEventListener('click', function(){
-      const mailBodyMineur = document.getElementById('mail-body-mineur');
-      if (mailBodyMineur) {
-        navigator.clipboard.writeText(mailBodyMineur.value)
-          .then(() => alert('Texte copié dans le presse-papiers !'))
-          .catch(err => console.error('Erreur de copie: ', err));
-      }
-    });
+	copyBtnMineur.addEventListener('click', function(){
+	  const mailBodyMineur = document.getElementById('mail-body-mineur');
+	  if (mailBodyMineur) {
+		const texteACopier = `Destinataire : ${recipient}\n\nMessage : ${mailBodyMineur.value}`;
+		navigator.clipboard.writeText(texteACopier)
+		  .then(() => alert('Adresse et message copiés dans le presse-papiers !'))
+		  .catch(err => console.error('Erreur de copie: ', err));
+	  }
+	});
+
   }
 
   // --- INIT DATES ET LOGO ---
