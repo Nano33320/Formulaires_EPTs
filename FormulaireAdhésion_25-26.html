@@ -961,33 +961,35 @@ document.addEventListener("DOMContentLoaded", function () {
     const signatureFileName = `${nomVal}_${prenomVal}_Signature.pdf`;
     const body = `Bonjour,
 
-Merci de joindre en pièce jointe les 3 fichiers dont les noms sont :
+Merci de joindre en pièce jointe les fichiers suivants :
 - ${adhesionFileName}
 - ${adulteFileName}
 - ${signatureFileName}
 
-Pour cela, cliquez sur l’icône 📎 (trombone) dans votre outil/interface de messagerie, puis sélectionnez les 3 fichiers dans votre dossier "Téléchargement".
-
-Sans ces pièces jointes, votre inscription ne pourra pas être traitée.
+Sans ces documents, votre inscription ne pourra pas être traitée.
 
 Cordialement,
 L’équipe de l’Entrain Pour Tous`;
 
-    document.getElementById('mail-body-adulte').value = body;
-
     const mailtoLink = `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 
-    let fallbackDisplayed = false;
-    const blurHandler = () => {
-      fallbackDisplayed = true;
-      window.removeEventListener("blur", blurHandler);
+    const iframe = document.createElement('iframe');
+    iframe.style.display = 'none';
+    document.body.appendChild(iframe);
+    iframe.src = mailtoLink;
+
+    let fallbackDisplayedAdulte = false;
+    const blurHandlerAdulte = () => {
+      fallbackDisplayedAdulte = true;
+      window.removeEventListener("blur", blurHandlerAdulte);
     };
-    window.addEventListener("blur", blurHandler);
+    window.addEventListener("blur", blurHandlerAdulte);
 
     setTimeout(() => {
-      window.removeEventListener("blur", blurHandler);
+      if (iframe.parentNode) document.body.removeChild(iframe);
+      window.removeEventListener("blur", blurHandlerAdulte);
       setTimeout(() => {
-        if (!fallbackDisplayed) showAltMailAdulte(recipient, subject, body);
+        if (!fallbackDisplayedAdulte) showAltMailAdulte(recipient, subject, body);
       }, 300);
     }, 1000);
   });
@@ -997,10 +999,10 @@ L’équipe de l’Entrain Pour Tous`;
       "gmail-link-adulte": `https://mail.google.com/mail/?view=cm&to=${encodeURIComponent(recipient)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`,
       "outlook-link-adulte": `https://outlook.live.com/mail/0/deeplink/compose?to=${encodeURIComponent(recipient)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`,
       "yahoo-link-adulte": `https://compose.mail.yahoo.com/?to=${encodeURIComponent(recipient)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`,
-      "orange-link-adulte": `https://mail.orange.fr/appsuite/#!!&view=message&to=${encodeURIComponent(recipient)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`,
+      "orange-link-adulte": `https://mail.orange.fr/appsuite/#!!&view=message&to=${encodeURIComponent(recipient)}&subject=${encodeURIComponent(body)}`,
       "sfr-link-adulte": `https://webmail.sfr.fr/?to=${encodeURIComponent(recipient)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`,
       "bouygues-link-adulte": `https://www.bouyguestelecom.fr/mon-compte/ma-messagerie?to=${encodeURIComponent(recipient)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`,
-      "free-link-adulte": `https://zimbra.free.fr/?to=${encodeURIComponent(recipient)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+      "free-link-adulte": `https://zimbra.free.fr/?to=${encodeURIComponent(recipient)}&subject=${encodeURIComponent(recipient)}&body=${encodeURIComponent(body)}`
     };
 
     Object.keys(mailServices).forEach(id => {
@@ -1018,8 +1020,19 @@ L’équipe de l’Entrain Pour Tous`;
         .then(() => alert('Message copié dans le presse-papiers !'))
         .catch(err => console.error('Erreur de copie : ', err));
     });
+
+    copyBtnAdulte.addEventListener('click', function(){
+      const mailBodyAdulte = document.getElementById('mail-body-adulte');
+      if (mailBodyAdulte) {
+        const texteACopier = `Destinataire : ${recipient}\n\nMessage : ${mailBodyAdulte.value}`;
+        navigator.clipboard.writeText(texteACopier)
+          .then(() => alert('Adresse et message copiés dans le presse-papiers !'))
+          .catch(err => console.error('Erreur de copie: ', err));
+      }
+    });
   }
 });
+
 
   // --- SANTE MINEUR ---
   function purgeSanteMineurFields() {
