@@ -897,11 +897,15 @@
 //	<!-- ==== Comptage des problèmes santé adulte ==== -->
 const checkboxesAdulte = document.querySelectorAll('input[id^="q"][id$="Adulte"]');
 const santeAdulteCount = document.getElementById('sante-adulte-count');
+const radiosSante = document.querySelectorAll('input[name="sante"]');
 
 function updateSanteAdulteCount() {
     const checkedCount = Array.from(checkboxesAdulte).filter(cb => cb.checked).length;
+    const selectedRadio = document.querySelector('input[name="sante"]:checked');
 
-    if (checkedCount === 0) {
+    if (selectedRadio && (selectedRadio.value === "Certificat" || selectedRadio.value === "Prescription")) {
+        santeAdulteCount.innerHTML = `<label style="color: green;">Continuez votre démarche d'adhésion, nous mettrons votre dossier en suspend en attendant le document</label>`;
+    } else if (checkedCount === 0) {
         santeAdulteCount.innerHTML = `<label style="color: blue;">Le questionnaire Santé suffit pour vous inscrire</label>`;
     } else {
         santeAdulteCount.innerHTML = `<label style="color: red;">Vous devez consulter votre médecin afin qu'il vous prescrive un certificat médical</label>`;
@@ -909,12 +913,9 @@ function updateSanteAdulteCount() {
 }
 
 checkboxesAdulte.forEach(cb => cb.addEventListener('change', updateSanteAdulteCount));
+radiosSante.forEach(radio => radio.addEventListener('change', updateSanteAdulteCount));
 updateSanteAdulteCount();
 
-// Réagit aux changements de checkbox (page 2)
-document.querySelectorAll('input[id^="q"][id$="Adulte"]').forEach(cb => {
-  cb.addEventListener('change', updateSanteAdulteCount);
-});
 
   // --- SIGNATURE ADULTE ---
   window.redirectToSignatureForm = function() {
@@ -1096,30 +1097,36 @@ L’équipe de l’Entrain Pour Tous`;
   }
 
 	<!-- ==== Comptage des problèmes santé mineur ==== -->
-	document.addEventListener('DOMContentLoaded', function () {
-		const checkboxesMineur = document.querySelectorAll('input[id^="q"][id$="Mineur"]');
-		const santeMineurValue = document.getElementById('sante-mineur-value');
-		const santeMineurMessage = document.getElementById('sante-mineur-message');
+document.addEventListener('DOMContentLoaded', function () {
+    const checkboxesMineur = document.querySelectorAll('input[id^="q"][id$="Mineur"]');
+    const santeMineurValue = document.getElementById('sante-mineur-value');
+    const santeMineurMessage = document.getElementById('sante-mineur-message');
+    const radiosSante = document.querySelectorAll('input[name="sante"]');
 
-		function updateSanteMineurCount() {
-			const checkedCount = Array.from(checkboxesMineur).filter(cb => cb.checked).length;
+    function updateSanteMineurCount() {
+        const checkedCount = Array.from(checkboxesMineur).filter(cb => cb.checked).length;
+        const selectedRadio = document.querySelector('input[name="sante"]:checked');
 
-			if (santeMineurValue) {
-				santeMineurValue.textContent = checkedCount;
-			}
+        if (santeMineurValue) {
+            santeMineurValue.textContent = checkedCount;
+        }
 
-			if (santeMineurMessage) {
-				if (checkedCount === 0) {
-					santeMineurMessage.innerHTML = `<label style="color: blue;">Le questionnaire Santé suffit pour vous inscrire</label>`;
-				} else {
-					santeMineurMessage.innerHTML = `<label style="color: red;">Vous devez consulter votre médecin et nous fournir un certificat médical.<br>Finalisez votre inscription nous mettons votre dossier en suspend dans l'attente du certificat médical.</label>`;
-				}
-			}
-		}
+        if (santeMineurMessage) {
+            if (selectedRadio && (selectedRadio.value === "Certificat" || selectedRadio.value === "Prescription")) {
+                santeMineurMessage.innerHTML = `<label style="color: green;">Continuez votre démarche d'adhésion, nous mettrons votre dossier en suspend en attendant le document</label>`;
+            } else if (checkedCount === 0) {
+                santeMineurMessage.innerHTML = `<label style="color: blue;">Le questionnaire Santé suffit pour vous inscrire</label>`;
+            } else {
+                santeMineurMessage.innerHTML = `<label style="color: red;">Vous devez consulter votre médecin et nous fournir un certificat médical.<br>Finalisez votre inscription, nous mettons votre dossier en suspend dans l'attente du certificat médical.</label>`;
+            }
+        }
+    }
 
-		checkboxesMineur.forEach(cb => cb.addEventListener('change', updateSanteMineurCount));
-		updateSanteMineurCount();
-	});
+    checkboxesMineur.forEach(cb => cb.addEventListener('change', updateSanteMineurCount));
+    radiosSante.forEach(radio => radio.addEventListener('change', updateSanteMineurCount));
+    updateSanteMineurCount();
+});
+
 
   // --- SIGNATURE MINEUR ---
   function handleFormSubmit(event) {
