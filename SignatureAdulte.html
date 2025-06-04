@@ -144,11 +144,11 @@
 		<div style="background-color: #f8f9fa; padding: 15px; margin-bottom: 20px; border-radius: 5px; border-left: 4px solid #4CAF50;">
 		<p style="font-size: 1.2em; margin: 0 0 10px 0;"><strong>Comment signer ce document :</strong></p>
 			<ol style="font-size: 0.9em; margin: 0; padding-left: 20px;">
-				<li style="line-height: 1.4; margin-bottom: 10px;">Avec la souris ou un ThinkPad si vous en avez un ou avec le doigt si vous avez un écran tactile, <span style="color: red;">signez dans le PAD = Rectangle à bord rouge</span></li>
-				<li style="line-height: 1.4; margin-bottom: 10px;">Cliquez sur "Valider" => votre fichier "NOM Prénom_Signature.pdf" sera créé et enregistré dans votre dossier Téléchargement et le PDF s'affichera.</li>
+				<li style="line-height: 1.4; margin-bottom: 10px;">Avec la souris ou un ThinkPad <i>(si vous en avez un)</i> ou avec le doigt si vous avez un écran tactile, <span style="color: red;">signez dans le PAD = Rectangle à bord rouge</span></li>
+				<li style="line-height: 1.4; margin-bottom: 10px;">Cliquez sur "Valider" => votre fichier <span style="color: blue;">"NOM Prénom_Signature.pdf"</span> sera créé et enregistré dans votre dossier Téléchargement et le PDF s'affichera.</li>
 				<li style="line-height: 1.4; margin-bottom: 10px;">Fermez le PDF et vous serez ramené au Questionnaire Santé en bas duquel le bouton <b>"Envoyer par courriel"</b> sera activé <i><span style="color: #4CAF50;">(sur fond vert)</span></i>.</li>
-				<li style="line-height: 1.4; margin-bottom: 10px;">Une fenêtre courriel s'ouvrira pour y joindre les 3 fichiers par courriel : <span style="color: blue;">"NOM Prénom_Adhésion_24-24.csv"</span>+<span style="color: blue;">"NOM Prénom_Questionnaire Santé Adulte_24-24.csv"</span>+<span style="color: blue;">"NOM Prénom_Signature_24-24.pdf"</span>à l'adresse => <span style="color: blue;"><b>lentrainpourtous@epts.fr&nbsp;&nbsp;&nbsp;&nbsp;</b></span></li>
-				<li style="line-height: 1.4; margin-bottom: 10px;">Pour que votre adhésion puisse être validée, envoyez votre paiement par chèque à l'ordre de l'<span style="color: blue;"><b>Entrain Pour Tous</b></span>.</li>
+				<li style="line-height: 1.4; margin-bottom: 10px;">Une fenêtre courriel s'ouvrira il faudra y insérer les 3 fichiers que vous trouverez dans le dossier "Téléchargements" : <br><span style="color: blue;">"NOM Prénom_Adhésion_24-24.csv"</span> + <span style="color: blue;">"NOM Prénom_Questionnaire Santé Adulte_24-24.csv"</span> + <span style="color: blue;">"NOM Prénom_Signature_24-24.pdf"</span><br>les envoyer à l'adresse => <span style="color: blue;"><b>lentrainpourtous@epts.fr&nbsp;&nbsp;&nbsp;&nbsp;</b></span></li>
+				<li style="line-height: 1.4; margin-bottom: 10px;">Pour que votre adhésion puisse être validée, vous devez envoyez votre paiement par chèque à l'ordre de l'<span style="color: blue;"><b><i>Entrain Pour Tous</i></b></span>.</li>
 			</ol>
 		<form id="signaturePDFAdulte">
 			<div class="form-group">
@@ -329,10 +329,11 @@
 			  "vous DEVEZ fermer cette page pour accéder à l'écran suivant.",
 			  " ",
 			  "Vous serez redirigé vers le Questionnaire Santé",
-			  "sur lequel vous devrez cliquer sur le bouton « Envoyer par courriel »"
+			  "vous devrez y cliquer sur le bouton « Envoyer par courriel ».",
+			  "Pensez à envoyer votre paiement pour que votre adhésion puisse être validée."
 			];
 			let y = 150;
-			const indexNoir = [3, 4]; 
+			const indexNoir = [3, 4, 5]; 
 			lignes.forEach((texte, index) => {
 			  if (indexNoir.includes(index)) {
 				doc.setTextColor(0, 0, 0); // Noir
