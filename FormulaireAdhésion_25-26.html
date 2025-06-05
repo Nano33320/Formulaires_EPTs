@@ -295,9 +295,6 @@
 								<label for="prescription" style="margin-left: 8px; color: blue;">Prescription Médicale</label>
 							</span>
 						</div>
-
-
-
 						<div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
 							<span style="display: flex; align-items: center; flex-grow: 1;">
 								<input type="checkbox" id="reglement" name="conditions" value="reglement" required disabled>
@@ -392,8 +389,6 @@
                         <div><input type="checkbox" id="q5Adulte"><label for="q5Adulte">5°) Si vous avez arrêté le sport pendant 30 jours ou plus pour des raisons de santé, avez-vous repris sans l'accord d'un médecin ?</label></div>
                         <div><input type="checkbox" id="q6Adulte"><label for="q6Adulte">6°) Avez-vous débuté un traitement médical de longue durée (hors contraception et désensibilisation aux allergies) ?</label></div>
                     </div>
-                </div>
-                <div class="form-group">
                     <label>Actuellement</label>
                     <div class="checkbox-group">
                         <div><input type="checkbox" id="q7Adulte"><label for="q7Adulte">7°) Ressentez-vous une douleur, un manque de force ou une raideur suite à un problème osseux, articulaire ou musculaire (fracture, entorse, luxation, déchirure, tendinite, etc...) survenu durant les 12 derniers mois ?</label></div>
@@ -862,8 +857,6 @@
     });
   });
 
-
-
 // Désactivation checkbox questionnaire santé adulte si certificat ou prescription
 document.addEventListener('DOMContentLoaded', function() {
     const radios = document.querySelectorAll('input[name="sante"]');
@@ -884,12 +877,6 @@ document.addEventListener('DOMContentLoaded', function() {
         checkbox.disabled = true;
     });
 });
-
-
-
-
-
-
 
   const santeAdulteForm = document.getElementById('santeAdulteForm');
   if (santeAdulteForm) {
@@ -997,6 +984,8 @@ Merci de joindre en pièce jointe les fichiers suivants :
 - ${adhesionFileName}
 - ${adulteFileName}
 - ${signatureFileName}
+
+Pour cela, cliquez sur l’icône 📎 (trombone) dans votre outil/interface de messagerie, puis sélectionnez les 3 fichiers dans votre dossier "Téléchargement".
 
 Sans ces documents, votre inscription ne pourra pas être traitée.
 
@@ -1114,8 +1103,6 @@ L’équipe de l’Entrain Pour Tous`;
     });
   });
 
-
-
 // Désactivation checkbox questionnaire santé mineur si certificat ou prescription
 document.addEventListener('DOMContentLoaded', function() {
     const radios = document.querySelectorAll('input[name="sante"]');
@@ -1136,17 +1123,6 @@ document.addEventListener('DOMContentLoaded', function() {
         checkbox.disabled = true;
     });
 });
-
-
-
-
-
-
-
-
-
-
-
 
   const santeMineurForm = document.getElementById('santeMineurForm');
   if (santeMineurForm) {
@@ -1279,6 +1255,8 @@ Merci de joindre en pièce jointe les fichiers suivants :
 - ${adhesionFileName}
 - ${mineurFileName}
 - ${signatureFileName}
+
+Pour cela, cliquez sur l’icône 📎 (trombone) dans votre outil/interface de messagerie, puis sélectionnez les 3 fichiers dans votre dossier "Téléchargement".
 
 Sans ces documents, votre inscription ne pourra pas être traitée.
 
