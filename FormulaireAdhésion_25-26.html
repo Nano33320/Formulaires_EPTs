@@ -267,19 +267,19 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="textfield5">Champ libre 1</label>
+                    <label for="textfield5">Souhaits et attentes <span style="color: blue; font-style: italic; font-size: 0.8em;">(Champ libre 1)</span></label>
                     <input type="text" id="textfield5" name="textfield5">
                 </div>
                 <div class="form-group">
-                    <label for="textfield6">Champ libre 2</label>
+                    <label for="textfield6">Souhaits et attentes <span style="color: blue; font-style: italic; font-size: 0.8em;">(Champ libre 2)</span></label>
                     <input type="text" id="textfield6" name="textfield6">
                 </div>
                 <div class="form-group">
-                    <label for="textfield7">Champ libre 3</label>
+                    <label for="textfield7">Souhaits et attentes <span style="color: blue; font-style: italic; font-size: 0.8em;">(Champ libre 3)</span></label>
                     <input type="text" id="textfield7" name="textfield7">
                 </div>
 				<div class="form-group">
-					<label>Conditions</label>
+					<label>Choix nécessaires pour l'adhésion</label>
 					<div class="checkbox-group">
 						<div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
 							<span style="display: flex; align-items: center; flex-grow: 1;">
@@ -295,20 +295,23 @@
 								<label for="prescription" style="margin-left: 8px; color: blue;">Prescription Médicale</label>
 							</span>
 						</div>
+
+
+
 						<div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
 							<span style="display: flex; align-items: center; flex-grow: 1;">
 								<input type="checkbox" id="reglement" name="conditions" value="reglement" required disabled>
-								<label for="reglement" onclick="ouvrirHTMLUnique('reglement')" style="margin-left: 8px; cursor: pointer;"><strong><i><u>Acceptation du règlement intérieur</u></i></strong></label><span class="required">*</span> <i><span style="color: blue; font-style: italic;">(afin de valider votre acceptation => cliquer pour ouvrir et lire le règlement intérieur)</span></i></label>
+								<label for="reglement" onclick="ouvrirHTMLUnique('reglement')" style="margin-left: 8px; cursor: pointer;"><strong><i><u>Acceptation du règlement intérieur</u></i></strong><span class="required">* </span><i><span style="color: blue; font-style: italic;">(afin de valider votre acceptation => cliquer pour ouvrir et lire le règlement intérieur)</span></i></label>
 							</span>
 						</div>
 						<div style="display: flex; align-items: center; gap: 16px; width: 100%;">
 							<span style="display: flex; align-items: center; flex-grow: 1;">
 								<input type="radio" id="autorise" name="image" value="Autorise" required>
-								<label for="autorise" style="margin-left: 8px;">Acceptation de l'autorisation de diffusion<span class="required" style="color: white; font-style: italic;">xxxxxxxxxxxxxxx</span></label>
+								<label for="autorise" style="margin-left: 8px;"><strong>Acceptation de l'autorisation de diffusion</strong><span class="required" style="color: white; font-style: italic;">xxxxxxxxxxxxxx</span><span class="required" style="color: black; font-style: italic;">OU</span><span class="required" style="color: white; font-style: italic;">xxxxxx</span></label>
 							</span>
 							<span style="display: flex; align-items: center; flex-grow: 1;">
 								<input type="radio" id="refuse" name="image" value="Refuse" required>
-								<label for="refuse" style="margin-left: 8px; color: brown;">Refus de l'autorisation de diffusion</label>
+								<label for="refuse" style="margin-left: 8px; color: brown;"><strong>Refus de l'autorisation de diffusion</strong></label>
 							</span>
 						</div>
 						<div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
@@ -859,6 +862,35 @@
     });
   });
 
+
+
+// Désactivation checkbox questionnaire santé adulte si certificat ou prescription
+document.addEventListener('DOMContentLoaded', function() {
+    const radios = document.querySelectorAll('input[name="sante"]');
+    const checkboxesAdulte = document.querySelectorAll('input[id^="q"][id$="Adulte"]');
+
+    radios.forEach(radio => {
+        radio.addEventListener('change', function() {
+            const isQuestionnaireSelected = document.getElementById('questionnaire').checked;
+
+            checkboxesAdulte.forEach(checkbox => {
+                checkbox.disabled = !isQuestionnaireSelected;
+            });
+        });
+    });
+
+    // Désactiver les cases à cocher concernées par défaut au chargement de la page
+    checkboxesAdulte.forEach(checkbox => {
+        checkbox.disabled = true;
+    });
+});
+
+
+
+
+
+
+
   const santeAdulteForm = document.getElementById('santeAdulteForm');
   if (santeAdulteForm) {
     santeAdulteForm.addEventListener('submit', function(e) {
@@ -1081,6 +1113,40 @@ L’équipe de l’Entrain Pour Tous`;
       else label.classList.remove('text-red');
     });
   });
+
+
+
+// Désactivation checkbox questionnaire santé mineur si certificat ou prescription
+document.addEventListener('DOMContentLoaded', function() {
+    const radios = document.querySelectorAll('input[name="sante"]');
+    const checkboxesMineur = document.querySelectorAll('input[id^="q"][id$="Mineur"]');
+
+    radios.forEach(radio => {
+        radio.addEventListener('change', function() {
+            const isQuestionnaireSelected = document.getElementById('questionnaire').checked;
+
+            checkboxesMineur.forEach(checkbox => {
+                checkbox.disabled = !isQuestionnaireSelected;
+            });
+        });
+    });
+
+    // Désactiver les cases à cocher concernées par défaut au chargement de la page
+    checkboxesMineur.forEach(checkbox => {
+        checkbox.disabled = true;
+    });
+});
+
+
+
+
+
+
+
+
+
+
+
 
   const santeMineurForm = document.getElementById('santeMineurForm');
   if (santeMineurForm) {
