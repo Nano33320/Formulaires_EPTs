@@ -339,44 +339,43 @@
 		  const { jsPDF } = window.jspdf;
 		  const doc = new jsPDF();
 
-	      //	Titre
-doc.setFontSize(16);
-doc.setTextColor(0, 0, 255); // Couleur bleue
-doc.text("Signature de l'Adhésion et du Questionnaire Santé Adulte", 105, 20, { align: "center" });
+	      //	Message
+			doc.setFontSize(16);
+			doc.setTextColor(0, 0, 255); // Couleur bleue
+			doc.text("Signature de l'Adhésion et du Questionnaire Santé Adulte", 105, 20, { align: "center" });
 
-doc.setTextColor(0, 0, 0); // Couleur noire
-doc.text(`Nom : ${nom}`, 10, 40);
-doc.text(`Prénom : ${prenom}`, 10, 50);
-doc.text(`Nom Réprésentant Légal : ${nomrepleg}`, 10, 60);
-doc.text(`Prénom Réprésentant Légal : ${prenomrepleg}`, 10, 70);
-doc.text(`Téléphone : ${tel}`, 10, 80);
-doc.text(`Date : ${date}`, 10, 90);
-doc.text(`Code unique : ${code}`, 10, 100);
-doc.text('Signature :', 10, 110);
-doc.addImage(signatureData, 'PNG', 10, 115, 80, 30);
+			doc.setTextColor(0, 0, 0); // Couleur noire
+			doc.text(`Nom : ${nom}`, 10, 40);
+			doc.text(`Prénom : ${prenom}`, 10, 50);
+			doc.text(`Nom Réprésentant Légal : ${nomrepleg}`, 10, 60);
+			doc.text(`Prénom Réprésentant Légal : ${prenomrepleg}`, 10, 70);
+			doc.text(`Téléphone : ${tel}`, 10, 80);
+			doc.text(`Date : ${date}`, 10, 90);
+			doc.text(`Code unique : ${code}`, 10, 100);
+			doc.text('Signature :', 10, 110);
+			doc.addImage(signatureData, 'PNG', 10, 115, 80, 30);
+			let y = 150;
+			const lignes = [
+			  "Votre signature est enregistrée,",
+			  "vous DEVEZ fermer cette page pour accéder à l'écran suivant.",
+			  " ",
+			  "Vous serez redirigé vers le Questionnaire Santé",
+			  "vous devrez y cliquer sur le bouton « Envoyer par courriel ».",
+			  "Pensez à faire parvenir votre paiement à l'association",
+			  " pour que votre adhésion puisse être validée."
+			];
 
-let y = 150;
-const lignes = [
-  "Votre signature est enregistrée,",
-  "vous DEVEZ fermer cette page pour accéder à l'écran suivant.",
-  " ",
-  "Vous serez redirigé vers le Questionnaire Santé",
-  "vous devrez y cliquer sur le bouton « Envoyer par courriel ».",
-  "Pensez à faire parvenir votre paiement à l'association",
-  " pour que votre adhésion puisse être validée."
-];
-
-lignes.forEach((texte, index) => {
-  if (index < 3) {
-    doc.setTextColor(255, 0, 0); // Rouge pour les lignes 0 à 2
-  } else if (index < 5) {
-    doc.setTextColor(0, 0, 0); // Noir pour les lignes 3 et 4
-  } else {
-    doc.setTextColor(0, 0, 255); // Bleu pour les lignes 5 et 6
-  }
-  doc.text(texte, 105, y, { align: "center" });
-  y += 10;
-});
+			lignes.forEach((texte, index) => {
+			  if (index < 3) {
+				doc.setTextColor(255, 0, 0); // Rouge pour les lignes 0 à 2
+			  } else if (index < 5) {
+				doc.setTextColor(0, 0, 0); // Noir pour les lignes 3 et 4
+			  } else {
+				doc.setTextColor(0, 0, 255); // Bleu pour les lignes 5 et 6
+			  }
+			  doc.text(texte, 105, y, { align: "center" });
+			  y += 10;
+			});
 
 		  let nomFichier = `${nom} ${prenom}_Signature.pdf`;
 
