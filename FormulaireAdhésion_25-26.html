@@ -395,7 +395,7 @@
                     <button id="sendEmailAdulte" disabled>Envoyer par courriel</button>
 				</div>
                 <div class="instructions">
-                    <p><span style="color: red;"><b>Cliquez sur "Envoyer par courriel". Votre client de messagerie s'ouvrira avec un courriel pré-rempli. Veuillez ajouter manuellement les DEUX fichiers PDF en pièce jointe avant d'envoyer le courriel.</b></span></p>
+                    <p><span style="color: red;"><b>Cliquez sur "Envoyer par courriel". Votre messagerie s'ouvrira avec un courriel pré-rempli. Veuillez ajouter manuellement les DEUX fichiers PDF en pièce jointe avant d'envoyer le courriel.</b></span></p>
                 </div> 
         </div>
 
@@ -515,7 +515,7 @@
                     <button id="sendEmailMineur" disabled>Envoyer par courriel</button>
 				</div>
                 <div class="instructions">
-                    <p><span style="color: red;"><b>Cliquez sur "Envoyer par courriel". Votre client de messagerie s'ouvrira avec un courriel pré-rempli. Veuillez ajouter manuellement les DEUX fichiers PDF en pièce jointe avant d'envoyer le courriel.</b></span></p>
+                    <p><span style="color: red;"><b>Cliquez sur "Envoyer par courriel". Votre messagerie s'ouvrira avec un courriel pré-rempli. Veuillez ajouter manuellement les DEUX fichiers PDF en pièce jointe avant d'envoyer le courriel.</b></span></p>
                 </div>  
 		</div>
 		
@@ -987,8 +987,8 @@ Merci de joindre en pièce jointe les fichiers suivants :
 
 Pour cela, cliquez sur l’icône 📎 (trombone) dans votre outil/interface de messagerie, puis sélectionnez les 3 fichiers dans votre dossier "Téléchargement".
 
-Pensez à faire parvenir votre paiement à l'association
 Sans ces documents, votre inscription ne pourra pas être traitée/validée.
+Votre cotisatin peut-être adressée par courrier à l'association ou remise directement lors d'une scéance.
 
 Cordialement,
 L’équipe de l’Entrain Pour Tous`;
@@ -1054,7 +1054,6 @@ L’équipe de l’Entrain Pour Tous`;
     });
   }
 });
-
 
   // --- SANTE MINEUR ---
   function purgeSanteMineurFields() {
@@ -1198,14 +1197,8 @@ if (santeMineurForm) {
 	if (btnModifierMineur) btnModifierMineur.disabled = true;
 	const btnValiderMineur = document.getElementById('exportSanteMineur');
 	if (btnValiderMineur) btnValiderMineur.disabled = true;	
-	
-	
-	
   });
 }
-
-
-
 
 	<!-- ==== Comptage des problèmes santé mineur ==== -->
 document.addEventListener('DOMContentLoaded', function () {
@@ -1237,7 +1230,6 @@ document.addEventListener('DOMContentLoaded', function () {
     radiosSante.forEach(radio => radio.addEventListener('change', updateSanteMineurCount));
     updateSanteMineurCount();
 });
-
 
   // --- SIGNATURE MINEUR ---
   function handleFormSubmit(event) {
@@ -1311,8 +1303,8 @@ Merci de joindre en pièce jointe les fichiers suivants :
 
 Pour cela, cliquez sur l’icône 📎 (trombone) dans votre outil/interface de messagerie, puis sélectionnez les 3 fichiers dans votre dossier "Téléchargement".
 
-Pensez à faire parvenir votre paiement à l'association
 Sans ces documents, votre inscription ne pourra pas être traitée/validée.
+Votre cotisatin peut-être adressée par courrier à l'association ou remise directement lors d'une scéance.
 
 Cordialement,
 L’équipe de l’Entrain Pour Tous`;
@@ -1378,7 +1370,6 @@ L’équipe de l’Entrain Pour Tous`;
 	});
   }
 });
-
 </script>
 </body>
 </html>

@@ -144,11 +144,8 @@
 		<div style="background-color: #f8f9fa; padding: 15px; margin-bottom: 20px; border-radius: 5px; border-left: 4px solid #4CAF50;">
 		<p style="font-size: 1.2em; margin: 0 0 10px 0;"><strong>Comment signer ce document :</strong></p>
 			<ol style="font-size: 0.9em; margin: 0; padding-left: 20px;">
-				<li style="line-height: 1.4; margin-bottom: 10px;">Avec la souris ou un ThinkPad <i>(si vous en avez un)</i> ou avec le doigt si vous avez un écran tactile, <span style="color: red;">signez dans le PAD = Rectangle à bord rouge</span></li>
-				<li style="line-height: 1.4; margin-bottom: 10px;">Cliquez sur "Valider" => votre fichier <span style="color: blue;">"NOM Prénom_Signature.pdf"</span> sera créé et enregistré dans votre dossier Téléchargement et le PDF s'affichera.</li>
-				<li style="line-height: 1.4; margin-bottom: 10px;">Fermez le PDF et vous serez ramené au Questionnaire Santé en bas duquel le bouton <b>"Envoyer par courriel"</b> sera activé <i><span style="color: #4CAF50;">(sur fond vert)</span></i>.</li>
-				<li style="line-height: 1.4; margin-bottom: 10px;">Une fenêtre courriel s'ouvrira il faudra y insérer les 3 fichiers que vous trouverez dans le dossier "Téléchargements" : <br><span style="color: blue;">"NOM Prénom_Adhésion_24-24.csv"</span> + <span style="color: blue;">"NOM Prénom_Questionnaire Santé Adulte_24-24.csv"</span> + <span style="color: blue;">"NOM Prénom_Signature_24-24.pdf"</span><br>les envoyer à l'adresse => <span style="color: blue;"><b>lentrainpourtous@epts.fr&nbsp;&nbsp;&nbsp;&nbsp;</b></span></li>
-				<li style="line-height: 1.4; margin-bottom: 10px;">Pour que votre adhésion puisse être validée, vous devez faire parvenir votre paiement à l'association par chèque à l'ordre de l'<span style="color: blue;"><b><i>Entrain Pour Tous</i></b></span>.</li>
+				<li style="line-height: 1.4; margin-bottom: 10px;">Avec la souris ou avec le doigt si vous avez un écran tactile, <span style="color: red;">signez dans le cadre ci-dessous</span></li>
+				<li style="line-height: 1.4; margin-bottom: 10px;">Cliquez ensuite sur "Valider".</li>
 			</ol>
 		<form id="signaturePDFAdulte">
 			<div class="form-group">
@@ -176,6 +173,7 @@
 			  <span id="code-unique" class="code-box">------</span>
 			</div>
 			<div class="form-group">
+				<label><span style="font-style: italic; color:blue;">« Je confirme ma volonté d’adhérer à l’Association et la sincérité des informations portées sur le formulaire d’adhésion et sur le questionnaire santé ».</span></label><br>
 				<label>Signer dans le rectangle</label><br>
 				<canvas id="signature-pad" width="400" height="150"></canvas><br>
 				<button type="button" id="clear">Effacer / refaire la signature</button>
@@ -326,12 +324,10 @@
 				let y = 150;
 				const lignes = [
 				  "Votre signature est enregistrée,",
-				  "vous DEVEZ fermer cette page pour accéder à l'écran suivant.",
+				  "vous DEVEZ FERMER cette page pour accéder à l'écran suivant.",
 				  " ",
 				  "Vous serez redirigé vers le Questionnaire Santé",
-				  "vous devrez y cliquer sur le bouton « Envoyer par courriel ».",
-				  "Pensez à faire parvenir votre paiement à l'association",
-				  " pour que votre adhésion puisse être validée."
+				  "vous devrez y cliquer sur le bouton « Envoyer par courriel »."
 				];
 
 				lignes.forEach((texte, index) => {
