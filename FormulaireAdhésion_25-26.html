@@ -97,8 +97,7 @@
         @media (max-width: 600px) {
             .form-container img { position: static; width: 100%; max-width: 180px; right: auto; top: 10px; }
             .form-container { padding-top: 80px; }
-        }
-		
+        }	
 		.button-container-signature {
 			display: flex;
 			justify-content: space-between;
@@ -137,8 +136,6 @@
             box-shadow: 0 1px 6px #4caf5044;
         }		
     </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/signature_pad/4.1.7/signature_pad.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
     <div class="form-container">
@@ -319,24 +316,10 @@
 						</div>
 					</div>
 				</div>
-                <button type="submit" id="exportAdhesion">Valider le formulaire</button>
+                <button type="submit" id="exportAdhesion">Valider</button>
             </form>
         </div>
         <!-- =================== CHOIX SANTE ===================== -->
-        <div id="step-choix-sante" class="step">
-            <h1>Questionnaire Santé</h1>
-            <div style="margin-bottom:20px;">
-                <span style="font-size:1.2em;">Merci, votre fichier d’adhésion a bien été généré.<br>
-                Merci de remplir également le questionnaire santé correspondant :</span>
-            </div>
-            <div class="button-container" style="justify-content:center;">
-                <button id="btn-sante-adulte">Questionnaire Santé Adulte</button>
-                <button id="btn-sante-mineur">Questionnaire Santé Mineur</button>
-            </div>
-            <div style="margin-top:30px;text-align:center;">
-                <button onclick="showStep('step-adhesion')">Modifier le formulaire</button>
-            </div>
-        </div>
 
         <!-- =================== SANTE ADULTE ===================== -->
         <div id="step-sante-adulte" class="step">
@@ -404,11 +387,13 @@
                 </div>
 				<div class="button-container">									
 					<button type="submit" id="exportSanteAdulte" onclick="redirectToSignatureForm()" style="cursor: pointer;"><strong><i>Valider</i></strong></button>
+					<button id="btnModifierFormulaireAdulte" type="button" onclick="showStep('step-adhesion')">Modifier le formulaire</button>
 				</div>
 			</form>
                 <h1>Envoyer par Courriel</h1>
                 <div style="text-align: center;">
-                    <button id="sendEmailAdulte" disabled>Envoyer par courriel</button> </div>
+                    <button id="sendEmailAdulte" disabled>Envoyer par courriel</button>
+				</div>
                 <div class="instructions">
                     <p><span style="color: red;"><b>Cliquez sur "Envoyer par courriel". Votre client de messagerie s'ouvrira avec un courriel pré-rempli. Veuillez ajouter manuellement les DEUX fichiers PDF en pièce jointe avant d'envoyer le courriel.</b></span></p>
                 </div> 
@@ -521,12 +506,14 @@
                     <input type="text" id="dateMineur" name="date" readonly>
                 </div>
 				<div class="button-container">									
-					<button type="submit" id="exportSanteMineur" style="cursor: pointer;"><strong><i>Valider</i></strong></button>
+					<button type="submit" id="exportSanteMineur" onclick="redirectToSignatureForm2()" style="cursor: pointer;"><strong><i>Valider</i></strong></button>
+					<button id="btnModifierFormulaireMineur" type="button" onclick="showStep('step-adhesion')">Modifier le formulaire</button>
 				</div>
-            </form>
+			</form>
                 <h1>Envoyer par Courriel</h1>
                 <div style="text-align: center;">
-                    <button id="sendEmailMineur" disabled>Envoyer par courriel</button> </div>
+                    <button id="sendEmailMineur" disabled>Envoyer par courriel</button>
+				</div>
                 <div class="instructions">
                     <p><span style="color: red;"><b>Cliquez sur "Envoyer par courriel". Votre client de messagerie s'ouvrira avec un courriel pré-rempli. Veuillez ajouter manuellement les DEUX fichiers PDF en pièce jointe avant d'envoyer le courriel.</b></span></p>
                 </div>  
@@ -540,7 +527,10 @@
     document.querySelectorAll('.step').forEach(div => div.classList.remove('active'));
     const stepDiv = document.getElementById(stepId);
     if (stepDiv) stepDiv.classList.add('active');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+        // Ajout du scroll après un léger délai
+    setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 50);
   }
 
   function getCurrentDate() {
@@ -754,15 +744,9 @@
 
       const headers = 'Année;Mr/Mme;Nom;Prénom;Date Naissance;Adresse;CP;Ville;Courriel;Mobile;AM < 3 ans;EMS PE 3/6;Skate;GymAdapt;GymCarte;GymChaise;YogaGym;MVSD;GymSouplesse;GymSénior;Pilates;GymTonique;MN;MultiSports;JeuxSociété;TextField_5;TextField_6;TextField_7;TarifsX;Santé;Règlement Intérieur;Image;Cotisation';
       const csvContent = '\ufeff' + headers + '\n' + data;
-      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-      const link = document.createElement("a");
-      const url = URL.createObjectURL(blob);
-      const fileName = `${nom ? nom.value.trim() : ''} ${prenom ? prenom.value.trim() : ''}_Adhésion_25-26.csv`;
-      link.setAttribute("href", url);
-      link.setAttribute("download", fileName);
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+	  
+	  // Sauvegarde dans le localStorage pour futur téléchargement
+	  localStorage.setItem('csv_adhesion_epts', csvContent);
 
       // Pré-remplir les questionnaires santé avec nom/prénom/civilité
       if (document.getElementById('nomAdulte')) document.getElementById('nomAdulte').value = nom ? nom.value.trim() : '';
@@ -804,24 +788,8 @@
         } else {
           showStep('step-sante-adulte');
         }
-      } else {
-        showStep('step-choix-sante');
       }
     });
-  }
-
-  // CHOIX FORMULAIRE SANTE
-  const btnSanteAdulte = document.getElementById('btn-sante-adulte');
-  if (btnSanteAdulte) {
-    btnSanteAdulte.onclick = function() {
-      showStep('step-sante-adulte');
-    };
-  }
-  const btnSanteMineur = document.getElementById('btn-sante-mineur');
-  if (btnSanteMineur) {
-    btnSanteMineur.onclick = function() {
-      showStep('step-sante-mineur');
-    };
   }
 
   // --- SANTE ADULTE ---  
@@ -878,40 +846,72 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-  const santeAdulteForm = document.getElementById('santeAdulteForm');
-  if (santeAdulteForm) {
-    santeAdulteForm.addEventListener('submit', function(e) {
-      e.preventDefault();
-      const data = [
-        '2025/2026',
-        document.querySelector('input[name="civiliteAdulte"]:checked')?.value || '',
-        nomAdulte ? nomAdulte.value.trim() : '',
-        prenomAdulte ? prenomAdulte.value.trim() : '',
-        document.getElementById('q1Adulte')?.checked ? 'Yes' : 'No',
-        document.getElementById('q2Adulte')?.checked ? 'Yes' : 'No',
-        document.getElementById('q3Adulte')?.checked ? 'Yes' : 'No',
-        document.getElementById('q4Adulte')?.checked ? 'Yes' : 'No',
-        document.getElementById('q5Adulte')?.checked ? 'Yes' : 'No',
-        document.getElementById('q6Adulte')?.checked ? 'Yes' : 'No',
-        document.getElementById('q7Adulte')?.checked ? 'Yes' : 'No',
-        document.getElementById('q8Adulte')?.checked ? 'Yes' : 'No',
-        document.getElementById('q9Adulte')?.checked ? 'Yes' : 'No',
-        document.getElementById('dateAdulte')?.value.trim() || ''
-      ].join(';');
-      const headers = 'Année;Mr/Mme;Nom;Prénom;Q1;Q2;Q3;Q4;Q5;Q6;Q7;Q8;Q9;Date';
-      const csvContent = '\ufeff' + headers + '\n' + data;
-      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-      const link = document.createElement("a");
-      const url = URL.createObjectURL(blob);
-      const fileName = `${nomAdulte ? nomAdulte.value.trim() : ''} ${prenomAdulte ? prenomAdulte.value.trim() : ''}_Questionnaire Santé Adulte_25-26.csv`;
-      link.setAttribute("href", url);
-      link.setAttribute("download", fileName);
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      if (document.getElementById('sendEmailAdulte')) document.getElementById('sendEmailAdulte').disabled = false;
-    });
-  }
+// Enregistrement des csv Adhésion et Questionnaire Santé Adulte
+const santeAdulteForm = document.getElementById('santeAdulteForm');
+if (santeAdulteForm) {
+  santeAdulteForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const nom = nomAdulte ? nomAdulte.value.trim() : '';
+    const prenom = prenomAdulte ? prenomAdulte.value.trim() : '';
+
+    const data = [
+      '2025/2026',
+      document.querySelector('input[name="civiliteAdulte"]:checked')?.value || '',
+      nom,
+      prenom,
+      document.getElementById('q1Adulte')?.checked ? 'Yes' : 'No',
+      document.getElementById('q2Adulte')?.checked ? 'Yes' : 'No',
+      document.getElementById('q3Adulte')?.checked ? 'Yes' : 'No',
+      document.getElementById('q4Adulte')?.checked ? 'Yes' : 'No',
+      document.getElementById('q5Adulte')?.checked ? 'Yes' : 'No',
+      document.getElementById('q6Adulte')?.checked ? 'Yes' : 'No',
+      document.getElementById('q7Adulte')?.checked ? 'Yes' : 'No',
+      document.getElementById('q8Adulte')?.checked ? 'Yes' : 'No',
+      document.getElementById('q9Adulte')?.checked ? 'Yes' : 'No',
+      document.getElementById('dateAdulte')?.value.trim() || ''
+    ].join(';');
+
+    const headers = 'Année;Mr/Mme;Nom;Prénom;Q1;Q2;Q3;Q4;Q5;Q6;Q7;Q8;Q9;Date';
+    const csvSante = '\ufeff' + headers + '\n' + data;
+
+    // 🔒 Sauvegarde locale (utile si on veut réutiliser ou afficher plus tard)
+    localStorage.setItem('csv_sante_adulte_epts', csvSante);
+
+    // 📥 Téléchargement du CSV Santé
+    const blobSante = new Blob([csvSante], { type: 'text/csv;charset=utf-8;' });
+    const linkSante = document.createElement("a");
+    linkSante.href = URL.createObjectURL(blobSante);
+    linkSante.download = `${nom} ${prenom}_Questionnaire_Sante_Adulte_25-26.csv`;
+    document.body.appendChild(linkSante);
+    linkSante.click();
+    document.body.removeChild(linkSante);
+
+    // 📥 Téléchargement du CSV Adhésion si dispo
+    const csvAdhesion = localStorage.getItem('csv_adhesion_epts');
+    if (csvAdhesion) {
+      const blobAdhesion = new Blob([csvAdhesion], { type: 'text/csv;charset=utf-8;' });
+      const linkAdhesion = document.createElement("a");
+      linkAdhesion.href = URL.createObjectURL(blobAdhesion);
+      linkAdhesion.download = `${nom} ${prenom}_Adhesion_25-26.csv`;
+      document.body.appendChild(linkAdhesion);
+      linkAdhesion.click();
+      document.body.removeChild(linkAdhesion);
+    }
+
+    // 📧 Active le bouton email
+    const btn = document.getElementById('sendEmailAdulte');
+    if (btn) btn.disabled = false;
+	
+	// 📧 Désactive les bouton "Valider" et "Modifier Formulaire"
+	const btnModifierAdulte = document.getElementById('btnModifierFormulaireAdulte');
+	if (btnModifierAdulte) btnModifierAdulte.disabled = true;
+	const btnValiderAdulte = document.getElementById('exportSanteAdulte');
+	if (btnValiderAdulte) btnValiderAdulte.disabled = true;
+  });
+}
+
+
 
 //	<!-- ==== Comptage des problèmes santé adulte ==== -->
 const checkboxesAdulte = document.querySelectorAll('input[id^="q"][id$="Adulte"]');
@@ -1125,35 +1125,87 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-  const santeMineurForm = document.getElementById('santeMineurForm');
-  if (santeMineurForm) {
-    santeMineurForm.addEventListener('submit', function(e) {
-      e.preventDefault();
-      const data = [
-        '2025/2026',
-        document.querySelector('input[name="civiliteMineur"]:checked')?.value || '',
-        nomMineur ? nomMineur.value.trim() : '',
-        prenomMineur ? prenomMineur.value.trim() : '',
-        document.getElementById('ageMineur')?.value.trim() || '',
-        nomreplegMineur ? nomreplegMineur.value.trim() : '',
-        prenomreplegMineur ? prenomreplegMineur.value.trim() : '',
-        ...Array.from({length: 23}, (_, i) => document.getElementById(`q${i+1}Mineur`)?.checked ? 'Yes' : 'No'),
-        document.getElementById('dateMineur')?.value.trim() || ''
-      ].join(';');
-      const headers = 'Année;G/F;Nom;Prénom;Âge;NomRepLég;PrénomRepLég;Q1;Q2;Q3;Q4;Q5;Q6;Q7;Q8;Q9;Q10;Q11;Q12;Q13;Q14;Q15;Q16;Q17;Q18;Q19;Q20;Q21;Q22;Q23;Date';
-      const csvContent = '\ufeff' + headers + '\n' + data;
-      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-      const link = document.createElement("a");
-      const url = URL.createObjectURL(blob);
-      const fileName = `${nomMineur ? nomMineur.value.trim() : ''} ${prenomMineur ? prenomMineur.value.trim() : ''}_Questionnaire Santé Mineur_25-26.csv`;
-      link.setAttribute("href", url);
-      link.setAttribute("download", fileName);
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      if (document.getElementById('sendEmailMineur')) document.getElementById('sendEmailMineur').disabled = false;
-    });
-  }
+// Enregistrement des csv Adhésion et Questionnaire Santé Mineur
+const santeMineurForm = document.getElementById('santeMineurForm');
+
+if (santeMineurForm) {
+  santeMineurForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    // Récupération explicite des champs
+    const nomMineur = document.getElementById('nomMineur');
+    const prenomMineur = document.getElementById('prenomMineur');
+    const nomreplegMineur = document.getElementById('nomreplegMineur');
+    const prenomreplegMineur = document.getElementById('prenomreplegMineur');
+    const ageMineur = document.getElementById('ageMineur');
+    const dateMineur = document.getElementById('dateMineur');
+    const civilite = document.querySelector('input[name="civiliteMineur"]:checked');
+
+    const nom = nomMineur ? nomMineur.value.trim() : '';
+    const prenom = prenomMineur ? prenomMineur.value.trim() : '';
+
+    // Génération des données CSV
+    const data = [
+      '2025/2026',
+      civilite ? civilite.value : '',
+      nom,
+      prenom,
+      ageMineur ? ageMineur.value.trim() : '',
+      nomreplegMineur ? nomreplegMineur.value.trim() : '',
+      prenomreplegMineur ? prenomreplegMineur.value.trim() : '',
+      ...Array.from({ length: 23 }, (_, i) =>
+        document.getElementById(`q${i + 1}Mineur`)?.checked ? 'Yes' : 'No'
+      ),
+      dateMineur ? dateMineur.value.trim() : ''
+    ].join(';');
+
+    const headers =
+      'Année;G/F;Nom;Prénom;Âge;NomRepLég;PrénomRepLég;' +
+      Array.from({ length: 23 }, (_, i) => `Q${i + 1}`).join(';') +
+      ';Date';
+
+    const csvSante = '\ufeff' + headers + '\n' + data;
+
+    // 📥 Téléchargement fichier Questionnaire Santé Mineur
+    const blobSante = new Blob([csvSante], { type: 'text/csv;charset=utf-8;' });
+    const linkSante = document.createElement('a');
+    linkSante.href = URL.createObjectURL(blobSante);
+    linkSante.download = `${nom} ${prenom}_Questionnaire_Sante_Mineur_25-26.csv`;
+    document.body.appendChild(linkSante);
+    linkSante.click();
+    document.body.removeChild(linkSante);
+
+    // 📥 Téléchargement fichier Adhésion depuis localStorage
+    const csvAdhesion = localStorage.getItem('csv_adhesion_epts');
+    if (csvAdhesion) {
+      const blobAdhesion = new Blob([csvAdhesion], { type: 'text/csv;charset=utf-8;' });
+      const linkAdhesion = document.createElement('a');
+      linkAdhesion.href = URL.createObjectURL(blobAdhesion);
+      linkAdhesion.download = `${nom} ${prenom}_Adhesion_25-26.csv`;
+      document.body.appendChild(linkAdhesion);
+      linkAdhesion.click();
+      document.body.removeChild(linkAdhesion);
+    } else {
+      console.warn("Aucun CSV d’adhésion trouvé dans le localStorage.");
+    }
+
+    // ✅ Activation bouton email
+    const btn = document.getElementById('sendEmailMineur');
+    if (btn) btn.disabled = false;
+	
+	// 📧 Désactive les bouton "Valider" et "Modifier Formulaire"
+	const btnModifierMineur = document.getElementById('btnModifierFormulaireMineur');
+	if (btnModifierMineur) btnModifierMineur.disabled = true;
+	const btnValiderMineur = document.getElementById('exportSanteMineur');
+	if (btnValiderMineur) btnValiderMineur.disabled = true;	
+	
+	
+	
+  });
+}
+
+
+
 
 	<!-- ==== Comptage des problèmes santé mineur ==== -->
 document.addEventListener('DOMContentLoaded', function () {
@@ -1327,19 +1379,6 @@ L’équipe de l’Entrain Pour Tous`;
   }
 });
 
-  // --- INIT DATES ET LOGO ---
-  window.addEventListener('load', () => {
-    const dateAdulteEl = document.getElementById('dateAdulte');
-    if (dateAdulteEl) dateAdulteEl.value = getCurrentDate();
-    const dateMineurEl = document.getElementById('dateMineur');
-    if (dateMineurEl) dateMineurEl.value = getCurrentDate();
-    // Vérifier si une image de logo est présente, sinon utiliser le placeholder
-    const logoImg = document.querySelector('.form-container img');
-    if (logoImg && (!logoImg.getAttribute('src') || logoImg.getAttribute('src').trim() === "")) {
-      logoImg.src = "https://placehold.co/300x100/eeeeee/333333?text=Logo+EPT";
-      logoImg.alt = "Logo EPT Placeholder";
-    }
-  });
 </script>
 </body>
 </html>
