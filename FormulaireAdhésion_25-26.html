@@ -278,7 +278,7 @@
 								<input type="radio" id="questionnaire" name="sante" value="Questionnaire" required>
 								<label for="questionnaire" style="margin-left: 8px; color: black;">Questionnaire Santé <span class="required">* </span><span style="color: blue; font-style: italic;">(1 seul choix possible)</span></label>
 							</span>
-							<span style="display: flex; align-items: center; flex-grow: 1; justify-content: center;">
+							<span style="display: flex; align-items: center; flex-grow: 1; justify-content: center; transform: translateX(-30px);">
 								<input type="radio" id="certificat" name="sante" value="Certificat" required>
 								<label for="certificat" style="margin-left: 8px; color: brown;">Certificat Médical</label>
 							</span>
@@ -296,13 +296,12 @@
 						<div style="display: flex; align-items: center; gap: 16px; width: 100%;">
 							<div style="display: flex; align-items: center; gap: 16px;">
 								<input type="radio" id="autorise" name="image" value="Autorise" required>
-								<label for="autorise" style="margin-left: 8px; color: brown;"><strong>Accepter</strong></label>
-								
+								<label for="autorise" style="margin-left: 0px;">Accepter (<span class="required">*</span>)</label>								
 								<input type="radio" id="refuse" name="image" value="Refuse" required>
-								<label for="refuse" style="margin-left: 8px; color: brown;"><strong>Refuser<span style="color: white;">XXX</span></strong></label>
+								<label for="refuse" style="margin-left: 0px;">Refuser<span style="color: white;">XXX</span></label>
 							</div>
 							<div style="flex-grow: 1; text-align: center;">
-								<label for="autorise" style="color: brown;"><strong><=><span style="color: white;">XXX</span>Autorisation de diffusion</strong></label>
+								<label for="autorise"><span style="color: white;">XXX</span>Droit à l'image => autorisation de diffusion</label>															
 							</div>
 						</div>
 						<div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
