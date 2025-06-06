@@ -294,14 +294,16 @@
 							</span>
 						</div>
 						<div style="display: flex; align-items: center; gap: 16px; width: 100%;">
-							<span style="display: flex; align-items: center; flex-grow: 1;">
+							<div style="display: flex; align-items: center; gap: 16px;">
 								<input type="radio" id="autorise" name="image" value="Autorise" required>
-								<label for="autorise" style="margin-left: 8px;"><strong>Acceptation de l'autorisation de diffusion</strong><span class="required" style="color: white; font-style: italic;">xxxxxxxxxxxxxxxxxxxxx</span><span class="required" style="color: black; font-style: italic;">OU PAS</span><span class="required" style="color: white; font-style: italic;">xxxxxx</span></label>
-							</span>
-							<span style="display: flex; align-items: center; flex-grow: 1;">
+								<label for="autorise" style="margin-left: 8px; color: brown;"><strong>Accepter</strong></label>
+								
 								<input type="radio" id="refuse" name="image" value="Refuse" required>
-								<label for="refuse" style="margin-left: 8px; color: brown;"><strong>Refus de l'autorisation de diffusion</strong></label>
-							</span>
+								<label for="refuse" style="margin-left: 8px; color: brown;"><strong>Refuser<span style="color: white;">XXX</span></strong></label>
+							</div>
+							<div style="flex-grow: 1; text-align: center;">
+								<label for="autorise" style="color: brown;"><strong><=><span style="color: white;">XXX</span>Autorisation de diffusion</strong></label>
+							</div>
 						</div>
 						<div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
 							<span style="display: flex; align-items: center; flex-grow: 1;">
@@ -314,7 +316,6 @@
                 <button type="submit" id="exportAdhesion">Valider</button>
             </form>
         </div>
-        <!-- =================== CHOIX SANTE ===================== -->
 
         <!-- =================== SANTE ADULTE ===================== -->
         <div id="step-sante-adulte" class="step">
