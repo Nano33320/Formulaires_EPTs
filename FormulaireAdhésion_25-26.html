@@ -45,6 +45,11 @@
             background-color: #4CAF50; color: white; padding: 10px 20px; border: none;
             border-radius: 4px; cursor: pointer; font-size: 16px;
         }
+        /* Cible uniquement les labels associés aux cases à cocher des questionnaires santé */
+        input[id^="q"][id$="Adulte"] + label,
+        input[id^="q"][id$="Mineur"] + label {
+            color: grey; /* Change la couleur du texte en gris */
+        }
         button:hover { background-color: #45a049; }
         button:disabled { background-color: #cccccc; cursor: not-allowed; }
         .help-text { color: #666; font-size: 14px; margin-top: 4px; }
@@ -906,8 +911,6 @@ if (santeAdulteForm) {
   });
 }
 
-
-
 //	<!-- ==== Comptage des problèmes santé adulte ==== -->
 const checkboxesAdulte = document.querySelectorAll('input[id^="q"][id$="Adulte"]');
 const santeAdulteCount = document.getElementById('sante-adulte-count');
@@ -918,7 +921,7 @@ function updateSanteAdulteCount() {
     const selectedRadio = document.querySelector('input[name="sante"]:checked');
 
     if (selectedRadio && (selectedRadio.value === "Certificat" || selectedRadio.value === "Prescription")) {
-        santeAdulteCount.innerHTML = `<label style="color: green;">Vous avez une prescription ou un certificat médical,<br>continuez votre démarche d'adhésion, nous mettrons votre dossier en suspend en attendant le document</label>`;
+        santeAdulteCount.innerHTML = `<label style="color: green;font-size: 1.2em;">Vous avez une prescription ou un certificat médical, ne répondez pas au questionnaire.<br>Continuez votre démarche d'adhésion, nous mettrons votre dossier en suspens en attendant le document</label>`;
     } else if (checkedCount === 0) {
         santeAdulteCount.innerHTML = `<label style="color: blue;">Le questionnaire Santé suffit pour vous inscrire</label>`;
     } else {
@@ -929,7 +932,6 @@ function updateSanteAdulteCount() {
 checkboxesAdulte.forEach(cb => cb.addEventListener('change', updateSanteAdulteCount));
 radiosSante.forEach(radio => radio.addEventListener('change', updateSanteAdulteCount));
 updateSanteAdulteCount();
-
 
   // --- SIGNATURE ADULTE ---
   window.redirectToSignatureForm = function() {
@@ -983,7 +985,7 @@ Merci de joindre en pièce jointe les fichiers suivants :
 Pour cela, cliquez sur l’icône 📎 (trombone) dans votre outil/interface de messagerie, puis sélectionnez les 3 fichiers dans votre dossier "Téléchargement".
 
 Sans ces documents, votre inscription ne pourra pas être traitée/validée.
-Votre cotisatin peut-être adressée par courrier à l'association ou remise directement lors d'une scéance.
+Votre cotisatin peut-être adressée par courrier à l'association ou remise directement lors d'une séance.
 
 Cordialement,
 L’équipe de l’Entrain Pour Tous`;
@@ -1212,7 +1214,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (santeMineurMessage) {
             if (selectedRadio && (selectedRadio.value === "Certificat" || selectedRadio.value === "Prescription")) {
-                santeMineurMessage.innerHTML = `<label style="color: green;">Vous avez une prescription ou un certificat médical,<br>continuez votre démarche d'adhésion, nous mettrons votre dossier en suspend en attendant le document</label>`;
+                santeMineurMessage.innerHTML = `<label style="color: green;font-size: 1.2em;">Vous avez une prescription ou un certificat médical, ne répondez pas au questionnaire.<br>Continuez votre démarche d'adhésion, nous mettrons votre dossier en suspens en attendant le document</label>`;
             } else if (checkedCount === 0) {
                 santeMineurMessage.innerHTML = `<label style="color: blue;">Le questionnaire Santé suffit pour vous inscrire</label>`;
             } else {
@@ -1299,7 +1301,7 @@ Merci de joindre en pièce jointe les fichiers suivants :
 Pour cela, cliquez sur l’icône 📎 (trombone) dans votre outil/interface de messagerie, puis sélectionnez les 3 fichiers dans votre dossier "Téléchargement".
 
 Sans ces documents, votre inscription ne pourra pas être traitée/validée.
-Votre cotisatin peut-être adressée par courrier à l'association ou remise directement lors d'une scéance.
+Votre cotisatin peut-être adressée par courrier à l'association ou remise directement lors d'une séance.
 
 Cordialement,
 L’équipe de l’Entrain Pour Tous`;
