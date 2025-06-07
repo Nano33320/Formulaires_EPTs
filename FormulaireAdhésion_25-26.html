@@ -44,7 +44,20 @@
         button {
             background-color: #4CAF50; color: white; padding: 10px 20px; border: none;
             border-radius: 4px; cursor: pointer; font-size: 16px;
-        }
+        }		
+		.label-questionnaire.disabled {
+		  color: gray !important;
+		  font-style: italic;
+		}
+		.label-questionnaire.disabled span {
+		  color: gray !important;
+		}
+
+.label-checkbox.disabled {
+  color: gray;
+  font-style: italic;
+}
+		
         /* Cible uniquement les labels associés aux cases à cocher des questionnaires santé */
         input[id^="q"][id$="Adulte"] + label,
         input[id^="q"][id$="Mineur"] + label {
@@ -360,9 +373,9 @@
                     <label for="prenomAdulte">Prénom <span class="required">*</span></label>
                     <input type="text" id="prenomAdulte" name="prenom" autocomplete="off" required readonly>
                 </div>
-                <div class="form-group">
-                    <label style="color: blue; text-align: center; background-color: lightgray;padding: 10px 0;">Répondez aux questions ci-dessous => en laissant la case vide vous validez "NON" <span style="color: red; font-style: italic;">en la cochant vous validez "OUI"</span></label>
-                </div>
+				<div class="form-group">
+					<label class="label-questionnaire" style="color: blue; text-align: center; background-color: lightgray; padding: 10px 0;">Répondez aux questions ci-dessous => en laissant la case vide vous validez "NON" <span style="color: red; font-style: italic;">en la cochant vous validez "OUI"</span></label>
+				</div>			
                 <div class="form-group">
                     <label>Durant les 12 derniers mois</label>
                     <div class="checkbox-group">
@@ -455,7 +468,7 @@
                     <input type="text" id="prenomreplegMineur" autocomplete="off" required>
                 </div>
                 <div class="form-group">
-                    <label style="color: blue; text-align: center; background-color: lightgray;padding: 10px 0;">Répondez aux questions ci-dessous => en laissant la case vide vous validez "NON" <span style="color: red; font-style: italic;">en la cochant vous validez "OUI"</span></label>
+					<label class="label-questionnaire" style="color: blue; text-align: center; background-color: lightgray; padding: 10px 0;">Répondez aux questions ci-dessous => en laissant la case vide vous validez "NON" <span style="color: red; font-style: italic;">en la cochant vous validez "OUI"</span></label>
                 </div>
                 <div class="form-group">
                     <label>DEPUIS L'ANNNÉE DERNIÈRE :</label>
@@ -827,24 +840,34 @@
   });
 
 // Désactivation checkbox questionnaire santé adulte si certificat ou prescription
-document.addEventListener('DOMContentLoaded', function() {
-    const radios = document.querySelectorAll('input[name="sante"]');
-    const checkboxesAdulte = document.querySelectorAll('input[id^="q"][id$="Adulte"]');
+document.addEventListener('DOMContentLoaded', function () {
+  const radios = document.querySelectorAll('input[name="sante"]');
+  const checkboxesAdulte = document.querySelectorAll('input[id^="q"][id$="Adulte"]');
+  const labelQuestionnaire = document.querySelector('.label-questionnaire'); // Cible ton label
 
-    radios.forEach(radio => {
-        radio.addEventListener('change', function() {
-            const isQuestionnaireSelected = document.getElementById('questionnaire').checked;
+  function updateState() {
+    const isQuestionnaireSelected = document.getElementById('questionnaire').checked;
 
-            checkboxesAdulte.forEach(checkbox => {
-                checkbox.disabled = !isQuestionnaireSelected;
-            });
-        });
-    });
-
-    // Désactiver les cases à cocher concernées par défaut au chargement de la page
     checkboxesAdulte.forEach(checkbox => {
-        checkbox.disabled = true;
+      checkbox.disabled = !isQuestionnaireSelected;
     });
+
+    if (!isQuestionnaireSelected) {
+      labelQuestionnaire.classList.add('disabled');
+    } else {
+      labelQuestionnaire.classList.remove('disabled');
+    }
+  }
+
+  radios.forEach(radio => {
+    radio.addEventListener('change', updateState);
+  });
+
+  // Initialisation à l'ouverture
+  checkboxesAdulte.forEach(checkbox => {
+    checkbox.disabled = true;
+  });
+  labelQuestionnaire.classList.add('disabled'); // par défaut grisé
 });
 
 // Enregistrement des csv Adhésion et Questionnaire Santé Adulte
@@ -922,7 +945,7 @@ function updateSanteAdulteCount() {
     const selectedRadio = document.querySelector('input[name="sante"]:checked');
 
     if (selectedRadio && (selectedRadio.value === "Certificat" || selectedRadio.value === "Prescription")) {
-        santeAdulteCount.innerHTML = `<label style="color: green;font-size: 1.2em;">Vous avez une prescription ou un certificat médical, ne répondez pas au questionnaire.<br>Continuez votre démarche d'adhésion, nous mettrons votre dossier en suspens en attendant le document</label>`;
+        santeAdulteCount.innerHTML = `<label style="color: green;font-size: 1.2em;">Vous avez une prescription ou un certificat médical, ne répondez pas au questionnaire.<br>Valider pour continuer votre démarche d'adhésion,<br>nous mettrons votre dossier en suspens en attendant le document.</label>`;
     } else if (checkedCount === 0) {
         santeAdulteCount.innerHTML = `<label style="color: blue;">Le questionnaire Santé suffit pour vous inscrire</label>`;
     } else {
@@ -986,7 +1009,7 @@ Merci de joindre en pièce jointe les fichiers suivants :
 Pour cela, cliquez sur l’icône 📎 (trombone) dans votre outil/interface de messagerie, puis sélectionnez les 3 fichiers dans votre dossier "Téléchargement".
 
 Sans ces documents, votre inscription ne pourra pas être traitée/validée.
-Votre cotisatin peut-être adressée par courrier à l'association ou remise directement lors d'une séance.
+Votre cotisation peut-être adressée par courrier à l'Association ou remise directement lors d'une séance.
 
 Cordialement,
 L’équipe de l’Entrain Pour Tous`;
@@ -1102,24 +1125,34 @@ L’équipe de l’Entrain Pour Tous`;
   });
 
 // Désactivation checkbox questionnaire santé mineur si certificat ou prescription
-document.addEventListener('DOMContentLoaded', function() {
-    const radios = document.querySelectorAll('input[name="sante"]');
-    const checkboxesMineur = document.querySelectorAll('input[id^="q"][id$="Mineur"]');
+document.addEventListener('DOMContentLoaded', function () {
+  const radios = document.querySelectorAll('input[name="sante"]');
+  const checkboxesAdulte = document.querySelectorAll('input[id^="q"][id$="Mineur"]');
+  const labelQuestionnaire = document.querySelector('.label-questionnaire'); // Cible ton label
 
-    radios.forEach(radio => {
-        radio.addEventListener('change', function() {
-            const isQuestionnaireSelected = document.getElementById('questionnaire').checked;
+  function updateState() {
+    const isQuestionnaireSelected = document.getElementById('questionnaire').checked;
 
-            checkboxesMineur.forEach(checkbox => {
-                checkbox.disabled = !isQuestionnaireSelected;
-            });
-        });
+    checkboxesAdulte.forEach(checkbox => {
+      checkbox.disabled = !isQuestionnaireSelected;
     });
 
-    // Désactiver les cases à cocher concernées par défaut au chargement de la page
-    checkboxesMineur.forEach(checkbox => {
-        checkbox.disabled = true;
-    });
+    if (!isQuestionnaireSelected) {
+      labelQuestionnaire.classList.add('disabled');
+    } else {
+      labelQuestionnaire.classList.remove('disabled');
+    }
+  }
+
+  radios.forEach(radio => {
+    radio.addEventListener('change', updateState);
+  });
+
+  // Initialisation à l'ouverture
+  checkboxesAdulte.forEach(checkbox => {
+    checkbox.disabled = true;
+  });
+  labelQuestionnaire.classList.add('disabled'); // par défaut grisé
 });
 
 // Enregistrement des csv Adhésion et Questionnaire Santé Mineur
@@ -1215,7 +1248,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (santeMineurMessage) {
             if (selectedRadio && (selectedRadio.value === "Certificat" || selectedRadio.value === "Prescription")) {
-                santeMineurMessage.innerHTML = `<label style="color: green;font-size: 1.2em;">Vous avez une prescription ou un certificat médical, ne répondez pas au questionnaire.<br>Continuez votre démarche d'adhésion, nous mettrons votre dossier en suspens en attendant le document</label>`;
+                santeMineurMessage.innerHTML = `<label style="color: green;font-size: 1.2em;">Vous avez une prescription ou un certificat médical, ne répondez pas au questionnaire.<br>Valider pour continuer votre démarche d'adhésion,<br>nous mettrons votre dossier en suspens en attendant le document.</label>`;
             } else if (checkedCount === 0) {
                 santeMineurMessage.innerHTML = `<label style="color: blue;">Le questionnaire Santé suffit pour vous inscrire</label>`;
             } else {
@@ -1302,7 +1335,7 @@ Merci de joindre en pièce jointe les fichiers suivants :
 Pour cela, cliquez sur l’icône 📎 (trombone) dans votre outil/interface de messagerie, puis sélectionnez les 3 fichiers dans votre dossier "Téléchargement".
 
 Sans ces documents, votre inscription ne pourra pas être traitée/validée.
-Votre cotisatin peut-être adressée par courrier à l'association ou remise directement lors d'une séance.
+Votre cotisation peut-être adressée par courrier à l'Association ou remise directement lors d'une séance.
 
 Cordialement,
 L’équipe de l’Entrain Pour Tous`;
