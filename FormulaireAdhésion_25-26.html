@@ -5,46 +5,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Adhésion & Questionnaires Santé 2025-2026</title>
     <style>
-        h1 { text-align: center; margin-bottom: 30px; }
-        .hidden-field { display: none; }
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 1100px;
-            margin: 50px auto;
-            padding: 20px;
-            background-color: #f5f5f5;
-        }
-        .form-container {
-            background-color: white;
-            padding: 20px;
-            padding-top: 160px; /* Logo padding */
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            position: relative;
-        }
-        .form-container img {
-            position: absolute;
-            top: 20px;
-            right: 425px;
-            width: 300px;
-            height: auto;
-        }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; }
-        input[type="text"], input[type="email"], input[type="tel"], input[type="number"] {
-            width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;
-            box-sizing: border-box; font-size: 16px;
-        }
-        .radio-group, .radio-group-horizontal {
-            display: flex; flex-direction: row; gap: 8px; margin-top: 5px;
-        }
-        .radio-group label, .radio-group-horizontal label { margin: 0; font-weight: normal; }
-        .required { color: red; margin-left: 3px; }
-        .error-message { color: red; font-size: 14px; margin-top: 5px; display: none; }
-        button {
-            background-color: #4CAF50; color: white; padding: 10px 20px; border: none;
-            border-radius: 4px; cursor: pointer; font-size: 16px;
-        }		
+		h1 { text-align: center; margin-bottom: 30px; }
+		.hidden-field { display: none; }
+		body {
+			font-family: Arial, sans-serif;
+			max-width: 1100px;
+			margin: 50px auto;
+			padding: 20px;
+			background-color: #f5f5f5;
+		}
+		.form-container {
+			background-color: white;
+			padding: 20px;
+			padding-top: 160px; /* Logo padding */
+			border-radius: 8px;
+			box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+			position: relative;
+		}
+		.form-container img {
+			position: absolute;
+			top: 20px;
+			right: 425px;
+			width: 300px;
+			height: auto;
+		}
+		.form-group { margin-bottom: 15px; }
+		label { display: block; margin-bottom: 5px; font-weight: bold; }
+		input[type="text"], input[type="email"], input[type="tel"], input[type="number"] {
+			width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;
+			box-sizing: border-box; font-size: 16px;
+		}
+		.radio-group, .radio-group-horizontal {
+			display: flex; flex-direction: row; gap: 8px; margin-top: 5px;
+		}
+		.radio-group label, .radio-group-horizontal label { margin: 0; font-weight: normal; }
+		.required { color: red; margin-left: 3px; }
+		.error-message { color: red; font-size: 14px; margin-top: 5px; display: none; }
+		button {
+			background-color: #4CAF50; color: white; padding: 10px 20px; border: none;
+			border-radius: 4px; cursor: pointer; font-size: 16px;
+		}
 		.label-questionnaire.disabled {
 		  color: gray !important;
 		  font-style: italic;
@@ -52,32 +52,34 @@
 		.label-questionnaire.disabled span {
 		  color: gray !important;
 		}
-
-.label-checkbox.disabled {
-  color: gray;
-  font-style: italic;
-}
-		
-        /* Cible uniquement les labels associés aux cases à cocher des questionnaires santé */
-        input[id^="q"][id$="Adulte"] + label,
-        input[id^="q"][id$="Mineur"] + label {
-            color: grey; /* Change la couleur du texte en gris */
-	    font-style: italic; /* Ajoute l'italique */
-        }
-        button:hover { background-color: #45a049; }
-        button:disabled { background-color: #cccccc; cursor: not-allowed; }
-        .help-text { color: #666; font-size: 14px; margin-top: 4px; }
-        .checkbox-group {
-            display: flex; flex-direction: column; gap: 8px; margin-top: 5px;
-        }
-        .checkbox-group div { display: flex; align-items: center; gap: 8px; }
-        .checkbox-group label { margin: 0; font-weight: normal; }
-        .text-red { color: red; }
-        .button-container {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
-        }
+		/* Texte des labels par défaut */
+		input[type="checkbox"] + label {
+		  color: black;
+		  font-style: normal;
+		}
+		/* Texte rouge si coché */
+		input[type="checkbox"]:checked + label {
+		  color: red;
+		}
+		/* Texte grisé + italique si désactivé */
+		input[type="checkbox"]:disabled + label {
+		  color: gray;
+		  font-style: italic;
+		}
+		button:hover { background-color: #45a049; }
+		button:disabled { background-color: #cccccc; cursor: not-allowed; }
+		.help-text { color: #666; font-size: 14px; margin-top: 4px; }
+		.checkbox-group {
+			display: flex; flex-direction: column; gap: 8px; margin-top: 5px;
+		}
+		.checkbox-group div { display: flex; align-items: center; gap: 8px; }
+		.checkbox-group label { margin: 0; font-weight: normal; }
+		.text-red { color: red; }
+		.button-container {
+			display: flex;
+			justify-content: space-between;
+			margin-top: 20px;
+		}
         .button-container button { margin-left: 10px; }
         .email-container {
             display: flex;
@@ -374,8 +376,8 @@
                     <input type="text" id="prenomAdulte" name="prenom" autocomplete="off" required readonly>
                 </div>
 				<div class="form-group">
-					<label class="label-questionnaire" style="color: blue; text-align: center; background-color: lightgray; padding: 10px 0;">Répondez aux questions ci-dessous => en laissant la case vide vous validez "NON" <span style="color: red; font-style: italic;">en la cochant vous validez "OUI"</span></label>
-				</div>			
+					<label class="label-questionnaire sante-adulte" style="color: blue; text-align: center; background-color: lightgray; padding: 10px 0;">Répondez aux questions ci-dessous => en laissant la case vide vous validez "NON" <span style="color: red; font-style: italic;">en la cochant vous validez "OUI"</span></label>
+				</div>		
                 <div class="form-group">
                     <label>Durant les 12 derniers mois</label>
                     <div class="checkbox-group">
@@ -467,8 +469,8 @@
                     <label for="prenomreplegMineur"><span style="font-style: italic;">Prénom <span class="required">*</span></span></label>
                     <input type="text" id="prenomreplegMineur" autocomplete="off" required>
                 </div>
-                <div class="form-group">
-					<label class="label-questionnaire" style="color: blue; text-align: center; background-color: lightgray; padding: 10px 0;">Répondez aux questions ci-dessous => en laissant la case vide vous validez "NON" <span style="color: red; font-style: italic;">en la cochant vous validez "OUI"</span></label>
+                 <div class="form-group">
+					<label class="label-questionnaire sante-mineur" style="color: blue; text-align: center; background-color: lightgray; padding: 10px 0;">Répondez aux questions ci-dessous => en laissant la case vide vous validez "NON" <span style="color: red; font-style: italic;">en la cochant vous validez "OUI"</span></label>
                 </div>
                 <div class="form-group">
                     <label>DEPUIS L'ANNNÉE DERNIÈRE :</label>
@@ -838,12 +840,12 @@
       else label.classList.remove('text-red');
     });
   });
-
+// -------------------------------------------------------------------------------
 // Désactivation checkbox questionnaire santé adulte si certificat ou prescription
 document.addEventListener('DOMContentLoaded', function () {
   const radios = document.querySelectorAll('input[name="sante"]');
   const checkboxesAdulte = document.querySelectorAll('input[id^="q"][id$="Adulte"]');
-  const labelQuestionnaire = document.querySelector('.label-questionnaire'); // Cible ton label
+  const labelQuestionnaire = document.querySelector('.label-questionnaire sante-adulte'); // Cible ton label
 
   function updateState() {
     const isQuestionnaireSelected = document.getElementById('questionnaire').checked;
@@ -869,7 +871,7 @@ document.addEventListener('DOMContentLoaded', function () {
   });
   labelQuestionnaire.classList.add('disabled'); // par défaut grisé
 });
-
+// -------------------------------------------------------------------------------
 // Enregistrement des csv Adhésion et Questionnaire Santé Adulte
 const santeAdulteForm = document.getElementById('santeAdulteForm');
 if (santeAdulteForm) {
@@ -1124,19 +1126,18 @@ L’équipe de l’Entrain Pour Tous`;
     });
   });
 
+// -------------------------------------------------------------------------------
 // Désactivation checkbox questionnaire santé mineur si certificat ou prescription
 document.addEventListener('DOMContentLoaded', function () {
   const radios = document.querySelectorAll('input[name="sante"]');
-  const checkboxesAdulte = document.querySelectorAll('input[id^="q"][id$="Mineur"]');
+  const checkboxesMineur = document.querySelectorAll('input[id^="q"][id$="Mineur"]');
   const labelQuestionnaire = document.querySelector('.label-questionnaire'); // Cible ton label
 
   function updateState() {
     const isQuestionnaireSelected = document.getElementById('questionnaire').checked;
-
-    checkboxesAdulte.forEach(checkbox => {
+    checkboxesMineur.forEach(checkbox => {
       checkbox.disabled = !isQuestionnaireSelected;
     });
-
     if (!isQuestionnaireSelected) {
       labelQuestionnaire.classList.add('disabled');
     } else {
@@ -1149,12 +1150,12 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   // Initialisation à l'ouverture
-  checkboxesAdulte.forEach(checkbox => {
+  checkboxesMineur.forEach(checkbox => {
     checkbox.disabled = true;
   });
   labelQuestionnaire.classList.add('disabled'); // par défaut grisé
 });
-
+// -------------------------------------------------------------------------------
 // Enregistrement des csv Adhésion et Questionnaire Santé Mineur
 const santeMineurForm = document.getElementById('santeMineurForm');
 
