@@ -44,7 +44,15 @@
 		button {
 			background-color: #4CAF50; color: white; padding: 10px 20px; border: none;
 			border-radius: 4px; cursor: pointer; font-size: 16px;
+		}		
+		/* Texte des labels par défaut pour les boutons radio */
+		input[type="radio"] + label {
+		  font-style: normal;
 		}
+		/* Texte rouge uniquement si le bouton radio est sélectionné */
+		input[type="radio"]:checked + label {
+		  color: red;
+		}		
 		.label-questionnaire.disabled {
 		  color: gray !important;
 		  font-style: italic;
@@ -994,13 +1002,14 @@ document.addEventListener("DOMContentLoaded", function () {
   `);
 
   sendEmailAdulteBtn.addEventListener('click', function () {
-    const nomVal = (typeof nom !== 'undefined' && nom.value.trim()) || 'NOM_INCONNU';
-    const prenomVal = (typeof prenom !== 'undefined' && prenom.value.trim()) || 'PRENOM_INCONNU';
+    const nomVal = (document.getElementById('nom')?.value.trim()) || 'NOM_INCONNU';
+    const prenomVal = (document.getElementById('prenom')?.value.trim()) || 'PRENOM_INCONNU';
     const recipient = 'lentrainpourtous@epts.fr';
     const subject = 'Inscription : fichiers CSV et PDF en pièce jointe';
     const adhesionFileName = `${nomVal}_${prenomVal}_Adhésion_25-26.csv`;
     const adulteFileName = `${nomVal}_${prenomVal}_Questionnaire Santé Adulte_25-26.csv`;
     const signatureFileName = `${nomVal}_${prenomVal}_Signature.pdf`;
+
     const body = `Bonjour,
 
 Merci de joindre en pièce jointe les fichiers suivants :
@@ -1008,7 +1017,11 @@ Merci de joindre en pièce jointe les fichiers suivants :
 - ${adulteFileName}
 - ${signatureFileName}
 
-Pour cela, cliquez sur l’icône 📎 (trombone) dans votre outil/interface de messagerie, puis sélectionnez les 3 fichiers dans votre dossier "Téléchargement".
+Si vous avez dû copier ce message => copier/coller l'adresse du destinataire ci-dessous :
+
+${recipient}
+
+Pour joindre les pièces à envoyer, cliquez sur l’icône 📎 (trombone) dans votre outil/interface de messagerie, puis sélectionnez les 3 fichiers dans votre dossier "Téléchargement".
 
 Sans ces documents, votre inscription ne pourra pas être traitée/validée.
 Votre cotisation peut-être adressée par courrier à l'Association ou remise directement lors d'une séance.
@@ -1042,12 +1055,12 @@ L’équipe de l’Entrain Pour Tous`;
   function showAltMailAdulte(recipient, subject, body) {
     const mailServices = {
       "gmail-link-adulte": `https://mail.google.com/mail/?view=cm&to=${encodeURIComponent(recipient)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`,
-      "outlook-link-adulte": `https://outlook.live.com/mail/0/deeplink/compose?to=${encodeURIComponent(recipient)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`,
+      "outlook-link-adulte": `https://outlook.live.com/owa/?path=/mail/action/compose&to=${encodeURIComponent(recipient)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`,
       "yahoo-link-adulte": `https://compose.mail.yahoo.com/?to=${encodeURIComponent(recipient)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`,
-      "orange-link-adulte": `https://mail.orange.fr/appsuite/#!!&view=message&to=${encodeURIComponent(recipient)}&subject=${encodeURIComponent(body)}`,
+      "orange-link-adulte": `https://mail.orange.fr/?&to=${encodeURIComponent(recipient)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`,
       "sfr-link-adulte": `https://webmail.sfr.fr/?to=${encodeURIComponent(recipient)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`,
       "bouygues-link-adulte": `https://www.bouyguestelecom.fr/mon-compte/ma-messagerie?to=${encodeURIComponent(recipient)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`,
-      "free-link-adulte": `https://zimbra.free.fr/?to=${encodeURIComponent(recipient)}&subject=${encodeURIComponent(recipient)}&body=${encodeURIComponent(body)}`
+      "free-link-adulte": `https://zimbra.free.fr/?to=${encodeURIComponent(recipient)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
     };
 
     Object.keys(mailServices).forEach(id => {
@@ -1055,28 +1068,27 @@ L’équipe de l’Entrain Pour Tous`;
       if (linkElement) linkElement.href = mailServices[id];
     });
 
+    const mailBodyAdulte = document.getElementById('mail-body-adulte');
+    if (mailBodyAdulte) {
+      mailBodyAdulte.value = body;
+    }
+
     document.getElementById('alt-mail-panel-adulte').style.display = 'block';
   }
 
   const copyBtnAdulte = document.getElementById('copy-btn-adulte');
   if (copyBtnAdulte) {
     copyBtnAdulte.addEventListener('click', function () {
-      navigator.clipboard.writeText(document.getElementById('mail-body-adulte').value)
-        .then(() => alert('Message copié dans le presse-papiers !'))
-        .catch(err => console.error('Erreur de copie : ', err));
-    });
-
-    copyBtnAdulte.addEventListener('click', function(){
       const mailBodyAdulte = document.getElementById('mail-body-adulte');
       if (mailBodyAdulte) {
-        const texteACopier = `Destinataire : ${recipient}\n\nMessage : ${mailBodyAdulte.value}`;
-        navigator.clipboard.writeText(texteACopier)
-          .then(() => alert('Adresse et message copiés dans le presse-papiers !'))
+        navigator.clipboard.writeText(mailBodyAdulte.value)
+          .then(() => alert('Message copié dans le presse-papiers !'))
           .catch(err => console.error('Erreur de copie: ', err));
       }
     });
   }
 });
+
 
   // --- SANTE MINEUR ---
   function purgeSanteMineurFields() {
@@ -1319,13 +1331,14 @@ document.addEventListener("DOMContentLoaded", function () {
   `);
 
   sendEmailMineurBtn.addEventListener('click', function () {
-    const nomVal = (typeof nom !== 'undefined' && nom.value.trim()) || 'NOM_INCONNU';
-    const prenomVal = (typeof prenom !== 'undefined' && prenom.value.trim()) || 'PRENOM_INCONNU';
+    const nomVal = (document.getElementById('nom')?.value.trim()) || 'NOM_INCONNU';
+    const prenomVal = (document.getElementById('prenom')?.value.trim()) || 'PRENOM_INCONNU';
     const recipient = 'lentrainpourtous@epts.fr';
-    const subject = 'Inscription : fichiers PDF en pièce jointe';
+    const subject = 'Inscription : fichiers CSV et PDF en pièce jointe';
     const adhesionFileName = `${nomVal}_${prenomVal}_Adhésion_25-26.csv`;
     const mineurFileName = `${nomVal}_${prenomVal}_Questionnaire Santé Mineur_25-26.csv`;
-    const signatureFileName = `${nomVal}_${prenomVal}_Signature_25-26.pdf`;
+    const signatureFileName = `${nomVal}_${prenomVal}_Signature.pdf`;
+
     const body = `Bonjour,
 
 Merci de joindre en pièce jointe les fichiers suivants :
@@ -1333,7 +1346,11 @@ Merci de joindre en pièce jointe les fichiers suivants :
 - ${mineurFileName}
 - ${signatureFileName}
 
-Pour cela, cliquez sur l’icône 📎 (trombone) dans votre outil/interface de messagerie, puis sélectionnez les 3 fichiers dans votre dossier "Téléchargement".
+Si vous avez dû copier ce message => copier/coller l'adresse du destinataire ci-dessous :
+
+${recipient}
+
+Pour joindre les pièces à envoyer, cliquez sur l’icône 📎 (trombone) dans votre outil/interface de messagerie, puis sélectionnez les 3 fichiers dans votre dossier "Téléchargement".
 
 Sans ces documents, votre inscription ne pourra pas être traitée/validée.
 Votre cotisation peut-être adressée par courrier à l'Association ou remise directement lors d'une séance.
@@ -1367,9 +1384,9 @@ L’équipe de l’Entrain Pour Tous`;
   function showAltMailMineur(recipient, subject, body) {
     const mailServices = {
       "gmail-link-mineur": `https://mail.google.com/mail/?view=cm&to=${encodeURIComponent(recipient)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`,
-      "outlook-link-mineur": `https://outlook.live.com/mail/0/deeplink/compose?to=${encodeURIComponent(recipient)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`,
+      "outlook-link-mineur": `https://outlook.live.com/owa/?path=/mail/action/compose&to=${encodeURIComponent(recipient)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`,
       "yahoo-link-mineur": `https://compose.mail.yahoo.com/?to=${encodeURIComponent(recipient)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`,
-      "orange-link-mineur": `https://mail.orange.fr/appsuite/#!!&view=message&to=${encodeURIComponent(recipient)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`,
+      "orange-link-mineur": `https://mail.orange.fr/?&to=${encodeURIComponent(recipient)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`,
       "sfr-link-mineur": `https://webmail.sfr.fr/?to=${encodeURIComponent(recipient)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`,
       "bouygues-link-mineur": `https://www.bouyguestelecom.fr/mon-compte/ma-messagerie?to=${encodeURIComponent(recipient)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`,
       "free-link-mineur": `https://zimbra.free.fr/?to=${encodeURIComponent(recipient)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
@@ -1380,28 +1397,28 @@ L’équipe de l’Entrain Pour Tous`;
       if (linkElement) linkElement.href = mailServices[id];
     });
 
+    const mailBodyMineur = document.getElementById('mail-body-mineur');
+    if (mailBodyMineur) {
+      mailBodyMineur.value = body;
+    }
+
     document.getElementById('alt-mail-panel-mineur').style.display = 'block';
   }
 
   const copyBtnMineur = document.getElementById('copy-btn-mineur');
   if (copyBtnMineur) {
     copyBtnMineur.addEventListener('click', function () {
-      navigator.clipboard.writeText(document.getElementById('mail-body-mineur').value)
-        .then(() => alert('Message copié dans le presse-papiers !'))
-        .catch(err => console.error('Erreur de copie : ', err));
+      const mailBodyMineur = document.getElementById('mail-body-mineur');
+      if (mailBodyMineur) {
+        navigator.clipboard.writeText(mailBodyMineur.value)
+          .then(() => alert('Message copié dans le presse-papiers !'))
+          .catch(err => console.error('Erreur de copie: ', err));
+      }
     });
-	
-	copyBtnMineur.addEventListener('click', function(){
-	  const mailBodyMineur = document.getElementById('mail-body-mineur');
-	  if (mailBodyMineur) {
-		const texteACopier = `Destinataire : ${recipient}\n\nMessage : ${mailBodyMineur.value}`;
-		navigator.clipboard.writeText(texteACopier)
-		  .then(() => alert('Adresse et message copiés dans le presse-papiers !'))
-		  .catch(err => console.error('Erreur de copie: ', err));
-	  }
-	});
   }
 });
+
+
 </script>
 </body>
 </html>
