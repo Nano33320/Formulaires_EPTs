@@ -542,8 +542,8 @@
                     <p><span style="color: red;"><b>Cliquez sur "Envoyer par courriel". Votre messagerie s'ouvrira avec un courriel pré-rempli. Veuillez ajouter manuellement les DEUX fichiers PDF en pièce jointe avant d'envoyer le courriel.</b></span></p>
                 </div>  
 		</div>
-		
-<!-- =================== SCRIPTS ===================== -->
+
+<!-- =================== SCRIPT ===================== -->
 <script>
 // == FORMULAIRE ADHÉSION EPTs 2025/2026 ==
   // --- UTILS ---
@@ -674,9 +674,9 @@
     });
   }
 
-  // --- MOBILE ---
-  const mobileInput = document.getElementById('mobile');
-  if (mobileInput) {
+// --- MOBILE ---
+const mobileInput = document.getElementById('mobile');
+if (mobileInput) {
     const mobileError = document.getElementById('mobileError');
     mobileInput.addEventListener('keydown', function(e) {
       const allowedKeys = ['Tab', 'Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Home', 'End'];
@@ -724,9 +724,9 @@
     }
   });
 
-  // --- SOUMISSION FORMULAIRE ADHÉSION ---
-  const adhesionForm = document.getElementById('adhesionForm');
-  if (adhesionForm) {
+// --- SOUMISSION FORMULAIRE ADHÉSION ---
+const adhesionForm = document.getElementById('adhesionForm');
+if (adhesionForm) {
     adhesionForm.addEventListener('submit', function(e) {
       e.preventDefault();
       // Création des données CSV
@@ -816,8 +816,8 @@
     });
   }
 
-  // --- SANTE ADULTE ---  
-  function purgeSanteAdulteFields() {
+// --- SANTE ADULTE ---  
+function purgeSanteAdulteFields() {
     const form = document.getElementById('santeAdulteForm');
     if (!form) return;
     form.reset();
@@ -848,6 +848,7 @@
       else label.classList.remove('text-red');
     });
   });
+
 // -------------------------------------------------------------------------------
 // Désactivation checkbox questionnaire santé adulte si certificat ou prescription
 document.addEventListener('DOMContentLoaded', function () {
@@ -879,6 +880,7 @@ document.addEventListener('DOMContentLoaded', function () {
   });
   labelQuestionnaire.classList.add('disabled'); // par défaut grisé
 });
+
 // -------------------------------------------------------------------------------
 // Enregistrement des csv Adhésion et Questionnaire Santé Adulte
 const santeAdulteForm = document.getElementById('santeAdulteForm');
@@ -967,8 +969,8 @@ checkboxesAdulte.forEach(cb => cb.addEventListener('change', updateSanteAdulteCo
 radiosSante.forEach(radio => radio.addEventListener('change', updateSanteAdulteCount));
 updateSanteAdulteCount();
 
-  // --- SIGNATURE ADULTE ---
-  window.redirectToSignatureForm = function() {
+// --- SIGNATURE ADULTE ---
+window.redirectToSignatureForm = function() {
     const nomVal = nom ? nom.value : '';
     const prenomVal = prenom ? prenom.value : '';
     const mobileVal = mobileInput ? mobileInput.value : '';
@@ -976,7 +978,7 @@ updateSanteAdulteCount();
     window.open(url, '_blank');
   };
 
-  // --- ENVOI COURRIEL ADULTE ---
+// --- ENVOI COURRIEL ADULTE ---
 document.addEventListener("DOMContentLoaded", function () {
   const sendEmailAdulteBtn = document.getElementById('sendEmailAdulte');
   if (!sendEmailAdulteBtn) return;
@@ -1001,7 +1003,7 @@ document.addEventListener("DOMContentLoaded", function () {
     </div>
   `);
 
-  sendEmailAdulteBtn.addEventListener('click', function () {
+sendEmailAdulteBtn.addEventListener('click', function () {
     const nomVal = (document.getElementById('nom')?.value.trim()) || 'NOM_INCONNU';
     const prenomVal = (document.getElementById('prenom')?.value.trim()) || 'PRENOM_INCONNU';
     const recipient = 'lentrainpourtous@epts.fr';
@@ -1052,7 +1054,7 @@ L’équipe de l’Entrain Pour Tous`;
     }, 1000);
   });
 
-  function showAltMailAdulte(recipient, subject, body) {
+function showAltMailAdulte(recipient, subject, body) {
     const mailServices = {
       "gmail-link-adulte": `https://mail.google.com/mail/?view=cm&to=${encodeURIComponent(recipient)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`,
       "outlook-link-adulte": `https://outlook.live.com/owa/?path=/mail/action/compose&to=${encodeURIComponent(recipient)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`,
@@ -1090,8 +1092,8 @@ L’équipe de l’Entrain Pour Tous`;
 });
 
 
-  // --- SANTE MINEUR ---
-  function purgeSanteMineurFields() {
+// --- SANTE MINEUR ---
+function purgeSanteMineurFields() {
     const form = document.getElementById('santeMineurForm');
     if (!form) return;
     form.reset();
@@ -1167,6 +1169,7 @@ document.addEventListener('DOMContentLoaded', function () {
   });
   labelQuestionnaire.classList.add('disabled'); // par défaut grisé
 });
+
 // -------------------------------------------------------------------------------
 // Enregistrement des csv Adhésion et Questionnaire Santé Mineur
 const santeMineurForm = document.getElementById('santeMineurForm');
@@ -1244,7 +1247,7 @@ if (santeMineurForm) {
   });
 }
 
-	<!-- ==== Comptage des problèmes santé mineur ==== -->
+<!-- ==== Comptage des problèmes santé mineur ==== -->
 document.addEventListener('DOMContentLoaded', function () {
     const checkboxesMineur = document.querySelectorAll('input[id^="q"][id$="Mineur"]');
     const santeMineurValue = document.getElementById('sante-mineur-value');
@@ -1275,8 +1278,8 @@ document.addEventListener('DOMContentLoaded', function () {
     updateSanteMineurCount();
 });
 
-  // --- SIGNATURE MINEUR ---
-  function handleFormSubmit(event) {
+// --- SIGNATURE MINEUR ---
+function handleFormSubmit(event) {
     // Vérifie les champs HTML5 (required, etc.)
     if (!event.target.checkValidity()) {
         // Laisse le navigateur afficher les erreurs
@@ -1305,7 +1308,7 @@ function redirectToSignatureForm2() {
     window.open(url, '_blank');
   };
 
-  // --- ENVOI COURRIEL MINEUR ---
+// --- ENVOI COURRIEL MINEUR ---
 document.addEventListener("DOMContentLoaded", function () {
   const sendEmailMineurBtn = document.getElementById('sendEmailMineur');
   if (!sendEmailMineurBtn) return;
@@ -1417,8 +1420,6 @@ L’équipe de l’Entrain Pour Tous`;
     });
   }
 });
-
-
 </script>
 </body>
 </html>
