@@ -2,6 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
+	<link rel="icon" href="EPTs-Logo.ico" type="image/x-icon">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Adhésion & Questionnaires Santé 2025-2026</title>
     <style>
@@ -409,11 +410,22 @@
                     <label for="dateAdulte">Date</label>
                     <input type="text" id="dateAdulte" name="date" readonly>
                 </div>
+
+				<!-- Champ caché, rempli par le serveur lors de l’upload -->
+				<input type="hidden" id="num_adhesion" name="num_adhesion" value="">
+
+				<!-- Case à cocher signature obligatoire -->
+				<div style="margin-top:1rem">
+				  <label>
+					<input type="checkbox" id="consent_sig" name="consent_sig" required>
+					Je certifie l’exactitude des informations fournies et j’autorise leur traitement (RGPD).
+				  </label>
+				</div>
+
 				<div class="button-container">									
 					<button type="submit" id="exportSanteAdulte" style="cursor: pointer;"><strong><i>Valider</i></strong></button>
 					<button id="btnModifierFormulaireAdulte" type="button" onclick="showStep('step-adhesion')">Modifier le formulaire</button>
 				</div>
-			</form>
 			</form>
 				<div style="text-align: center; margin-top: 20px;">
 				  <button id="uploadCSVsAndPay" disabled onclick="uploadCSVsAndPay()">Régler ma Cotisation</button>
@@ -527,6 +539,18 @@
                     <input type="text" id="dateMineur" name="date" readonly>
                 </div>
 				<div class="button-container">									
+
+				<!-- Champ caché, rempli par le serveur lors de l’upload -->
+				<input type="hidden" id="num_adhesion" name="num_adhesion" value="">
+
+				<!-- Case à cocher signature obligatoire -->
+				<div style="margin-top:1rem">
+				  <label>
+					<input type="checkbox" id="consent_sig" name="consent_sig" required>
+					Je certifie l’exactitude des informations fournies et j’autorise leur traitement (RGPD).
+				  </label>
+				</div>
+
 					<button type="submit" id="exportSanteMineur" style="cursor: pointer;"><strong><i>Valider</i></strong></button>
 					<button id="btnModifierFormulaireMineur" type="button" onclick="showStep('step-adhesion')">Modifier le formulaire</button>
 				</div>
@@ -538,409 +562,389 @@
 
 <!-- =================== SCRIPT ===================== -->
 <script>
-// == FORMULAIRE ADHÉSION EPTs 2025/2026 ==
-  // --- UTILS ---
-  function showStep(stepId) {
+// ====================== UTILS ======================
+function showStep(stepId) {
     document.querySelectorAll('.step').forEach(div => div.classList.remove('active'));
     const stepDiv = document.getElementById(stepId);
     if (stepDiv) stepDiv.classList.add('active');
-        // Ajout du scroll après un léger délai
     setTimeout(() => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }, 50);
-  }
+}
 
-  function getCurrentDate() {
+function getCurrentDate() {
     const today = new Date();
     const day = String(today.getDate()).padStart(2, '0');
     const month = String(today.getMonth() + 1).padStart(2, '0');
     const year = today.getFullYear();
     return `${day}/${month}/${year}`;
-  }
+}
 
-	// --- PURGE ADHÉSION ---
-	function purgeAdhesionFields() {
-		const form = document.getElementById('adhesionForm');
-		if (!form) return;
-		form.reset();
-		form.querySelectorAll('.error-message').forEach(error => error.style.display = 'none');
-		form.querySelectorAll('input').forEach(input => input.setCustomValidity(''));
-		 }
+// ====================== FORMULAIRE ADHÉSION ======================
+// --- PURGE ADHÉSION ---
+function purgeAdhesionFields() {
+    const form = document.getElementById('adhesionForm');
+    if (!form) return;
+    form.reset();
+    form.querySelectorAll('.error-message').forEach(error => error.style.display = 'none');
+    form.querySelectorAll('input').forEach(input => input.setCustomValidity(''));
+}
 
-  // --- CHAMPS ADHÉSION ---
-  const nom = document.getElementById('nom');
-  if (nom) {
+// --- CHAMPS ADHÉSION ---
+const nom = document.getElementById('nom');
+if (nom) {
     nom.addEventListener('input', function(e) {
-      let value = e.target.value.replace(/[^a-zA-ZÀ-ÿ\s\-]/g, '').toUpperCase();
-      e.target.value = value;
+        let value = e.target.value.replace(/[^a-zA-ZÀ-ÿ\s\-]/g, '').toUpperCase();
+        e.target.value = value;
     });
-  }
+}
 
-  const prenom = document.getElementById('prenom');
-  if (prenom) {
+const prenom = document.getElementById('prenom');
+if (prenom) {
     prenom.addEventListener('input', function(e) {
-      let value = e.target.value.replace(/[^a-zA-ZÀ-ÿ \-]/g, '');
-      value = value.split(/[\s-]/).map(part => part ? part.charAt(0).toUpperCase() + part.slice(1).toLowerCase() : '').join('-');
-      e.target.value = value;
+        let value = e.target.value.replace(/[^a-zA-ZÀ-ÿ \-]/g, '');
+        value = value.split(/[\s-]/).map(part => part ? part.charAt(0).toUpperCase() + part.slice(1).toLowerCase() : '').join('-');
+        e.target.value = value;
     });
-  }
+}
 
-  const nomreplegMineur = document.getElementById('nomreplegMineur');
-  if (nomreplegMineur) {
-    nomreplegMineur.addEventListener('input', function(e) {
-      let value = e.target.value.replace(/[^a-zA-ZÀ-ÿ\s\-]/g, '').toUpperCase();
-      e.target.value = value;
-    });
-  }
-
-  const prenomreplegMineur = document.getElementById('prenomreplegMineur');
-  if (prenomreplegMineur) {
-    prenomreplegMineur.addEventListener('input', function(e) {
-      let value = e.target.value.replace(/[^a-zA-ZÀ-ÿ \-]/g, '');
-      value = value.split(/[\s-]/).map(part => part ? part.charAt(0).toUpperCase() + part.slice(1).toLowerCase() : '').join('-');
-      e.target.value = value;
-    });
-  }
-
-  const ville = document.getElementById('ville');
-  if (ville) {
+const ville = document.getElementById('ville');
+if (ville) {
     ville.addEventListener('input', function(e) {
-      let value = e.target.value.replace(/[^a-zA-ZÀ-ÿ\s\-]/g, '').toUpperCase();
-      e.target.value = value;
+        let value = e.target.value.replace(/[^a-zA-ZÀ-ÿ\s\-]/g, '').toUpperCase();
+        e.target.value = value;
     });
-  }
+}
 
-  // --- DATE DE NAISSANCE ---
-  const dateInput = document.getElementById('dateNaissance');
-  if (dateInput) {
+// --- DATE DE NAISSANCE ---
+const dateInput = document.getElementById('dateNaissance');
+if (dateInput) {
     dateInput.addEventListener('keydown', function(e) {
-      const allowedKeys = ['Tab', 'Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Home', 'End'];
-      if (allowedKeys.includes(e.key)) return;
-      if (!/[0-9]/.test(e.key)) e.preventDefault();
+        const allowedKeys = ['Tab', 'Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Home', 'End'];
+        if (allowedKeys.includes(e.key)) return;
+        if (!/[0-9]/.test(e.key)) e.preventDefault();
     });
-    dateInput.addEventListener('input', function(e) {
-      let value = e.target.value.replace(/[^0-9]/g, '').substring(0, 8);
-      const dateError = document.getElementById('dateError');
-      if (value.length) {
-        let formattedDate = '';
-        if (value.length > 0) formattedDate += value.substring(0, 2);
-        if (value.length > 2) formattedDate += '/' + value.substring(2, 4);
-        if (value.length > 4) formattedDate += '/' + value.substring(4, 8);
-        e.target.value = formattedDate;
-        if (value.length === 8) {
-          const day = parseInt(value.substring(0, 2), 10);
-          const month = parseInt(value.substring(2, 4), 10);
-          const year = parseInt(value.substring(4, 8), 10);
-          const date = new Date(year, month - 1, day);
-          const valid = date.getDate() === day &&
-                        date.getMonth() === month - 1 &&
-                        date.getFullYear() === year &&
-                        year >= 1900 &&
-                        year <= new Date().getFullYear();
-          if (dateError) dateError.style.display = valid ? 'none' : 'block';
-          dateInput.setCustomValidity(valid ? '' : 'Date invalide');
-        }
-      } else {
-        const dateError = document.getElementById('dateError');
-        if (dateError) dateError.style.display = 'none';
-        dateInput.setCustomValidity('');
-      }
-    });
-  }
 
-  // --- CODE POSTAL ---
-  const cpInput = document.getElementById('cp');
-  if (cpInput) {
+    dateInput.addEventListener('input', function(e) {
+        let value = e.target.value.replace(/[^0-9]/g, '').substring(0, 8);
+        const dateError = document.getElementById('dateError');
+        if (value.length) {
+            let formattedDate = '';
+            if (value.length > 0) formattedDate += value.substring(0, 2);
+            if (value.length > 2) formattedDate += '/' + value.substring(2, 4);
+            if (value.length > 4) formattedDate += '/' + value.substring(4, 8);
+            e.target.value = formattedDate;
+            if (value.length === 8) {
+                const day = parseInt(value.substring(0, 2), 10);
+                const month = parseInt(value.substring(2, 4), 10);
+                const year = parseInt(value.substring(4, 8), 10);
+                const date = new Date(year, month - 1, day);
+                const valid = date.getDate() === day &&
+                              date.getMonth() === month - 1 &&
+                              date.getFullYear() === year &&
+                              year >= 1900 &&
+                              year <= new Date().getFullYear();
+                if (dateError) dateError.style.display = valid ? 'none' : 'block';
+                dateInput.setCustomValidity(valid ? '' : 'Date invalide');
+            }
+        } else {
+            if (dateError) dateError.style.display = 'none';
+            dateInput.setCustomValidity('');
+        }
+    });
+}
+
+// --- CODE POSTAL ---
+const cpInput = document.getElementById('cp');
+if (cpInput) {
     cpInput.addEventListener('keydown', function(e) {
-      const allowedKeys = ['Tab', 'Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Home', 'End'];
-      if (allowedKeys.includes(e.key)) return;
-      if (!/[0-9]/.test(e.key)) e.preventDefault();
+        const allowedKeys = ['Tab', 'Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Home', 'End'];
+        if (allowedKeys.includes(e.key)) return;
+        if (!/[0-9]/.test(e.key)) e.preventDefault();
     });
+
     cpInput.addEventListener('input', function(e) {
-      let value = e.target.value.replace(/\D/g, '').substring(0, 5);
-      const cpError = document.getElementById('cpError');
-      if (value.length > 2) value = value.substring(0, 2) + ' ' + value.substring(2);
-      e.target.value = value;
-      const valid = /^\d{2} \d{3}$/.test(e.target.value);
-      if (cpError) cpError.style.display = valid ? 'none' : 'block';
-      cpInput.setCustomValidity(valid ? '' : 'Code postal invalide');
+        let value = e.target.value.replace(/\D/g, '').substring(0, 5);
+        const cpError = document.getElementById('cpError');
+        if (value.length > 2) value = value.substring(0, 2) + ' ' + value.substring(2);
+        e.target.value = value;
+        const valid = /^\d{2} \d{3}$/.test(e.target.value);
+        if (cpError) cpError.style.display = valid ? 'none' : 'block';
+        cpInput.setCustomValidity(valid ? '' : 'Code postal invalide');
     });
-  }
+}
 
 // --- MOBILE ---
 const mobileInput = document.getElementById('mobile');
 if (mobileInput) {
     const mobileError = document.getElementById('mobileError');
     mobileInput.addEventListener('keydown', function(e) {
-      const allowedKeys = ['Tab', 'Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Home', 'End'];
-      if (allowedKeys.includes(e.key)) return;
-      if (!/[0-9]/.test(e.key)) e.preventDefault();
+        const allowedKeys = ['Tab', 'Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Home', 'End'];
+        if (allowedKeys.includes(e.key)) return;
+        if (!/[0-9]/.test(e.key)) e.preventDefault();
     });
-    mobileInput.addEventListener('input', function(e) {
-      let value = e.target.value.replace(/\D/g, '').substring(0, 10);
-      if (value.length > 0) value = value.match(/.{1,2}/g)?.join(' ') || '';
-      e.target.value = value;
-      const numericValue = value.replace(/\s/g, '');
-      const isValid = numericValue.length === 10 &&
-        (numericValue.startsWith('06') || numericValue.startsWith('07'));
-      if (mobileError) mobileError.style.display = isValid ? 'none' : 'block';
-      mobileInput.setCustomValidity(isValid ? '' : 'Numéro de mobile invalide');
-      if (mobileError) {
-        if (!isValid && numericValue.length === 10) {
-          mobileError.textContent = 'Le numéro doit commencer par 06 ou 07';
-        } else {
-          mobileError.textContent = 'Format : 06 XX XX XX XX ou 07 XX XX XX XX';
-        }
-      }
-    });
-  }
 
-  // --- OUVERTURE DU RÈGLEMENT INTÉRIEUR ---
-  function ouvrirHTMLUnique() {
+    mobileInput.addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, '').substring(0, 10);
+        if (value.length > 0) value = value.match(/.{1,2}/g)?.join(' ') || '';
+        e.target.value = value;
+        const numericValue = value.replace(/\s/g, '');
+        const isValid = numericValue.length === 10 &&
+                        (numericValue.startsWith('06') || numericValue.startsWith('07'));
+        if (mobileError) mobileError.style.display = isValid ? 'none' : 'block';
+        mobileInput.setCustomValidity(isValid ? '' : 'Numéro de mobile invalide');
+        if (mobileError) {
+            if (!isValid && numericValue.length === 10) {
+                mobileError.textContent = 'Le numéro doit commencer par 06 ou 07';
+            } else {
+                mobileError.textContent = 'Format : 06 XX XX XX XX ou 07 XX XX XX XX';
+            }
+        }
+    });
+}
+
+// --- OUVERTURE DU RÈGLEMENT INTÉRIEUR ---
+function ouvrirHTMLUnique() {
     const checkbox = document.getElementById('reglement');
     if (!checkbox) return;
     if (sessionStorage.getItem("htmlDejaOuvert") === "oui") {
-      if (checkbox.disabled) checkbox.disabled = false;
-      return;
+        if (checkbox.disabled) checkbox.disabled = false;
+        return;
     }
     sessionStorage.setItem("htmlDejaOuvert", "oui");
-    window.open('https://nano33320.github.io/Formulaires_EPTs/R%C3%A8glement%20Int%C3%A9rieur_25-26.html', '_blank');
+    window.open('https://nano33320.github.io/Formulaires_EPTs/Règlement%20Intérieur_25-26.html', '_blank');
     setTimeout(() => {
-      checkbox.disabled = false;
+        checkbox.disabled = false;
     }, 3000);
-  }
+}
 
-  window.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('DOMContentLoaded', () => {
     if (sessionStorage.getItem("htmlDejaOuvert") === "oui") {
-      const reglement = document.getElementById('reglement');
-      if (reglement) reglement.disabled = false;
+        const reglement = document.getElementById('reglement');
+        if (reglement) reglement.disabled = false;
     }
-  });
+});
 
 // --- SOUMISSION FORMULAIRE ADHÉSION ---
 const adhesionForm = document.getElementById('adhesionForm');
 if (adhesionForm) {
     adhesionForm.addEventListener('submit', function(e) {
-      e.preventDefault();
-      // Création des données CSV
-      const data = [
-        '2025/2026',
-        document.querySelector('input[name="civilite"]:checked')?.value || '',
-        nom ? nom.value.trim() : '',
-        prenom ? prenom.value.trim() : '',
-        dateInput ? dateInput.value.trim() : '',
-        document.getElementById('adresse')?.value.trim() || '',
-        cpInput ? cpInput.value.trim() : '',
-        ville ? ville.value.trim() : '',
-        document.getElementById('email')?.value.trim() || '',
-        mobileInput ? mobileInput.value.trim() : '',
-        document.getElementById('am')?.checked ? 'Yes' : 'Off',
-        document.getElementById('ems')?.checked ? 'Yes' : 'Off',
-        document.getElementById('skate')?.checked ? 'Yes' : 'Off',
-        document.getElementById('gymadapt')?.checked ? 'Yes' : 'Off',
-        document.getElementById('gymcarte')?.checked ? 'Yes' : 'Off',
-        document.getElementById('gymchaise')?.checked ? 'Yes' : 'Off',
-        document.getElementById('yogagym')?.checked ? 'Yes' : 'Off',
-        document.getElementById('mvsd')?.checked ? 'Yes' : 'Off',
-        document.getElementById('gymsouplesse')?.checked ? 'Yes' : 'Off',
-        document.getElementById('gymsenior')?.checked ? 'Yes' : 'Off',
-        document.getElementById('pilates')?.checked ? 'Yes' : 'Off',
-        document.getElementById('gymtonique')?.checked ? 'Yes' : 'Off',
-        document.getElementById('mn')?.checked ? 'Yes' : 'Off',
-        document.getElementById('multisports')?.checked ? 'Yes' : 'Off',
-        document.getElementById('jeuxsociete')?.checked ? 'Yes' : 'Off',
-        document.getElementById('textfield5')?.value.trim() || '',
-        document.getElementById('textfield6')?.value.trim() || '',
-        document.getElementById('textfield7')?.value.trim() || '',
-        document.querySelector('input[name="tarif"]:checked')?.value || '',
-        document.querySelector('input[name="sante"]:checked')?.value || '',
-        document.getElementById('reglement')?.checked ? 'Yes' : 'Off',
-        document.querySelector('input[name="image"]:checked')?.value || '',
-        document.getElementById('paiement')?.checked ? 'Yes' : 'Off'
-      ].join(';');
+        e.preventDefault();
 
-      const headers = 'Année;Mr/Mme;Nom;Prénom;Date Naissance;Adresse;CP;Ville;Courriel;Mobile;AM < 3 ans;EMS PE 3/6;Skate;GymAdapt;GymCarte;GymChaise;YogaGym;MVSD;GymSouplesse;GymSénior;Pilates;GymTonique;MN;MultiSports;JeuxSociété;TextField_5;TextField_6;TextField_7;TarifsX;Santé;Règlement Intérieur;Image;Cotisation';
-      const csvContent = '\ufeff' + headers + '\n' + data;
-	  
-	  // Sauvegarde dans le localStorage pour futur téléchargement
-	  localStorage.setItem('csv_adhesion_epts', csvContent);
+        // Création des données CSV
+        const data = [
+            '2025/2026',
+            document.querySelector('input[name="civilite"]:checked')?.value || '',
+            nom ? nom.value.trim() : '',
+            prenom ? prenom.value.trim() : '',
+            dateInput ? dateInput.value.trim() : '',
+            document.getElementById('adresse')?.value.trim() || '',
+            cpInput ? cpInput.value.trim() : '',
+            ville ? ville.value.trim() : '',
+            document.getElementById('email')?.value.trim() || '',
+            mobileInput ? mobileInput.value.trim() : '',
+            document.getElementById('am')?.checked ? 'Yes' : 'Off',
+            document.getElementById('ems')?.checked ? 'Yes' : 'Off',
+            document.getElementById('skate')?.checked ? 'Yes' : 'Off',
+            document.getElementById('gymadapt')?.checked ? 'Yes' : 'Off',
+            document.getElementById('gymcarte')?.checked ? 'Yes' : 'Off',
+            document.getElementById('gymchaise')?.checked ? 'Yes' : 'Off',
+            document.getElementById('yogagym')?.checked ? 'Yes' : 'Off',
+            document.getElementById('mvsd')?.checked ? 'Yes' : 'Off',
+            document.getElementById('gymsouplesse')?.checked ? 'Yes' : 'Off',
+            document.getElementById('gymsenior')?.checked ? 'Yes' : 'Off',
+            document.getElementById('pilates')?.checked ? 'Yes' : 'Off',
+            document.getElementById('gymtonique')?.checked ? 'Yes' : 'Off',
+            document.getElementById('mn')?.checked ? 'Yes' : 'Off',
+            document.getElementById('multisports')?.checked ? 'Yes' : 'Off',
+            document.getElementById('jeuxsociete')?.checked ? 'Yes' : 'Off',
+            document.getElementById('textfield5')?.value.trim() || '',
+            document.getElementById('textfield6')?.value.trim() || '',
+            document.getElementById('textfield7')?.value.trim() || '',
+            document.querySelector('input[name="tarif"]:checked')?.value || '',
+            document.querySelector('input[name="sante"]:checked')?.value || '',
+            document.getElementById('reglement')?.checked ? 'Yes' : 'Off',
+            document.querySelector('input[name="image"]:checked')?.value || '',
+            document.getElementById('paiement')?.checked ? 'Yes' : 'Off'
+        ].join(';');
 
-      // Pré-remplir les questionnaires santé avec nom/prénom/civilité
-      if (document.getElementById('nomAdulte')) document.getElementById('nomAdulte').value = nom ? nom.value.trim() : '';
-      if (document.getElementById('prenomAdulte')) document.getElementById('prenomAdulte').value = prenom ? prenom.value.trim() : '';
-      if (document.getElementById('nomMineur')) document.getElementById('nomMineur').value = nom ? nom.value.trim() : '';
-      if (document.getElementById('prenomMineur')) document.getElementById('prenomMineur').value = prenom ? prenom.value.trim() : '';
+        const headers = 'Année;Mr/Mme;Nom;Prénom;Date Naissance;Adresse;CP;Ville;Courriel;Mobile;AM < 3 ans;EMS PE 3/6;Skate;GymAdapt;GymCarte;GymChaise;YogaGym;MVSD;GymSouplesse;GymSénior;Pilates;GymTonique;MN;MultiSports;JeuxSociété;TextField_5;TextField_6;TextField_7;TarifsX;Santé;Règlement Intérieur;Image;Cotisation';
+        const csvContent = '\ufeff' + headers + '\n' + data;
 
-      const civ = document.querySelector('input[name="civilite"]:checked')?.value;
-      if (civ === 'Mr') {
-        if (document.getElementById('mrAdulte')) document.getElementById('mrAdulte').checked = true;
-        if (document.getElementById('G')) document.getElementById('G').checked = true;
-      } else if (civ === 'Mme') {
-        if (document.getElementById('mmeAdulte')) document.getElementById('mmeAdulte').checked = true;
-        if (document.getElementById('F')) document.getElementById('F').checked = true;
-      }
-      if (document.getElementById('dateAdulte')) document.getElementById('dateAdulte').value = getCurrentDate();
-      if (document.getElementById('dateMineur')) document.getElementById('dateMineur').value = getCurrentDate();
+        // Sauvegarde dans le localStorage pour futur téléchargement
+        localStorage.setItem('csv_adhesion_epts', csvContent);
 
-      function getAgeFromBirthdate(birthdate) {
-        if (!birthdate) return NaN;
-        const [day, month, year] = birthdate.split('/');
-        if (!day || !month || !year) return NaN;
-        const birth = new Date(Number(year), Number(month) - 1, Number(day));
-        if (isNaN(birth.getTime())) return NaN;
-        const today = new Date();
-        let age = today.getFullYear() - birth.getFullYear();
-        const m = today.getMonth() - birth.getMonth();
-        if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) age--;
-        return age;
-      }
+        // Pré-remplir les questionnaires santé avec nom/prénom/civilité
+        if (document.getElementById('nomAdulte')) document.getElementById('nomAdulte').value = nom ? nom.value.trim() : '';
+        if (document.getElementById('prenomAdulte')) document.getElementById('prenomAdulte').value = prenom ? prenom.value.trim() : '';
+        if (document.getElementById('nomMineur')) document.getElementById('nomMineur').value = nom ? nom.value.trim() : '';
+        if (document.getElementById('prenomMineur')) document.getElementById('prenomMineur').value = prenom ? prenom.value.trim() : '';
 
-      const birthdate = dateInput ? dateInput.value.trim() : '';
-      const age = getAgeFromBirthdate(birthdate);
-
-      if (!isNaN(age)) {
-        if (age < 18) {
-          if (document.getElementById('ageMineur')) document.getElementById('ageMineur').value = age;
-          showStep('step-sante-mineur');
-        } else {
-          showStep('step-sante-adulte');
+        const civ = document.querySelector('input[name="civilite"]:checked')?.value;
+        if (civ === 'Mr') {
+            if (document.getElementById('mrAdulte')) document.getElementById('mrAdulte').checked = true;
+            if (document.getElementById('G')) document.getElementById('G').checked = true;
+        } else if (civ === 'Mme') {
+            if (document.getElementById('mmeAdulte')) document.getElementById('mmeAdulte').checked = true;
+            if (document.getElementById('F')) document.getElementById('F').checked = true;
         }
-      }
-    });
-  }
 
-// --- SANTE ADULTE ---  
+        if (document.getElementById('dateAdulte')) document.getElementById('dateAdulte').value = getCurrentDate();
+        if (document.getElementById('dateMineur')) document.getElementById('dateMineur').value = getCurrentDate();
+
+        function getAgeFromBirthdate(birthdate) {
+            if (!birthdate) return NaN;
+            const [day, month, year] = birthdate.split('/');
+            if (!day || !month || !year) return NaN;
+            const birth = new Date(Number(year), Number(month) - 1, Number(day));
+            if (isNaN(birth.getTime())) return NaN;
+            const today = new Date();
+            let age = today.getFullYear() - birth.getFullYear();
+            const m = today.getMonth() - birth.getMonth();
+            if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) age--;
+            return age;
+        }
+
+        const birthdate = dateInput ? dateInput.value.trim() : '';
+        const age = getAgeFromBirthdate(birthdate);
+
+        if (!isNaN(age)) {
+            if (age < 18) {
+                if (document.getElementById('ageMineur')) document.getElementById('ageMineur').value = age;
+                showStep('step-sante-mineur');
+            } else {
+                showStep('step-sante-adulte');
+            }
+        }
+    });
+}
+
+// ====================== SANTE ADULTE ======================
 function purgeSanteAdulteFields() {
     const form = document.getElementById('santeAdulteForm');
     if (!form) return;
     form.reset();
     if (document.getElementById('dateAdulte')) document.getElementById('dateAdulte').value = getCurrentDate();
     form.querySelectorAll('input[type="checkbox"]').forEach(c => c.nextElementSibling?.classList.remove('text-red'));
-  }
+}
 
-  const nomAdulte = document.getElementById('nomAdulte');
-  if (nomAdulte) {
+const nomAdulte = document.getElementById('nomAdulte');
+if (nomAdulte) {
     nomAdulte.addEventListener('input', function(e) {
-      e.target.value = e.target.value.replace(/[^a-zA-ZÀ-ÿ\s\-]/g, '').toUpperCase();
+        e.target.value = e.target.value.replace(/[^a-zA-ZÀ-ÿ\s\-]/g, '').toUpperCase();
     });
-  }
+}
 
-  const prenomAdulte = document.getElementById('prenomAdulte');
-  if (prenomAdulte) {
+const prenomAdulte = document.getElementById('prenomAdulte');
+if (prenomAdulte) {
     prenomAdulte.addEventListener('input', function(e) {
-      let value = e.target.value.replace(/[^a-zA-ZÀ-ÿ \-]/g, '');
-      value = value.split(/[\s-]/).map(part => part ? part.charAt(0).toUpperCase() + part.slice(1).toLowerCase() : '').join('-');
-      e.target.value = value;
+        let value = e.target.value.replace(/[^a-zA-ZÀ-ÿ \-]/g, '');
+        value = value.split(/[\s-]/).map(part => part ? part.charAt(0).toUpperCase() + part.slice(1).toLowerCase() : '').join('-');
+        e.target.value = value;
     });
-  }
+}
 
-  document.querySelectorAll('#santeAdulteForm input[type="checkbox"]').forEach(checkbox => {
+document.querySelectorAll('#santeAdulteForm input[type="checkbox"]').forEach(checkbox => {
     checkbox.addEventListener('change', function(e) {
-      const label = e.target.nextElementSibling;
-      if (e.target.checked) label.classList.add('text-red');
-      else label.classList.remove('text-red');
+        const label = e.target.nextElementSibling;
+        if (e.target.checked) label.classList.add('text-red');
+        else label.classList.remove('text-red');
     });
-  });
-
-// -------------------------------------------------------------------------------
-// Désactivation checkbox questionnaire santé adulte si certificat ou prescription
-document.addEventListener('DOMContentLoaded', function () {
-  const radios = document.querySelectorAll('input[name="sante"]');
-  const checkboxesAdulte = document.querySelectorAll('input[id^="q"][id$="Adulte"]');
-  const labelQuestionnaire = document.querySelector('.label-questionnaire sante-adulte'); // Cible ton label
-
-  function updateState() {
-    const isQuestionnaireSelected = document.getElementById('questionnaire').checked;
-
-    checkboxesAdulte.forEach(checkbox => {
-      checkbox.disabled = !isQuestionnaireSelected;
-    });
-
-    if (!isQuestionnaireSelected) {
-      labelQuestionnaire.classList.add('disabled');
-    } else {
-      labelQuestionnaire.classList.remove('disabled');
-    }
-  }
-
-  radios.forEach(radio => {
-    radio.addEventListener('change', updateState);
-  });
-
-  // Initialisation à l'ouverture
-  checkboxesAdulte.forEach(checkbox => {
-    checkbox.disabled = true;
-  });
-  labelQuestionnaire.classList.add('disabled'); // par défaut grisé
 });
 
-// -------------------------------------------------------------------------------
+// Désactivation checkbox questionnaire santé adulte si certificat ou prescription
+document.addEventListener('DOMContentLoaded', function () {
+    const radios = document.querySelectorAll('input[name="sante"]');
+    const checkboxesAdulte = document.querySelectorAll('input[id^="q"][id$="Adulte"]');
+    const labelQuestionnaire = document.querySelector('.label-questionnaire.sante-adulte');
+
+    function updateState() {
+        const isQuestionnaireSelected = document.getElementById('questionnaire').checked;
+        checkboxesAdulte.forEach(checkbox => {
+            checkbox.disabled = !isQuestionnaireSelected;
+        });
+        if (!isQuestionnaireSelected) {
+            labelQuestionnaire.classList.add('disabled');
+        } else {
+            labelQuestionnaire.classList.remove('disabled');
+        }
+    }
+
+    radios.forEach(radio => {
+        radio.addEventListener('change', updateState);
+    });
+
+    // Initialisation à l'ouverture
+    checkboxesAdulte.forEach(checkbox => {
+        checkbox.disabled = true;
+    });
+    labelQuestionnaire.classList.add('disabled');
+});
+
 // Enregistrement des csv Adhésion et Questionnaire Santé Adulte
 const santeAdulteForm = document.getElementById('santeAdulteForm');
 if (santeAdulteForm) {
-  santeAdulteForm.addEventListener('submit', function (e) {
-    e.preventDefault();
+    santeAdulteForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const nom = nomAdulte ? nomAdulte.value.trim() : '';
+        const prenom = prenomAdulte ? prenomAdulte.value.trim() : '';
+        const data = [
+            '2025/2026',
+            document.querySelector('input[name="civiliteAdulte"]:checked')?.value || '',
+            nom,
+            prenom,
+            document.getElementById('q1Adulte')?.checked ? 'Yes' : 'No',
+            document.getElementById('q2Adulte')?.checked ? 'Yes' : 'No',
+            document.getElementById('q3Adulte')?.checked ? 'Yes' : 'No',
+            document.getElementById('q4Adulte')?.checked ? 'Yes' : 'No',
+            document.getElementById('q5Adulte')?.checked ? 'Yes' : 'No',
+            document.getElementById('q6Adulte')?.checked ? 'Yes' : 'No',
+            document.getElementById('q7Adulte')?.checked ? 'Yes' : 'No',
+            document.getElementById('q8Adulte')?.checked ? 'Yes' : 'No',
+            document.getElementById('q9Adulte')?.checked ? 'Yes' : 'No',
+            document.getElementById('dateAdulte')?.value.trim() || ''
+        ].join(';');
 
-    const nom = nomAdulte ? nomAdulte.value.trim() : '';
-    const prenom = prenomAdulte ? prenomAdulte.value.trim() : '';
+        const headers = 'Année;Mr/Mme;Nom;Prénom;Q1;Q2;Q3;Q4;Q5;Q6;Q7;Q8;Q9;Date';
+        const csvSante = '\ufeff' + headers + '\n' + data;
 
-    const data = [
-      '2025/2026',
-      document.querySelector('input[name="civiliteAdulte"]:checked')?.value || '',
-      nom,
-      prenom,
-      document.getElementById('q1Adulte')?.checked ? 'Yes' : 'No',
-      document.getElementById('q2Adulte')?.checked ? 'Yes' : 'No',
-      document.getElementById('q3Adulte')?.checked ? 'Yes' : 'No',
-      document.getElementById('q4Adulte')?.checked ? 'Yes' : 'No',
-      document.getElementById('q5Adulte')?.checked ? 'Yes' : 'No',
-      document.getElementById('q6Adulte')?.checked ? 'Yes' : 'No',
-      document.getElementById('q7Adulte')?.checked ? 'Yes' : 'No',
-      document.getElementById('q8Adulte')?.checked ? 'Yes' : 'No',
-      document.getElementById('q9Adulte')?.checked ? 'Yes' : 'No',
-      document.getElementById('dateAdulte')?.value.trim() || ''
-    ].join(';');
+        // Sauvegarde locale
+        localStorage.setItem('csv_sante_adulte_epts', csvSante);
 
-    const headers = 'Année;Mr/Mme;Nom;Prénom;Q1;Q2;Q3;Q4;Q5;Q6;Q7;Q8;Q9;Date';
-    const csvSante = '\ufeff' + headers + '\n' + data;
+        // Téléchargement du CSV Santé
+        const blobSante = new Blob([csvSante], { type: 'text/csv;charset=utf-8;' });
+        const linkSante = document.createElement("a");
+        linkSante.href = URL.createObjectURL(blobSante);
+        linkSante.download = `${nom} ${prenom}_Questionnaire_Sante_Adulte_25-26.csv`;
+        document.body.appendChild(linkSante);
+        linkSante.click();
+        document.body.removeChild(linkSante);
 
-    // 🔒 Sauvegarde locale (utile si on veut réutiliser ou afficher plus tard)
-    localStorage.setItem('csv_sante_adulte_epts', csvSante);
+        // Téléchargement du CSV Adhésion
+        const csvAdhesion = localStorage.getItem('csv_adhesion_epts');
+        if (csvAdhesion) {
+            const blobAdhesion = new Blob([csvAdhesion], { type: 'text/csv;charset=utf-8;' });
+            const linkAdhesion = document.createElement("a");
+            linkAdhesion.href = URL.createObjectURL(blobAdhesion);
+            linkAdhesion.download = `${nom} ${prenom}_Adhesion_25-26.csv`;
+            document.body.appendChild(linkAdhesion);
+            linkAdhesion.click();
+            document.body.removeChild(linkAdhesion);
+        }
 
-    // 📥 Téléchargement du CSV Santé
-    const blobSante = new Blob([csvSante], { type: 'text/csv;charset=utf-8;' });
-    const linkSante = document.createElement("a");
-    linkSante.href = URL.createObjectURL(blobSante);
-    linkSante.download = `${nom} ${prenom}_Questionnaire_Sante_Adulte_25-26.csv`;
-    document.body.appendChild(linkSante);
-    linkSante.click();
-    document.body.removeChild(linkSante);
+        // Active le bouton "Payer mon Adhésion"
+        const btn = document.getElementById('uploadCSVsAndPay');
+        if (btn) btn.disabled = false;
 
-    // 📥 Téléchargement du CSV Adhésion
-    const csvAdhesion = localStorage.getItem('csv_adhesion_epts');
-    if (csvAdhesion) {
-      const blobAdhesion = new Blob([csvAdhesion], { type: 'text/csv;charset=utf-8;' });
-      const linkAdhesion = document.createElement("a");
-      linkAdhesion.href = URL.createObjectURL(blobAdhesion);
-      linkAdhesion.download = `${nom} ${prenom}_Adhesion_25-26.csv`;
-      document.body.appendChild(linkAdhesion);
-      linkAdhesion.click();
-      document.body.removeChild(linkAdhesion);
-    }
-
-    // 📧 Active le bouton "Payer mon Adhésion"
-    const btn = document.getElementById('uploadCSVsAndPay');
-    if (btn) btn.disabled = false;
-	
-	// 📧 Désactive les bouton "Valider" et "Modifier Formulaire"
-	const btnModifierAdulte = document.getElementById('btnModifierFormulaireAdulte');
-	if (btnModifierAdulte) btnModifierAdulte.disabled = true;
-	const btnValiderAdulte = document.getElementById('exportSanteAdulte');
-	if (btnValiderAdulte) btnValiderAdulte.disabled = true;
-  });
+        // Désactive les boutons "Valider" et "Modifier Formulaire"
+        const btnModifierAdulte = document.getElementById('btnModifierFormulaireAdulte');
+        if (btnModifierAdulte) btnModifierAdulte.disabled = true;
+        const btnValiderAdulte = document.getElementById('exportSanteAdulte');
+        if (btnValiderAdulte) btnValiderAdulte.disabled = true;
+    });
 }
 
-//	<!-- ==== Comptage des problèmes santé adulte ==== -->
+// Comptage des problèmes santé adulte
 const checkboxesAdulte = document.querySelectorAll('input[id^="q"][id$="Adulte"]');
 const santeAdulteCount = document.getElementById('sante-adulte-count');
 const radiosSante = document.querySelectorAll('input[name="sante"]');
@@ -948,7 +952,6 @@ const radiosSante = document.querySelectorAll('input[name="sante"]');
 function updateSanteAdulteCount() {
     const checkedCount = Array.from(checkboxesAdulte).filter(cb => cb.checked).length;
     const selectedRadio = document.querySelector('input[name="sante"]:checked');
-
     if (selectedRadio && (selectedRadio.value === "Certificat" || selectedRadio.value === "Prescription")) {
         santeAdulteCount.innerHTML = `<label style="color: green;font-size: 1.2em;">Vous avez une prescription ou un certificat médical, ne répondez pas au questionnaire.<br>Valider pour continuer votre démarche d'adhésion,<br>nous mettrons votre dossier en suspens en attendant le document.</label>`;
     } else if (checkedCount === 0) {
@@ -962,163 +965,158 @@ checkboxesAdulte.forEach(cb => cb.addEventListener('change', updateSanteAdulteCo
 radiosSante.forEach(radio => radio.addEventListener('change', updateSanteAdulteCount));
 updateSanteAdulteCount();
 
-
-// --- SANTE MINEUR ---
+// ====================== SANTE MINEUR ======================
 function purgeSanteMineurFields() {
     const form = document.getElementById('santeMineurForm');
     if (!form) return;
     form.reset();
     if (document.getElementById('dateMineur')) document.getElementById('dateMineur').value = getCurrentDate();
     form.querySelectorAll('input[type="checkbox"]').forEach(c => c.nextElementSibling?.classList.remove('text-red'));
-  }
-  const resetSanteMineur = document.getElementById('resetSanteMineur');
-  if (resetSanteMineur) resetSanteMineur.onclick = purgeSanteMineurFields;
-  window.addEventListener('load', () => {
-    if (document.getElementById('dateMineur')) document.getElementById('dateMineur').value = getCurrentDate();
-  });
-
-  const nomMineur = document.getElementById('nomMineur');
-  if (nomMineur) {
-    nomMineur.addEventListener('input', function(e) {
-      e.target.value = e.target.value.replace(/[^a-zA-ZÀ-ÿ\s\-]/g, '').toUpperCase();
-    });
-  }
-  const prenomMineur = document.getElementById('prenomMineur');
-  if (prenomMineur) {
-    prenomMineur.addEventListener('input', function(e) {
-      let value = e.target.value.replace(/[^a-zA-ZÀ-ÿ \-]/g, '');
-      value = value.split(/[\s-]/).map(part => part ? part.charAt(0).toUpperCase() + part.slice(1).toLowerCase() : '').join('-');
-      e.target.value = value;
-    });
-  }
-  if (nomreplegMineur) {
-    nomreplegMineur.addEventListener('input', function(e) {
-      e.target.value = e.target.value.replace(/[^a-zA-ZÀ-ÿ\s\-]/g, '').toUpperCase();
-    });
-  }
-  if (prenomreplegMineur) {
-    prenomreplegMineur.addEventListener('input', function(e) {
-      let value = e.target.value.replace(/[^a-zA-ZÀ-ÿ \-]/g, '');
-      value = value.split(/[\s-]/).map(part => part ? part.charAt(0).toUpperCase() + part.slice(1).toLowerCase() : '').join('-');
-      e.target.value = value;
-    });
-  }
-  document.querySelectorAll('#santeMineurForm input[type="checkbox"]').forEach(checkbox => {
-    checkbox.addEventListener('change', function(e) {
-      const label = e.target.nextElementSibling;
-      if (e.target.checked) label.classList.add('text-red');
-      else label.classList.remove('text-red');
-    });
-  });
-
-// -------------------------------------------------------------------------------
-// Désactivation checkbox questionnaire santé mineur si certificat ou prescription
-document.addEventListener('DOMContentLoaded', function () {
-  const radios = document.querySelectorAll('input[name="sante"]');
-  const checkboxesMineur = document.querySelectorAll('input[id^="q"][id$="Mineur"]');
-  const labelQuestionnaire = document.querySelector('.label-questionnaire'); // Cible ton label
-
-  function updateState() {
-    const isQuestionnaireSelected = document.getElementById('questionnaire').checked;
-    checkboxesMineur.forEach(checkbox => {
-      checkbox.disabled = !isQuestionnaireSelected;
-    });
-    if (!isQuestionnaireSelected) {
-      labelQuestionnaire.classList.add('disabled');
-    } else {
-      labelQuestionnaire.classList.remove('disabled');
-    }
-  }
-
-  radios.forEach(radio => {
-    radio.addEventListener('change', updateState);
-  });
-
-  // Initialisation à l'ouverture
-  checkboxesMineur.forEach(checkbox => {
-    checkbox.disabled = true;
-  });
-  labelQuestionnaire.classList.add('disabled'); // par défaut grisé
-});
-
-// -------------------------------------------------------------------------------
-// Enregistrement des csv Adhésion et Questionnaire Santé Mineur
-const santeMineurForm = document.getElementById('santeMineurForm');
-
-if (santeMineurForm) {
-  santeMineurForm.addEventListener('submit', function (e) {
-    e.preventDefault();
-
-    // Récupération explicite des champs
-    const nomMineur = document.getElementById('nomMineur');
-    const prenomMineur = document.getElementById('prenomMineur');
-    const nomreplegMineur = document.getElementById('nomreplegMineur');
-    const prenomreplegMineur = document.getElementById('prenomreplegMineur');
-    const ageMineur = document.getElementById('ageMineur');
-    const dateMineur = document.getElementById('dateMineur');
-    const civilite = document.querySelector('input[name="civiliteMineur"]:checked');
-
-    const nom = nomMineur ? nomMineur.value.trim() : '';
-    const prenom = prenomMineur ? prenomMineur.value.trim() : '';
-
-    // Génération des données CSV
-    const data = [
-      '2025/2026',
-      civilite ? civilite.value : '',
-      nom,
-      prenom,
-      ageMineur ? ageMineur.value.trim() : '',
-      nomreplegMineur ? nomreplegMineur.value.trim() : '',
-      prenomreplegMineur ? prenomreplegMineur.value.trim() : '',
-      ...Array.from({ length: 23 }, (_, i) =>
-        document.getElementById(`q${i + 1}Mineur`)?.checked ? 'Yes' : 'No'
-      ),
-      dateMineur ? dateMineur.value.trim() : ''
-    ].join(';');
-
-    const headers =
-      'Année;G/F;Nom;Prénom;Âge;NomRepLég;PrénomRepLég;' +
-      Array.from({ length: 23 }, (_, i) => `Q${i + 1}`).join(';') +
-      ';Date';
-
-    const csvSante = '\ufeff' + headers + '\n' + data;
-
-    // 📥 Téléchargement fichier Questionnaire Santé Mineur
-    const blobSante = new Blob([csvSante], { type: 'text/csv;charset=utf-8;' });
-    const linkSante = document.createElement('a');
-    linkSante.href = URL.createObjectURL(blobSante);
-    linkSante.download = `${nom} ${prenom}_Questionnaire_Sante_Mineur_25-26.csv`;
-    document.body.appendChild(linkSante);
-    linkSante.click();
-    document.body.removeChild(linkSante);
-
-    // 📥 Téléchargement fichier Adhésion depuis localStorage
-    const csvAdhesion = localStorage.getItem('csv_adhesion_epts');
-    if (csvAdhesion) {
-      const blobAdhesion = new Blob([csvAdhesion], { type: 'text/csv;charset=utf-8;' });
-      const linkAdhesion = document.createElement('a');
-      linkAdhesion.href = URL.createObjectURL(blobAdhesion);
-      linkAdhesion.download = `${nom} ${prenom}_Adhesion_25-26.csv`;
-      document.body.appendChild(linkAdhesion);
-      linkAdhesion.click();
-      document.body.removeChild(linkAdhesion);
-    } else {
-      console.warn("Aucun CSV d’adhésion trouvé dans le localStorage.");
-    }
-
-    // ✅ Activation bouton "Payer mon Adhésion"
-    const btn = document.getElementById('uploadCSVsAndPay2');
-    if (btn) btn.disabled = false;
-	
-	// 📧 Désactive les bouton "Valider" et "Modifier Formulaire"
-	const btnModifierMineur = document.getElementById('btnModifierFormulaireMineur');
-	if (btnModifierMineur) btnModifierMineur.disabled = true;
-	const btnValiderMineur = document.getElementById('exportSanteMineur');
-	if (btnValiderMineur) btnValiderMineur.disabled = true;	
-  });
 }
 
-<!-- ==== Comptage des problèmes santé mineur ==== -->
+const nomMineur = document.getElementById('nomMineur');
+if (nomMineur) {
+    nomMineur.addEventListener('input', function(e) {
+        e.target.value = e.target.value.replace(/[^a-zA-ZÀ-ÿ\s\-]/g, '').toUpperCase();
+    });
+}
+
+const prenomMineur = document.getElementById('prenomMineur');
+if (prenomMineur) {
+    prenomMineur.addEventListener('input', function(e) {
+        let value = e.target.value.replace(/[^a-zA-ZÀ-ÿ \-]/g, '');
+        value = value.split(/[\s-]/).map(part => part ? part.charAt(0).toUpperCase() + part.slice(1).toLowerCase() : '').join('-');
+        e.target.value = value;
+    });
+}
+
+const nomreplegMineur = document.getElementById('nomreplegMineur');
+if (nomreplegMineur) {
+    nomreplegMineur.addEventListener('input', function(e) {
+        e.target.value = e.target.value.replace(/[^a-zA-ZÀ-ÿ\s\-]/g, '').toUpperCase();
+    });
+}
+
+const prenomreplegMineur = document.getElementById('prenomreplegMineur');
+if (prenomreplegMineur) {
+    prenomreplegMineur.addEventListener('input', function(e) {
+        let value = e.target.value.replace(/[^a-zA-ZÀ-ÿ \-]/g, '');
+        value = value.split(/[\s-]/).map(part => part ? part.charAt(0).toUpperCase() + part.slice(1).toLowerCase() : '').join('-');
+        e.target.value = value;
+    });
+}
+
+document.querySelectorAll('#santeMineurForm input[type="checkbox"]').forEach(checkbox => {
+    checkbox.addEventListener('change', function(e) {
+        const label = e.target.nextElementSibling;
+        if (e.target.checked) label.classList.add('text-red');
+        else label.classList.remove('text-red');
+    });
+});
+
+// Désactivation checkbox questionnaire santé mineur si certificat ou prescription
+document.addEventListener('DOMContentLoaded', function () {
+    const radios = document.querySelectorAll('input[name="sante"]');
+    const checkboxesMineur = document.querySelectorAll('input[id^="q"][id$="Mineur"]');
+    const labelQuestionnaire = document.querySelector('.label-questionnaire.sante-mineur');
+
+    function updateState() {
+        const isQuestionnaireSelected = document.getElementById('questionnaire').checked;
+        checkboxesMineur.forEach(checkbox => {
+            checkbox.disabled = !isQuestionnaireSelected;
+        });
+        if (!isQuestionnaireSelected) {
+            labelQuestionnaire.classList.add('disabled');
+        } else {
+            labelQuestionnaire.classList.remove('disabled');
+        }
+    }
+
+    radios.forEach(radio => {
+        radio.addEventListener('change', updateState);
+    });
+
+    // Initialisation à l'ouverture
+    checkboxesMineur.forEach(checkbox => {
+        checkbox.disabled = true;
+    });
+    labelQuestionnaire.classList.add('disabled');
+});
+
+// Enregistrement des csv Adhésion et Questionnaire Santé Mineur
+const santeMineurForm = document.getElementById('santeMineurForm');
+if (santeMineurForm) {
+    santeMineurForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const nomMineur = document.getElementById('nomMineur');
+        const prenomMineur = document.getElementById('prenomMineur');
+        const nomreplegMineur = document.getElementById('nomreplegMineur');
+        const prenomreplegMineur = document.getElementById('prenomreplegMineur');
+        const ageMineur = document.getElementById('ageMineur');
+        const dateMineur = document.getElementById('dateMineur');
+        const civilite = document.querySelector('input[name="civiliteMineur"]:checked');
+
+        const nom = nomMineur ? nomMineur.value.trim() : '';
+        const prenom = prenomMineur ? prenomMineur.value.trim() : '';
+
+        const data = [
+            '2025/2026',
+            civilite ? civilite.value : '',
+            nom,
+            prenom,
+            ageMineur ? ageMineur.value.trim() : '',
+            nomreplegMineur ? nomreplegMineur.value.trim() : '',
+            prenomreplegMineur ? prenomreplegMineur.value.trim() : '',
+            ...Array.from({ length: 23 }, (_, i) =>
+                document.getElementById(`q${i + 1}Mineur`)?.checked ? 'Yes' : 'No'
+            ),
+            dateMineur ? dateMineur.value.trim() : ''
+        ].join(';');
+
+        const headers =
+            'Année;G/F;Nom;Prénom;Âge;NomRepLég;PrénomRepLég;' +
+            Array.from({ length: 23 }, (_, i) => `Q${i + 1}`).join(';') +
+            ';Date';
+
+        const csvSante = '\ufeff' + headers + '\n' + data;
+
+        // Téléchargement fichier Questionnaire Santé Mineur
+        const blobSante = new Blob([csvSante], { type: 'text/csv;charset=utf-8;' });
+        const linkSante = document.createElement('a');
+        linkSante.href = URL.createObjectURL(blobSante);
+        linkSante.download = `${nom} ${prenom}_Questionnaire_Sante_Mineur_25-26.csv`;
+        document.body.appendChild(linkSante);
+        linkSante.click();
+        document.body.removeChild(linkSante);
+
+        // Téléchargement fichier Adhésion depuis localStorage
+        const csvAdhesion = localStorage.getItem('csv_adhesion_epts');
+        if (csvAdhesion) {
+            const blobAdhesion = new Blob([csvAdhesion], { type: 'text/csv;charset=utf-8;' });
+            const linkAdhesion = document.createElement('a');
+            linkAdhesion.href = URL.createObjectURL(blobAdhesion);
+            linkAdhesion.download = `${nom} ${prenom}_Adhesion_25-26.csv`;
+            document.body.appendChild(linkAdhesion);
+            linkAdhesion.click();
+            document.body.removeChild(linkAdhesion);
+        } else {
+            console.warn("Aucun CSV d’adhésion trouvé dans le localStorage.");
+        }
+
+        // Activation bouton "Payer mon Adhésion"
+        const btn = document.getElementById('uploadCSVsAndPay2');
+        if (btn) btn.disabled = false;
+
+        // Désactive les boutons "Valider" et "Modifier Formulaire"
+        const btnModifierMineur = document.getElementById('btnModifierFormulaireMineur');
+        if (btnModifierMineur) btnModifierMineur.disabled = true;
+        const btnValiderMineur = document.getElementById('exportSanteMineur');
+        if (btnValiderMineur) btnValiderMineur.disabled = true;
+    });
+}
+
+// Comptage des problèmes santé mineur
 document.addEventListener('DOMContentLoaded', function () {
     const checkboxesMineur = document.querySelectorAll('input[id^="q"][id$="Mineur"]');
     const santeMineurValue = document.getElementById('sante-mineur-value');
@@ -1128,11 +1126,9 @@ document.addEventListener('DOMContentLoaded', function () {
     function updateSanteMineurCount() {
         const checkedCount = Array.from(checkboxesMineur).filter(cb => cb.checked).length;
         const selectedRadio = document.querySelector('input[name="sante"]:checked');
-
         if (santeMineurValue) {
             santeMineurValue.textContent = checkedCount;
         }
-
         if (santeMineurMessage) {
             if (selectedRadio && (selectedRadio.value === "Certificat" || selectedRadio.value === "Prescription")) {
                 santeMineurMessage.innerHTML = `<label style="color: green;font-size: 1.2em;">Vous avez une prescription ou un certificat médical, ne répondez pas au questionnaire.<br>Valider pour continuer votre démarche d'adhésion,<br>nous mettrons votre dossier en suspens en attendant le document.</label>`;
@@ -1149,103 +1145,79 @@ document.addEventListener('DOMContentLoaded', function () {
     updateSanteMineurCount();
 });
 
-// Utilitaire commun : lit les champs déjà remplis à l’écran (adulte OU mineur)
+// ====================== UTILITAIRES COMMUNS ======================
 function getNomPrenomForFilename() {
-  const nom = document.getElementById('nomAdulte')?.value
-           || document.getElementById('nomMineur')?.value
-           || document.getElementById('nom')?.value
-           || '';
-  const prenom = document.getElementById('prenomAdulte')?.value
-              || document.getElementById('prenomMineur')?.value
-              || document.getElementById('prenom')?.value
-              || '';
-  const sanitize = s => s.trim()
-                         .replace(/\s+/g, ' ')                 // espaces multiples -> simple espace
-                         .replace(/[\/\\:*?"<>|]/g, '-');      // caractères interdits FS
-  return { nomVal: sanitize(nom), prenomVal: sanitize(prenom) };
+    const nom = document.getElementById('nomAdulte')?.value
+             || document.getElementById('nomMineur')?.value
+             || document.getElementById('nom')?.value
+             || '';
+    const prenom = document.getElementById('prenomAdulte')?.value
+                || document.getElementById('prenomMineur')?.value
+                || document.getElementById('prenom')?.value
+                || '';
+    const sanitize = s => s.trim()
+                         .replace(/\s+/g, ' ')
+                         .replace(/[\/\\:*?"<>|]/g, '-');
+    return { nomVal: sanitize(nom), prenomVal: sanitize(prenom) };
 }
 
-// Transfert Fichiers Adhésion Majeur à LWS php
-function uploadCSVsAndPay() {
-  const CLE_SECRETE = "L'EntrainPourTous33320";
-  const formData = new FormData();
-  formData.append("key", CLE_SECRETE);
+// ====================== TRANSFERT FICHIERS ET PAIEMENT ======================
+function uploadCSVsAndPay(isMineur) {
+    const csvAdhesion = localStorage.getItem('csv_adhesion_epts');
+    const csvSante = isMineur
+        ? localStorage.getItem('csv_sante_mineur_epts')
+        : localStorage.getItem('csv_sante_adulte_epts');
 
-  // ✅ Nom/Prénom fiables depuis le formulaire (plus de "NOM PRENOM")
-  const { nomVal, prenomVal } = getNomPrenomForFilename();
+    if (!csvAdhesion || !csvSante) {
+        alert("Veuillez d'abord valider le questionnaire santé.");
+        return;
+    }
 
-  // Noms de fichiers attendus
-  const adhesionFileName = `${nomVal} ${prenomVal}_Adhésion_25-26.csv`;
-  const santeAdulteFileName = `${nomVal} ${prenomVal}_Questionnaire Santé Adulte_25-26.csv`;
+    const CLE_SECRETE = "L'EntrainPourTous33320";
+    const formData = new FormData();
+    formData.append("key", CLE_SECRETE);
 
-  // Blobs depuis le localStorage (inchangé)
-  const csvAdhesion = localStorage.getItem('csv_adhesion_epts');
-  if (csvAdhesion) {
+    const { nomVal, prenomVal } = getNomPrenomForFilename();
+    const adhesionFileName = `${nomVal} ${prenomVal}_Adhésion_25-26.csv`;
+    const santeFileName = isMineur
+        ? `${nomVal} ${prenomVal}_Questionnaire_Santé_Mineur_25-26.csv`
+        : `${nomVal} ${prenomVal}_Questionnaire_Santé_Adulte_25-26.csv`;
+
     formData.append("fichiers[]", new Blob([csvAdhesion], {type:"text/csv"}), adhesionFileName);
-  }
-  const csvSanteAdulte = localStorage.getItem('csv_sante_adulte_epts');
-  if (csvSanteAdulte) {
-    formData.append("fichiers[]", new Blob([csvSanteAdulte], {type:"text/csv"}), santeAdulteFileName);
-  }
+    formData.append("fichiers[]", new Blob([csvSante], {type:"text/csv"}), santeFileName);
 
-  fetch("https://epts.fr/upload.php", { method: "POST", body: formData })
-    .then(r => r.json())
-    .then(data => {
-      if (data.status === "ok") {
-        window.location.href = "https://epts.fr/Inscription_Paiement%20HelloAsso.html";
-      } else {
-        alert("Erreur : " + data.message);
-      }
-    })
-    .catch(() => alert("Erreur réseau"));
-}
+    // Récupération des valeurs pour le paiement
+    const nom = document.getElementById(isMineur ? 'nomMineur' : 'nomAdulte')?.value.trim()
+             || document.getElementById('nom')?.value.trim()
+             || '';
+    const prenom = document.getElementById(isMineur ? 'prenomMineur' : 'prenomAdulte')?.value.trim()
+                || document.getElementById('prenom')?.value.trim()
+                || '';
+    const email = document.getElementById('email')?.value.trim() || '';
+    const tarif = document.querySelector('input[name="tarif"]:checked')?.value || '';
 
-// Transfert Fichiers Adhésion Mineur à LWS php
-function uploadCSVsAndPay2() {
-  const CLE_SECRETE = "L'EntrainPourTous33320";
-  const formData = new FormData();
-  formData.append("key", CLE_SECRETE);
+    if (!nom || !prenom || !email || !tarif) {
+        alert("Données manquantes pour le paiement.");
+        return;
+    }
 
-  // Nom & Prénom depuis le formulaire
-  const { nomVal, prenomVal } = getNomPrenomForFilename();
-
-  // Noms de fichiers attendus
-  const adhesionFileName = `${nomVal} ${prenomVal}_Adhésion_25-26.csv`;
-  const santeMineurFileName = `${nomVal} ${prenomVal}_Questionnaire Santé Mineur_25-26.csv`;
-
-  const csvAdhesion = localStorage.getItem('csv_adhesion_epts');
-  if (csvAdhesion) {
-    formData.append("fichiers[]", new Blob([csvAdhesion], {type:"text/csv"}), adhesionFileName);
-  }
-  const csvSanteMineur = localStorage.getItem('csv_sante_mineur_epts');
-  if (csvSanteMineur) {
-    formData.append("fichiers[]", new Blob([csvSanteMineur], {type:"text/csv"}), santeMineurFileName);
-  }
-
-// ✅ Transfert des Nom, Prénom et Tarif pour le paiement
-	// Récupération des valeurs
-	const nom = document.querySelector('input[name="adherent_nom"]').value.trim();
-	const prenom = document.querySelector('input[name="adherent_prenom"]').value.trim();
-	const email = document.getElementById('email').value.trim();
-	const tarif = document.querySelector('input[name="tarif"]:checked');
-
-	// Validation
-	if (!nom || !prenom || !email || !tarif) {
-		alert("Veuillez remplir tous les champs obligatoires (nom, prénom, tarif).");
-		return;
-	}
-
-  fetch("https://epts.fr/upload.php", { method: "POST", body: formData })
-    .then(r => r.json())
-    .then(data => {
-      if (data.status === "ok") {
-        window.location.href = "https://epts.fr/Inscription_Paiement%20HelloAsso.html";
-      } else {
-        alert("Erreur : " + data.message);
-      }
-    })
-    .catch(() => alert("Erreur réseau"));
+    fetch("https://epts.fr/upload.php", { method: "POST", body: formData })
+        .then(r => r.json())
+        .then(data => {
+            if (data.status === "ok") {
+                const params = new URLSearchParams();
+                params.append('nom', encodeURIComponent(nom));
+                params.append('prenom', encodeURIComponent(prenom));
+                params.append('email', encodeURIComponent(email));
+                params.append('tarif', encodeURIComponent(tarif));
+                window.location.href = `https://epts.fr/PaiementAdhésion.html?${params.toString()}`;
+            } else {
+                alert("Erreur : " + data.message);
+            }
+        })
+        .catch(() => alert("Erreur réseau"));
 }
 </script>
+
 </body>
 </html>
